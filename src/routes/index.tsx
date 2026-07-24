@@ -23,7 +23,28 @@ function Home() {
             />
             <div>
               <h1 className="font-brand text-2xl font-semibold leading-tight tracking-tight md:text-4xl">
-                Madrid's first boutique Human Health &amp; Performance Lab
+                Madrid's{" "}
+                <span className="relative inline-block whitespace-nowrap">
+                  first boutique
+                  <svg
+                    aria-hidden
+                    className="pointer-events-none absolute left-0 top-full -mt-1 h-[0.35em] w-full text-primary"
+                    viewBox="0 0 300 12"
+                    fill="none"
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      className="animate-draw"
+                      d="M2 8 C 52 3 92 10 142 6 C 202 1 252 10 298 5"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      pathLength={1}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
+                </span>{" "}
+                Human Health &amp; Performance Lab
               </h1>
               <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-muted md:text-xs">
                 <a
