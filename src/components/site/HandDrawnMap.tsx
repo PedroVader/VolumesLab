@@ -24,9 +24,9 @@ function StreetLabel({
       y={y}
       transform={rotate ? `rotate(${rotate} ${x} ${y})` : undefined}
       className="fill-foreground font-mono"
-      fontSize="11"
-      letterSpacing="2"
-      opacity="0.55"
+      fontSize="13"
+      letterSpacing="1.5"
+      opacity="0.6"
     >
       {children}
     </text>
@@ -36,11 +36,12 @@ function StreetLabel({
 export function HandDrawnMap({ className = "" }: { className?: string }) {
   return (
     <div className={`relative ${className}`}>
+      <div className="overflow-hidden">
       <svg
         viewBox="0 0 800 500"
         role="img"
         aria-label="Stylised map of Volumes Lab at Calle Churruca 5, Madrid"
-        className="h-auto w-full text-foreground"
+        className="h-auto w-full origin-center text-foreground max-sm:scale-[1.45]"
         preserveAspectRatio="xMidYMid meet"
       >
         {/* faint block texture */}
@@ -115,13 +116,14 @@ export function HandDrawnMap({ className = "" }: { className?: string }) {
           <text x="60" y="452" className="fill-foreground font-mono" fontSize="10" letterSpacing="1">50 M</text>
         </g>
       </svg>
+      </div>
 
-      {/* floating location card */}
+      {/* location card: floats over the map on desktop, sits below it on mobile */}
       <a
         href={MAPS_URL}
         target="_blank"
         rel="noreferrer"
-        className="group absolute bottom-4 right-4 block max-w-[15rem] border border-foreground bg-background/95 p-4 backdrop-blur-sm transition-colors hover:border-primary sm:bottom-6 sm:right-6"
+        className="group block border-t border-foreground bg-background/95 p-4 transition-colors hover:border-primary sm:absolute sm:bottom-6 sm:right-6 sm:max-w-[15rem] sm:border sm:backdrop-blur-sm"
       >
         <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
           [ Volumes Lab ]
