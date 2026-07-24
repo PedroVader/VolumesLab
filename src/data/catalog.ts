@@ -90,7 +90,7 @@ export const assessments: Product[] = [
   {
     slug: "performance",
     name: "Performance",
-    tagline: "Full physiological workup for athletes chasing measurable gains.",
+    tagline: "Full physiological workup for anyone chasing measurable gains.",
     price: 1190,
     duration: "3.5 hours",
     category: "assessment",

@@ -35,7 +35,14 @@ export function SiteFooter() {
             </li>
           </ul>
         </div>
-        <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 font-mono text-[10px] uppercase tracking-widest text-muted md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 border-t border-border pt-10">
+          <img
+            src="/volumes-mark.png"
+            alt="Volumes Lab"
+            className="mx-auto w-32 opacity-90"
+          />
+        </div>
+        <div className="mt-8 flex flex-col gap-2 pt-6 font-mono text-[10px] uppercase tracking-widest text-muted md:flex-row md:items-center md:justify-between">
           <p>Volumes Lab © {new Date().getFullYear()}</p>
           <p>Calle Churruca 5 Madrid</p>
         </div>
