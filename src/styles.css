@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;500;600;700;800&display=swap");
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-warm: var(--warm);
+  --font-display: "Helvetica Neue Condensed", "HelveticaNeue-CondensedBold", "Arial Narrow", "Helvetica Neue", Impact, Helvetica, Arial, sans-serif;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  --font-accent: "Microsoft Himalaya", "Papyrus", "Palatino Linotype", serif;
+}
+
+:root {
+  --radius: 0.25rem;
+  --background: hsl(40 13% 91%);
+  --foreground: hsl(0 0% 21%);
+  --card: hsl(40 13% 94%);
+  --card-foreground: hsl(0 0% 21%);
+  --popover: hsl(40 13% 94%);
+  --popover-foreground: hsl(0 0% 21%);
+  --primary: hsl(0 0% 21%);
+  --primary-foreground: hsl(40 13% 93%);
+  --secondary: hsl(40 10% 86%);
+  --secondary-foreground: hsl(0 0% 21%);
+  --muted: hsl(0 0% 40%);
+  --muted-foreground: hsl(0 0% 35%);
+  --accent: hsl(40 10% 86%);
+  --accent-foreground: hsl(0 0% 21%);
+  --destructive: hsl(0 60% 35%);
+  --destructive-foreground: hsl(40 13% 93%);
+  --border: hsl(0 0% 0% / 0.14);
+  --input: hsl(0 0% 0% / 0.15);
+  --ring: hsl(0 0% 21%);
+  --warm: hsl(9 74% 48%);
+}
+
+.dark {
+  --background: hsl(0 0% 8%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(0 0% 12%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 12%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(0 75% 55%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(0 0% 16%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 60%);
+  --muted-foreground: hsl(0 0% 65%);
+  --accent: hsl(0 0% 16%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 75% 55%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(0 0% 100% / 0.12);
+  --input: hsl(0 0% 100% / 0.15);
+  --ring: hsl(0 75% 55%);
+  --warm: hsl(9 80% 55%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); }
+}
+
+@keyframes vl-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes vl-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility animate-slide-up {
+  animation: vl-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@utility animate-marquee {
+  animation: vl-marquee 40s linear infinite;
+}
