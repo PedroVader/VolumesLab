@@ -7,7 +7,7 @@ import type { SampleMetric } from "@/data/productContent";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-foreground">
+    <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
       [ {children} ]
     </p>
   );
@@ -33,7 +33,7 @@ export function TrustStrip({ items }: { items: string[] }) {
           key={i}
           className="flex items-center gap-3 border-border px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-muted [&:not(:last-child)]:border-r max-md:[&:nth-child(-n+2)]:border-b max-md:[&:nth-child(2)]:border-r-0"
         >
-          <span aria-hidden className="text-foreground">✓</span>
+          <span aria-hidden className="text-primary">✓</span>
           {t}
         </li>
       ))}
@@ -79,8 +79,8 @@ export function VisitSteps({ steps }: { steps: { title: string; body: string }[]
   return (
     <ol className="grid gap-10 md:grid-cols-3">
       {steps.map((s, i) => (
-        <li key={i} className="border-t border-border pt-8">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-muted">
+        <li key={i} className="border-t-2 border-primary pt-8">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
             {String(i + 1).padStart(2, "0")}
           </p>
           <h3 className="mt-4 font-display text-2xl font-extrabold uppercase tracking-tight">{s.title}</h3>
@@ -96,7 +96,7 @@ export function VisitSteps({ steps }: { steps: { title: string; body: string }[]
 function PercentileBar({ percentile }: { percentile: number }) {
   return (
     <div className="relative h-1 w-full bg-foreground/10">
-      <div className="absolute inset-y-0 left-0 bg-foreground" style={{ width: `${Math.min(100, Math.max(0, percentile))}%` }} />
+      <div className="absolute inset-y-0 left-0 bg-primary" style={{ width: `${Math.min(100, Math.max(0, percentile))}%` }} />
     </div>
   );
 }
@@ -166,7 +166,7 @@ export function OutcomeList({ items }: { items: string[] }) {
     <ul className="space-y-0 divide-y divide-border border-y border-border">
       {items.map((o, i) => (
         <li key={i} className="flex gap-6 py-6">
-          <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
             {String(i + 1).padStart(2, "0")}
           </span>
           <p className="text-lg leading-relaxed text-foreground/85">{o}</p>
@@ -187,7 +187,7 @@ export function StickyBookBar({ price, duration, onAdd, ctaLabel }: { price: num
       </div>
       <button
         onClick={onAdd}
-        className="flex-1 bg-foreground py-3 text-center font-mono text-[11px] uppercase tracking-widest text-primary-foreground"
+        className="flex-1 bg-primary py-3 text-center font-mono text-[11px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
       >
         {ctaLabel}
       </button>

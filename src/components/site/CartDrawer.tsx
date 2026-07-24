@@ -63,7 +63,7 @@ export function CartDrawer({
           <Link
             to="/book/checkout"
             onClick={() => onOpenChange(false)}
-            className="block bg-foreground py-3 text-center font-mono text-xs uppercase tracking-widest text-white hover:bg-primary"
+            className="block bg-primary py-3 text-center font-mono text-xs uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
           >
             Checkout
           </Link>

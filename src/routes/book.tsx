@@ -195,7 +195,7 @@ function ComparisonTable() {
       values: [
         "First visit, everyone",
         "Healthspan & prevention",
-        "Athletes chasing numbers",
+        "Anyone chasing numbers",
       ],
     },
   ];
@@ -310,7 +310,7 @@ function ProductCard({ product }: { product: Product }) {
             add({ slug: product.slug, name: product.name, price: product.price, giftCard: false });
             toast.success(`${product.name} added to cart`);
           }}
-          className="bg-foreground py-2 font-mono text-[10px] uppercase tracking-widest text-primary-foreground hover:opacity-80"
+          className="bg-primary py-2 font-mono text-[10px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
         >
           Book · €{product.price}
         </button>

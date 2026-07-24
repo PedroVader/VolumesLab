@@ -24,7 +24,7 @@ export function SiteHeader() {
           className="flex items-center gap-3 leading-none"
         >
           <img src="/volumes-icon.png" alt="" className="h-8 w-8" />
-          <span className="font-mono text-[13px] font-bold uppercase tracking-widest">
+          <span className="font-brand text-[15px] font-semibold uppercase tracking-[0.2em]">
             Volumes Lab
           </span>
         </Link>
@@ -42,7 +42,7 @@ export function SiteHeader() {
           </button>
           <Link
             to="/book"
-            className="bg-foreground px-4 py-2 tracking-widest text-primary-foreground hover:opacity-80"
+            className="bg-primary px-4 py-2 tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
           >
             Book Now
           </Link>
@@ -92,7 +92,7 @@ export function SiteHeader() {
             <Link
               to="/book"
               onClick={() => setMobileOpen(false)}
-              className="flex-1 bg-foreground px-4 py-3 text-center text-primary-foreground"
+              className="flex-1 bg-primary px-4 py-3 text-center text-primary-foreground"
             >
               Book Now
             </Link>
@@ -130,7 +130,7 @@ function MenuTrigger({ label, active, onOpen }: { label: string; active: boolean
     <button
       onMouseEnter={onOpen}
       onFocus={onOpen}
-      className={`py-2 transition-opacity ${active ? "opacity-100" : "opacity-80 hover:opacity-100"}`}
+      className={`py-2 transition-colors ${active ? "text-primary" : "text-foreground/80 hover:text-primary"}`}
     >
       {label}
     </button>
@@ -151,7 +151,7 @@ function MenuColumn({
         {items.map((i) => (
           <li key={i.to}>
             <Link to={i.to} className="group block">
-              <p className="font-display text-lg font-bold uppercase group-hover:opacity-70">{i.name}</p>
+              <p className="font-display text-lg font-bold uppercase transition-colors group-hover:text-primary">{i.name}</p>
               <p className="mt-1 text-xs text-muted">{i.sub}</p>
             </Link>
           </li>

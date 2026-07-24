@@ -116,7 +116,7 @@ export function ProductPage({ product }: { product: Product }) {
                   )}
                   <button
                     onClick={addToCart}
-                    className="mt-4 block w-full bg-foreground py-4 text-center font-mono text-xs uppercase tracking-widest text-primary-foreground transition-colors hover:opacity-80"
+                    className="mt-4 block w-full bg-primary py-4 text-center font-mono text-xs uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
                   >
                     {gift ? `Add gift card · €${product.price}` : `Book ${product.name} · €${product.price}`}
                   </button>

@@ -17,6 +17,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-strong: var(--primary-strong);
+  --color-ink: var(--ink);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -29,6 +31,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-warm: var(--warm);
+  --font-brand: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: "Helvetica Neue Condensed", "HelveticaNeue-CondensedBold", "Arial Narrow", "Helvetica Neue", Impact, Helvetica, Arial, sans-serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "Martian Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
@@ -43,8 +46,10 @@
   --card-foreground: hsl(0 0% 21%);
   --popover: hsl(40 13% 94%);
   --popover-foreground: hsl(0 0% 21%);
-  --primary: hsl(0 0% 21%);
-  --primary-foreground: hsl(40 13% 93%);
+  --primary: hsl(9 74% 48%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-strong: hsl(9 74% 40%);
+  --ink: hsl(0 0% 13%);
   --secondary: hsl(40 10% 86%);
   --secondary-foreground: hsl(0 0% 21%);
   --muted: hsl(0 0% 40%);
@@ -66,8 +71,10 @@
   --card-foreground: hsl(0 0% 98%);
   --popover: hsl(0 0% 12%);
   --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(0 75% 55%);
+  --primary: hsl(9 80% 56%);
   --primary-foreground: hsl(0 0% 100%);
+  --primary-strong: hsl(9 80% 48%);
+  --ink: hsl(0 0% 8%);
   --secondary: hsl(0 0% 16%);
   --secondary-foreground: hsl(0 0% 98%);
   --muted: hsl(0 0% 60%);

@@ -19,7 +19,7 @@ function Home() {
               className="w-40 shrink-0 md:w-52"
             />
             <div>
-              <h1 className="font-mono text-lg font-bold uppercase leading-tight tracking-wide md:text-2xl">
+              <h1 className="font-brand text-2xl font-semibold leading-tight tracking-tight md:text-4xl">
                 Madrid's first boutique Human Health &amp; Performance Lab
               </h1>
               <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-muted md:text-xs">
@@ -51,7 +51,7 @@ function Home() {
           <div className="mt-10">
             <Link
               to="/book"
-              className="inline-flex items-center border border-foreground bg-foreground px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-background hover:text-foreground"
+              className="inline-flex items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
             >
               Book Now
             </Link>
@@ -102,7 +102,7 @@ function offerPath(p: Product): string {
 function OfferColumn({ title, items }: { title: string; items: Product[] }) {
   return (
     <div className="flex flex-col">
-      <p className="border-b border-foreground pb-4 font-mono text-[11px] font-bold uppercase tracking-widest">
+      <p className="border-b-2 border-primary pb-4 font-mono text-[11px] font-bold uppercase tracking-widest">
         {title}
       </p>
       <ul className="flex-1 divide-y divide-border">
@@ -110,7 +110,7 @@ function OfferColumn({ title, items }: { title: string; items: Product[] }) {
           <li key={p.slug}>
             <Link
               to={offerPath(p)}
-              className="block py-3 text-base text-foreground/85 underline-offset-4 hover:text-foreground hover:underline"
+              className="block py-3 text-base text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline"
             >
               {p.name}
             </Link>
@@ -119,7 +119,7 @@ function OfferColumn({ title, items }: { title: string; items: Product[] }) {
       </ul>
       <Link
         to="/book"
-        className="mt-8 inline-flex w-fit items-center border border-foreground bg-foreground px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-background hover:text-foreground"
+        className="mt-8 inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
       >
         Book Now
       </Link>
