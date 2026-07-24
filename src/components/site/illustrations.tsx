@@ -389,6 +389,68 @@ const illustrations: Record<IllustrationKey, () => React.ReactElement> = {
   retest: Retest,
 };
 
+/* ---------------- Category icons (Memberships / Assessments / Tests) ---------------- */
+// Small hand-drawn line marks in the same blueprint language, with a red survey accent.
+
+export type CategoryKey = "membership" | "assessment" | "test";
+
+const IS = { stroke: "currentColor", fill: "none", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+
+function MembershipIcon() {
+  return (
+    <g>
+      {/* recurring cycle */}
+      <path d="M38 20 A 15 15 0 1 0 39 30" {...IS} />
+      <path d="M38 11 L40 21 L30 19 Z" className="fill-foreground" stroke="none" />
+      {/* red progress node */}
+      <circle cx="24" cy="24" r="3.5" className="fill-primary" stroke="none" />
+    </g>
+  );
+}
+
+function AssessmentIcon() {
+  return (
+    <g>
+      {/* complete-picture target */}
+      <circle cx="24" cy="24" r="15" {...IS} strokeDasharray="3 4" strokeWidth="1.5" />
+      <circle cx="24" cy="24" r="8" {...IS} />
+      <line x1="24" y1="4" x2="24" y2="14" {...IS} strokeWidth="1.5" />
+      <line x1="24" y1="34" x2="24" y2="44" {...IS} strokeWidth="1.5" />
+      <line x1="4" y1="24" x2="14" y2="24" {...IS} strokeWidth="1.5" />
+      <line x1="34" y1="24" x2="44" y2="24" {...IS} strokeWidth="1.5" />
+      <circle cx="24" cy="24" r="3.5" className="fill-primary" stroke="none" />
+    </g>
+  );
+}
+
+function TestIcon() {
+  return (
+    <g>
+      {/* single measured curve */}
+      <path d="M11 10 L11 37 L40 37" {...IS} strokeWidth="1.5" opacity="0.7" />
+      <path d="M14 33 C 22 32 25 22 33 14" {...IS} />
+      <line x1="33" y1="6" x2="33" y2="22" {...IS} strokeWidth="1" strokeDasharray="3 4" opacity="0.6" />
+      <circle cx="33" cy="14" r="4" className="fill-primary" stroke="none" />
+      <circle cx="33" cy="14" r="1.6" className="fill-background" stroke="none" />
+    </g>
+  );
+}
+
+const categoryIcons: Record<CategoryKey, () => React.ReactElement> = {
+  membership: MembershipIcon,
+  assessment: AssessmentIcon,
+  test: TestIcon,
+};
+
+export function CategoryIcon({ k, className = "" }: { k: CategoryKey; className?: string }) {
+  const Inner = categoryIcons[k];
+  return (
+    <svg viewBox="0 0 48 48" role="img" aria-hidden className={`text-foreground ${className}`} preserveAspectRatio="xMidYMid meet">
+      <Inner />
+    </svg>
+  );
+}
+
 export function ProductIllustration({ k, className = "" }: { k: IllustrationKey; className?: string }) {
   const Inner = illustrations[k];
   return (

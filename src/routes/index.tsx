@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { HandDrawnMap } from "@/components/site/HandDrawnMap";
+import { CategoryIcon, type CategoryKey } from "@/components/site/illustrations";
 import { memberships, assessments, tests, type Product } from "@/data/catalog";
 
 export const Route = createFileRoute("/")({
@@ -62,13 +64,9 @@ function Home() {
       {/* Map */}
       <section className="border-t border-border px-6 py-16 md:py-20">
         <div className="mx-auto max-w-7xl">
-          <iframe
-            title="Volumes Lab, Calle Churruca 5, Madrid"
-            src="https://www.google.com/maps?q=Calle+Churruca+5,+Madrid,+Spain&output=embed"
-            className="h-[420px] w-full md:h-[560px]"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+          <div className="border border-border bg-card">
+            <HandDrawnMap />
+          </div>
           <p className="border-t border-border pt-4 text-sm text-foreground/85">
             Monday–Friday: 7am–8pm <span className="mx-2 text-muted">/</span> Saturday–Sunday: 9am–6pm
           </p>
@@ -83,9 +81,9 @@ function Home() {
           </h2>
 
           <div className="mt-10 grid gap-12 md:grid-cols-3">
-            <OfferColumn title="Memberships" items={memberships} />
-            <OfferColumn title="Assessments" items={assessments} />
-            <OfferColumn title="Tests" items={tests} />
+            <OfferColumn title="Memberships" items={memberships} icon="membership" />
+            <OfferColumn title="Assessments" items={assessments} icon="assessment" />
+            <OfferColumn title="Tests" items={tests} icon="test" />
           </div>
         </div>
       </section>
@@ -99,12 +97,13 @@ function offerPath(p: Product): string {
   return `/tests/${p.slug}`;
 }
 
-function OfferColumn({ title, items }: { title: string; items: Product[] }) {
+function OfferColumn({ title, items, icon }: { title: string; items: Product[]; icon: CategoryKey }) {
   return (
     <div className="flex flex-col">
-      <p className="border-b-2 border-primary pb-4 font-mono text-[11px] font-bold uppercase tracking-widest">
-        {title}
-      </p>
+      <div className="flex items-center justify-between border-b-2 border-primary pb-4">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-widest">{title}</p>
+        <CategoryIcon k={icon} className="h-8 w-8" />
+      </div>
       <ul className="flex-1 divide-y divide-border">
         {items.map((p) => (
           <li key={p.slug}>
