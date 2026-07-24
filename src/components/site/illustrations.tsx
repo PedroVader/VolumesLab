@@ -451,6 +451,32 @@ export function CategoryIcon({ k, className = "" }: { k: CategoryKey; className?
   );
 }
 
+/* ---------------- Hand-drawn arrow ---------------- */
+
+export function HandArrow({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 28 16"
+      fill="none"
+      role="img"
+      aria-hidden
+      className={className}
+      preserveAspectRatio="xMidYMid meet"
+    >
+      {/* shaft with a slight hand-drawn wobble */}
+      <path d="M2 8.4 C 9 7.2, 15 9.1, 23 7.9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      {/* arrowhead as a loose chevron */}
+      <path
+        d="M17 3 C 19.4 5, 21.6 6.8, 23.4 8 C 21.4 9.3, 19.3 11.1, 17.6 13.2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function ProductIllustration({ k, className = "" }: { k: IllustrationKey; className?: string }) {
   const Inner = illustrations[k];
   return (

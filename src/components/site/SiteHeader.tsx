@@ -3,7 +3,7 @@ import { useState } from "react";
 import { memberships, assessments, tests } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
 import { CartDrawer } from "./CartDrawer";
-import { CategoryIcon, type CategoryKey } from "./illustrations";
+import { CategoryIcon, HandArrow, type CategoryKey } from "./illustrations";
 
 type MenuKey = "memberships" | "assessments" | "tests" | null;
 
@@ -46,9 +46,7 @@ export function SiteHeader() {
             className="group inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-[12px] tracking-widest text-primary-foreground shadow-sm transition-colors hover:bg-primary-strong"
           >
             Book Now
-            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
-              →
-            </span>
+            <HandArrow className="h-3.5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
 
