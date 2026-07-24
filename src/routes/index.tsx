@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { HandDrawnMap } from "@/components/site/HandDrawnMap";
@@ -67,9 +68,7 @@ function Home() {
           <div className="border border-border bg-card">
             <HandDrawnMap />
           </div>
-          <p className="border-t border-border pt-4 text-sm text-foreground/85">
-            Monday–Friday: 7am–8pm <span className="mx-2 text-muted">/</span> Saturday–Sunday: 9am–6pm
-          </p>
+          <OpeningHours />
         </div>
       </section>
 
@@ -88,6 +87,48 @@ function Home() {
         </div>
       </section>
     </SiteChrome>
+  );
+}
+
+function OpeningHours() {
+  const [open, setOpen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    const day = now.getDay(); // 0 Sun … 6 Sat
+    const h = now.getHours() + now.getMinutes() / 60;
+    const isWeekday = day >= 1 && day <= 5;
+    setOpen(isWeekday ? h >= 7 && h < 20 : h >= 9 && h < 18);
+  }, []);
+
+  return (
+    <div className="mt-6 flex flex-col gap-5 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
+          [ Opening hours ]
+        </p>
+        {open !== null && (
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest">
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${open ? "animate-pulse bg-primary" : "bg-muted"}`}
+            />
+            <span className={open ? "text-foreground" : "text-muted"}>
+              {open ? "Open now" : "Closed"}
+            </span>
+          </span>
+        )}
+      </div>
+      <dl className="flex flex-wrap gap-x-10 gap-y-2 font-mono text-[11px] uppercase tracking-widest">
+        <div className="flex items-baseline gap-3">
+          <dt className="text-muted">Mon–Fri</dt>
+          <dd className="tabular-nums text-foreground">07:00 – 20:00</dd>
+        </div>
+        <div className="flex items-baseline gap-3">
+          <dt className="text-muted">Sat–Sun</dt>
+          <dd className="tabular-nums text-foreground">09:00 – 18:00</dd>
+        </div>
+      </dl>
+    </div>
   );
 }
 

@@ -24,7 +24,7 @@ export function SiteHeader() {
           className="flex items-center gap-3 leading-none"
         >
           <img src="/volumes-icon.png" alt="" className="h-8 w-8" />
-          <span className="font-brand text-[15px] font-semibold uppercase tracking-[0.2em]">
+          <span className="font-brand text-[15px] font-semibold uppercase tracking-[0.04em]">
             Volumes Lab
           </span>
         </Link>
@@ -42,9 +42,12 @@ export function SiteHeader() {
           </button>
           <Link
             to="/book"
-            className="bg-primary px-4 py-2 tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
+            className="group inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-[12px] tracking-widest text-primary-foreground shadow-sm transition-colors hover:bg-primary-strong"
           >
             Book Now
+            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
+              →
+            </span>
           </Link>
         </div>
 
