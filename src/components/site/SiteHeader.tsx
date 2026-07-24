@@ -21,10 +21,10 @@ export function SiteHeader() {
         <Link
           to="/"
           onClick={() => setMobileOpen(false)}
-          className="flex items-center gap-3 leading-none"
+          className="flex items-center gap-2.5 leading-none"
         >
           <img src="/volumes-icon.png" alt="" className="h-8 w-8" />
-          <span className="font-brand text-[15px] font-semibold uppercase tracking-[0.04em]">
+          <span className="font-brand text-[15px] font-semibold uppercase tracking-normal">
             Volumes Lab
           </span>
         </Link>
