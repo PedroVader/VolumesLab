@@ -96,8 +96,21 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    cursor: var(--cursor-arrow), auto;
   }
   h1, h2, h3, h4 { font-family: var(--font-display); }
+
+  /* Custom coral pointer (brand cursor) */
+  a, button, [role="button"], summary, label[for], .cursor-pointer {
+    cursor: var(--cursor-arrow), pointer;
+  }
+  input, textarea, select, [contenteditable] {
+    cursor: text;
+  }
+}
+
+:root {
+  --cursor-arrow: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='26'%20height='26'%20viewBox='0%200%2026%2026'%3E%3Cpath%20d='M5%203L5%2019.5L9.4%2015.3L12.6%2022L15.2%2020.8L12%2014.2L18.2%2014.2Z'%20fill='%23D33620'%20stroke='white'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3C/svg%3E") 5 3;
 }
 
 @keyframes vl-slide-up {
