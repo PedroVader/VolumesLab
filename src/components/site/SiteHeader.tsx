@@ -3,6 +3,7 @@ import { useState } from "react";
 import { memberships, assessments, tests } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
 import { CartDrawer } from "./CartDrawer";
+import { CategoryIcon, type CategoryKey } from "./illustrations";
 
 type MenuKey = "memberships" | "assessments" | "tests" | null;
 
@@ -31,9 +32,9 @@ export function SiteHeader() {
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-x-6 font-mono text-[11px] font-bold uppercase tracking-widest text-foreground md:flex">
-          <MenuTrigger label="Memberships" active={open === "memberships"} onOpen={() => setOpen("memberships")} />
-          <MenuTrigger label="Assessments" active={open === "assessments"} onOpen={() => setOpen("assessments")} />
-          <MenuTrigger label="Tests" active={open === "tests"} onOpen={() => setOpen("tests")} />
+          <MenuTrigger label="Memberships" icon="membership" active={open === "memberships"} onOpen={() => setOpen("memberships")} />
+          <MenuTrigger label="Assessments" icon="assessment" active={open === "assessments"} onOpen={() => setOpen("assessments")} />
+          <MenuTrigger label="Tests" icon="test" active={open === "tests"} onOpen={() => setOpen("tests")} />
           <button
             onClick={() => setCartOpen(true)}
             className="relative border border-border px-3 py-2 tracking-widest hover:border-foreground"
@@ -128,13 +129,26 @@ export function SiteHeader() {
   );
 }
 
-function MenuTrigger({ label, active, onOpen }: { label: string; active: boolean; onOpen: () => void }) {
+function MenuTrigger({
+  label,
+  icon,
+  active,
+  onOpen,
+}: {
+  label: string;
+  icon: CategoryKey;
+  active: boolean;
+  onOpen: () => void;
+}) {
   return (
     <button
       onMouseEnter={onOpen}
       onFocus={onOpen}
-      className={`py-2 transition-colors ${active ? "text-primary" : "text-foreground/80 hover:text-primary"}`}
+      className={`inline-flex items-center gap-2 py-2 transition-colors ${
+        active ? "text-primary" : "text-foreground/80 hover:text-primary"
+      }`}
     >
+      <CategoryIcon k={icon} className="h-4 w-4 shrink-0" />
       {label}
     </button>
   );
