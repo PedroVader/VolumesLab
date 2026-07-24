@@ -65,7 +65,7 @@ function Home() {
       {/* Map */}
       <section className="border-t border-border px-6 py-16 md:py-20">
         <div className="mx-auto max-w-7xl">
-          <div className="border border-border bg-card">
+          <div className="max-w-3xl border border-border bg-card">
             <HandDrawnMap />
           </div>
           <OpeningHours />
