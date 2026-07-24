@@ -11,7 +11,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         className="pointer-events-none fixed inset-0 z-[60]"
         style={{
           boxShadow:
-            "inset 0 0 4px hsl(9 74% 48% / 0.45), inset 0 0 80px hsl(9 74% 48% / 0.16), inset 0 0 160px hsl(9 74% 48% / 0.08)",
+            "inset 0 0 2px hsl(9 74% 48% / 0.55), inset 0 0 14px hsl(9 74% 48% / 0.10)",
         }}
       />
       {/* Vertical margin lines */}
