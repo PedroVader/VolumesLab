@@ -91,8 +91,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Volumes Lab, Human Health & Performance Lab in Madrid" },
       { name: "twitter:description", content: "Lab-grade health and performance testing in central Madrid." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a5097956-cef1-436c-8e11-b4e1c7453b0e/id-preview-1b7b68f1--4abebc4b-97b2-4e7a-b0ea-3ffed00a3619.lovable.app-1784290539568.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a5097956-cef1-436c-8e11-b4e1c7453b0e/id-preview-1b7b68f1--4abebc4b-97b2-4e7a-b0ea-3ffed00a3619.lovable.app-1784290539568.png" },
+      { property: "og:image", content: "https://volumes-lab.vercel.app/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "625" },
+      { property: "og:url", content: "https://volumes-lab.vercel.app" },
+      { name: "twitter:image", content: "https://volumes-lab.vercel.app/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
