@@ -14,6 +14,7 @@ export function SiteHeader() {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0));
 
   return (
+    <>
     <nav
       className="relative z-50 border-b border-border bg-background/95 backdrop-blur-md"
       onMouseLeave={() => setOpen(null)}
@@ -122,8 +123,9 @@ export function SiteHeader() {
         </div>
       )}
 
-      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </nav>
+    <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
+    </>
   );
 }
 
