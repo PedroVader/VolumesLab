@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
+import { MembershipCard } from "@/components/site/cards";
 import { memberships } from "@/data/catalog";
 
 export const Route = createFileRoute("/memberships/")({
@@ -38,33 +39,7 @@ function MembershipsLanding() {
       <section className="px-6 py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2">
           {memberships.map((m) => (
-            <article key={m.slug} className="flex flex-col border border-border bg-card p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-primary">
-                {m.membership?.goal}
-              </p>
-              <h2 className="mt-4 font-display text-3xl font-extrabold uppercase tracking-tight">{m.name}</h2>
-              <p className="mt-3 text-base leading-relaxed text-muted">{m.shortDescription}</p>
-              <ul className="mt-6 flex-1 space-y-2 text-sm text-foreground/85">
-                {m.measures.slice(0, 5).map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span aria-hidden className="text-primary">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              {m.membership?.commitment && (
-                <p className="mt-6 font-mono text-[10px] uppercase tracking-widest text-muted">
-                  {m.membership.commitment}
-                </p>
-              )}
-              <Link
-                to="/memberships/$slug"
-                params={{ slug: m.slug }}
-                className="mt-6 inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-              >
-                {m.ctaLabel ?? "Explore Membership"}
-              </Link>
-            </article>
+            <MembershipCard key={m.slug} m={m} />
           ))}
         </div>
       </section>

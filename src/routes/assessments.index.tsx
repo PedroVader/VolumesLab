@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
+import { ProductCard } from "@/components/site/cards";
 import { assessments, tests } from "@/data/catalog";
 
 export const Route = createFileRoute("/assessments/")({
@@ -42,26 +43,7 @@ function AssessmentsLanding() {
       <section className="px-6 py-16">
         <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
           {orderedAssessments.map((a) => (
-            <article key={a.slug} className="flex flex-col border border-border bg-card p-6">
-              <h2 className="font-display text-2xl font-bold uppercase tracking-tight">{a.name}</h2>
-              <p className="mt-3 flex-1 text-sm text-muted">{a.shortDescription}</p>
-              {a.badges?.map((b) => (
-                <p key={b} className="mt-4 font-mono text-[9px] uppercase tracking-widest text-primary">
-                  [ {b} ]
-                </p>
-              ))}
-              <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
-                <span className="font-display text-xl font-bold">€{a.price}</span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{a.duration}</span>
-              </div>
-              <Link
-                to="/assessments/$slug"
-                params={{ slug: a.slug }}
-                className="mt-4 inline-flex w-fit items-center bg-primary px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-              >
-                {a.ctaLabel ?? "Book"}
-              </Link>
-            </article>
+            <ProductCard key={a.slug} p={a} />
           ))}
         </div>
       </section>
