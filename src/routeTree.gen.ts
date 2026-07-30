@@ -9,17 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrainingRouteImport } from './routes/training'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestsIndexRouteImport } from './routes/tests.index'
+import { Route as MembershipsIndexRouteImport } from './routes/memberships.index'
+import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index'
+import { Route as AboutIndexRouteImport } from './routes/about.index'
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as MembershipsSlugRouteImport } from './routes/memberships.$slug'
 import { Route as BookCheckoutRouteImport } from './routes/book.checkout'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AssessmentsSlugRouteImport } from './routes/assessments.$slug'
+import { Route as AboutTeamRouteImport } from './routes/about.team'
+import { Route as AboutLocationRouteImport } from './routes/about.location'
+import { Route as AboutLabRouteImport } from './routes/about.lab'
 
+const TrainingRoute = TrainingRouteImport.update({
+  id: '/training',
+  path: '/training',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
@@ -28,6 +42,11 @@ const FaqRoute = FaqRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -43,6 +62,26 @@ const BlogRoute = BlogRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestsIndexRoute = TestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipsIndexRoute = MembershipsIndexRouteImport.update({
+  id: '/memberships/',
+  path: '/memberships/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentsIndexRoute = AssessmentsIndexRouteImport.update({
+  id: '/assessments/',
+  path: '/assessments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutIndexRoute = AboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestsSlugRoute = TestsSlugRouteImport.update({
@@ -70,43 +109,85 @@ const AssessmentsSlugRoute = AssessmentsSlugRouteImport.update({
   path: '/assessments/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutTeamRoute = AboutTeamRouteImport.update({
+  id: '/about/team',
+  path: '/about/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutLocationRoute = AboutLocationRouteImport.update({
+  id: '/about/location',
+  path: '/about/location',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutLabRoute = AboutLabRouteImport.update({
+  id: '/about/lab',
+  path: '/about/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRouteWithChildren
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/training': typeof TrainingRoute
+  '/about/lab': typeof AboutLabRoute
+  '/about/location': typeof AboutLocationRoute
+  '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/about/': typeof AboutIndexRoute
+  '/assessments/': typeof AssessmentsIndexRoute
+  '/memberships/': typeof MembershipsIndexRoute
+  '/tests/': typeof TestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRouteWithChildren
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/training': typeof TrainingRoute
+  '/about/lab': typeof AboutLabRoute
+  '/about/location': typeof AboutLocationRoute
+  '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/about': typeof AboutIndexRoute
+  '/assessments': typeof AssessmentsIndexRoute
+  '/memberships': typeof MembershipsIndexRoute
+  '/tests': typeof TestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRouteWithChildren
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/training': typeof TrainingRoute
+  '/about/lab': typeof AboutLabRoute
+  '/about/location': typeof AboutLocationRoute
+  '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/about/': typeof AboutIndexRoute
+  '/assessments/': typeof AssessmentsIndexRoute
+  '/memberships/': typeof MembershipsIndexRoute
+  '/tests/': typeof TestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,52 +195,95 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/book'
+    | '/cart'
     | '/contact'
     | '/faq'
+    | '/training'
+    | '/about/lab'
+    | '/about/location'
+    | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/about/'
+    | '/assessments/'
+    | '/memberships/'
+    | '/tests/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/blog'
     | '/book'
+    | '/cart'
     | '/contact'
     | '/faq'
+    | '/training'
+    | '/about/lab'
+    | '/about/location'
+    | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/about'
+    | '/assessments'
+    | '/memberships'
+    | '/tests'
   id:
     | '__root__'
     | '/'
     | '/blog'
     | '/book'
+    | '/cart'
     | '/contact'
     | '/faq'
+    | '/training'
+    | '/about/lab'
+    | '/about/location'
+    | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/about/'
+    | '/assessments/'
+    | '/memberships/'
+    | '/tests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRouteWithChildren
   BookRoute: typeof BookRouteWithChildren
+  CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  TrainingRoute: typeof TrainingRoute
+  AboutLabRoute: typeof AboutLabRoute
+  AboutLocationRoute: typeof AboutLocationRoute
+  AboutTeamRoute: typeof AboutTeamRoute
   AssessmentsSlugRoute: typeof AssessmentsSlugRoute
   MembershipsSlugRoute: typeof MembershipsSlugRoute
   TestsSlugRoute: typeof TestsSlugRoute
+  AboutIndexRoute: typeof AboutIndexRoute
+  AssessmentsIndexRoute: typeof AssessmentsIndexRoute
+  MembershipsIndexRoute: typeof MembershipsIndexRoute
+  TestsIndexRoute: typeof TestsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/training': {
+      id: '/training'
+      path: '/training'
+      fullPath: '/training'
+      preLoaderRoute: typeof TrainingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -172,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -193,6 +324,34 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tests/': {
+      id: '/tests/'
+      path: '/tests'
+      fullPath: '/tests/'
+      preLoaderRoute: typeof TestsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memberships/': {
+      id: '/memberships/'
+      path: '/memberships'
+      fullPath: '/memberships/'
+      preLoaderRoute: typeof MembershipsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments/': {
+      id: '/assessments/'
+      path: '/assessments'
+      fullPath: '/assessments/'
+      preLoaderRoute: typeof AssessmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/': {
+      id: '/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tests/$slug': {
@@ -230,6 +389,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssessmentsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about/team': {
+      id: '/about/team'
+      path: '/about/team'
+      fullPath: '/about/team'
+      preLoaderRoute: typeof AboutTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/location': {
+      id: '/about/location'
+      path: '/about/location'
+      fullPath: '/about/location'
+      preLoaderRoute: typeof AboutLocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/lab': {
+      id: '/about/lab'
+      path: '/about/lab'
+      fullPath: '/about/lab'
+      preLoaderRoute: typeof AboutLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -257,11 +437,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRouteWithChildren,
   BookRoute: BookRouteWithChildren,
+  CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  TrainingRoute: TrainingRoute,
+  AboutLabRoute: AboutLabRoute,
+  AboutLocationRoute: AboutLocationRoute,
+  AboutTeamRoute: AboutTeamRoute,
   AssessmentsSlugRoute: AssessmentsSlugRoute,
   MembershipsSlugRoute: MembershipsSlugRoute,
   TestsSlugRoute: TestsSlugRoute,
+  AboutIndexRoute: AboutIndexRoute,
+  AssessmentsIndexRoute: AssessmentsIndexRoute,
+  MembershipsIndexRoute: MembershipsIndexRoute,
+  TestsIndexRoute: TestsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
