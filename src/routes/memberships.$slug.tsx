@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { memberships } from "@/data/catalog";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import { ProductPage } from "@/components/site/ProductPage";
+import { ProductDetail } from "@/components/site/ProductDetail";
 
 export const Route = createFileRoute("/memberships/$slug")({
   component: Page,
@@ -35,7 +35,7 @@ function Page() {
   const { product } = Route.useLoaderData();
   return (
     <SiteChrome>
-      <ProductPage product={product} />
+      <ProductDetail product={product} />
     </SiteChrome>
   );
 }

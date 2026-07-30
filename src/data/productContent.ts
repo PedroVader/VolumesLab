@@ -118,7 +118,7 @@ export const productContent: Record<string, ProductContent> = {
   },
 
   // ---------------- ASSESSMENTS ----------------
-  foundations: {
+  foundational: {
     illustration: "foundations",
     heroProof: ["The recommended starting point", "Report within 48h", "Clinical debrief included"],
     outcomes: [

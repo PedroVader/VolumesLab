@@ -24,7 +24,7 @@ export const Route = createFileRoute("/book")({
   }),
 });
 
-const POPULAR = new Set(["foundations", "vo2max", "health-performance"]);
+const POPULAR = new Set(["foundational", "vo2max", "health-performance"]);
 
 const bookFaqs = [
   {
@@ -71,7 +71,7 @@ function BookIndex() {
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             <Link
               to="/assessments/$slug"
-              params={{ slug: "foundations" }}
+              params={{ slug: "foundational" }}
               className="group flex flex-col border border-foreground p-8 transition-colors hover:bg-foreground hover:text-primary-foreground"
             >
               <p className="font-mono text-[10px] uppercase tracking-widest opacity-70">Most popular</p>
@@ -211,7 +211,7 @@ function ComparisonTable() {
               {assessments.map((a) => (
                 <p key={a.slug} className="font-display text-xl font-extrabold uppercase tracking-tight">
                   {a.name}
-                  {a.slug === "foundations" && (
+                  {a.slug === "foundational" && (
                     <span className="ml-3 align-middle font-mono text-[9px] uppercase tracking-widest text-muted">
                       [ Most popular ]
                     </span>

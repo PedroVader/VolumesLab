@@ -138,7 +138,7 @@ export const memberships: Product[] = [
     giftable: false,
     membership: {
       goal: "Medically supported weight management",
-      initialAssessment: "foundations",
+      initialAssessment: "foundational",
       trainingFrequency: "One session per week",
       doctorInvolvement: "Initial consultation, then doctor review every three months",
       retesting: "Every three months",
@@ -153,7 +153,7 @@ export const memberships: Product[] = [
 
 export const assessments: Product[] = [
   {
-    slug: "foundations", // route /assessments/foundations (brief slug "foundational" to be aligned in the assessments rebuild)
+    slug: "foundational",
     name: "Foundational",
     tagline: "Establish your essential baseline.",
     shortDescription:
