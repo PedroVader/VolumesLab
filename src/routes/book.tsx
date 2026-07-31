@@ -1,346 +1,198 @@
+import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteChrome } from "@/components/site/SiteChrome";
-import { BookBand } from "@/components/site/BookBand";
-import {
-  Eyebrow,
-  SectionTitle,
-  TestimonialBand,
-  FaqList,
-} from "@/components/site/blocks";
-import { testimonials } from "@/data/productContent";
-import { memberships, assessments, tests, packages, type Product } from "@/data/catalog";
-import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
+import { SiteChrome } from "@/components/site/SiteChrome";
+import { Eyebrow, SectionTitle, FaqList } from "@/components/site/blocks";
+import { memberships, assessments, tests, training, productPath, type Product } from "@/data/catalog";
+import { bookingTarget } from "@/lib/booking";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/book")({
   component: BookIndex,
+  validateSearch: (search: Record<string, unknown>): { add?: string } => ({
+    add: typeof search.add === "string" ? search.add : undefined,
+  }),
   head: () => ({
     meta: [
-      { title: "Book Appointment, Volumes Lab Madrid" },
-      { name: "description", content: "Book memberships, complete assessments, individual tests and packages at Volumes Lab, Calle Churruca 5, Madrid." },
-      { property: "og:title", content: "Book Appointment, Volumes Lab Madrid" },
-      { property: "og:description", content: "Add memberships, assessments, tests and packages to your cart." },
+      { title: "Book a Service, Volumes Lab Madrid" },
+      {
+        name: "description",
+        content:
+          "Book a membership, complete assessment, individual test or personal training session at Volumes Lab, Calle Churruca 5, Madrid.",
+      },
+      { property: "og:title", content: "Book a Service, Volumes Lab Madrid" },
+      { property: "og:description", content: "Choose a membership, assessment, test or training option." },
     ],
   }),
 });
 
-const POPULAR = new Set(["foundational", "vo2max", "health-performance"]);
+const trainingSessions = training.filter((t) => t.categoryLabel === "Training Session");
+const trainingPackages = training.filter((t) => t.categoryLabel === "Training Package");
 
 const bookFaqs = [
   {
     q: "What happens after I book?",
-    a: "Our team confirms your appointment personally by email within 24 hours, with full preparation instructions for your test.",
+    a: "Our team confirms your appointment personally by email within 24 hours, with full preparation instructions.",
   },
   {
     q: "Can I change my appointment?",
-    a: "Yes, cancel or reschedule free of charge up to 48 hours before. Within 48 hours, a 50% fee applies.",
+    a: "Yes, cancel or reschedule free of charge up to 48 hours before. Within 48 hours a fee applies.",
   },
   {
     q: "How do gift cards work?",
-    a: "Every test, assessment and package can be purchased as a gift card. We email you a redeemable code, and the recipient books whenever suits them.",
+    a: "Most tests, assessments and packages can be purchased as a gift card. We email a redeemable code and the recipient books whenever suits them.",
   },
 ];
 
 function BookIndex() {
+  const { add } = Route.useSearch();
+
+  // Deep-link: /book?add=<slug> scrolls to and highlights the matching tile (brief 9.5).
+  useEffect(() => {
+    if (!add) return;
+    const el = document.getElementById(`item-${add}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.setAttribute("data-highlight", "true");
+    const t = setTimeout(() => el.removeAttribute("data-highlight"), 2000);
+    return () => clearTimeout(t);
+  }, [add]);
+
   return (
     <SiteChrome>
-      {/* ---------- HERO ---------- */}
-      <section className="border-b border-border px-6 py-24">
+      {/* Direct landing state (brief 9.6) */}
+      <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Book appointment</Eyebrow>
-          <h1 className="mt-6 font-display text-5xl font-extrabold uppercase tracking-tight md:text-7xl">
-            Book Now.
-          </h1>
+          <SectionTitle className="mt-6 max-w-3xl">Book a Volumes Lab service</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
-            Every item can be booked for yourself or purchased as a gift card. Your cart is saved
-            automatically, and our team confirms every booking personally within 24 hours.
+            Choose a membership, comprehensive assessment, individual test or personal training
+            option. Not sure what fits? Compare memberships or assessments before booking.
           </p>
           <ul className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[10px] uppercase tracking-widest text-muted">
+            <li>✓ Confirmed personally within 24h</li>
             <li>✓ Free reschedule up to 48h before</li>
-            <li>✓ Physician-led lab in Chamberí</li>
-            <li>✓ Reports reviewed in person</li>
+            <li>✓ Physician-led lab in Madrid</li>
           </ul>
         </div>
       </section>
 
-      {/* ---------- START HERE ---------- */}
-      <section className="border-b border-border px-6 py-20">
-        <div className="mx-auto max-w-7xl">
-          <Eyebrow>Start here</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Not sure where to begin? Three doors in.</SectionTitle>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <Link
-              to="/assessments/$slug"
-              params={{ slug: "foundational" }}
-              className="group flex flex-col border border-foreground p-8 transition-colors hover:bg-foreground hover:text-primary-foreground"
-            >
-              <p className="font-mono text-[10px] uppercase tracking-widest opacity-70">Most popular</p>
-              <h3 className="mt-4 font-display text-2xl font-extrabold uppercase tracking-tight">
-                The Foundational assessment
-              </h3>
-              <p className="mt-4 flex-1 text-sm leading-relaxed opacity-80">
-                90 minutes, four pillars, body composition, strength, mobility, metabolism, and a
-                clinical debrief with your action plan. The baseline everything else builds on.
-              </p>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-widest">€490, View →</p>
-            </Link>
-            <Link
-              to="/contact"
-              className="group flex flex-col border border-border p-8 transition-colors hover:border-foreground"
-            >
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted">Talk to a human</p>
-              <h3 className="mt-4 font-display text-2xl font-extrabold uppercase tracking-tight">
-                A free 15-minute call
-              </h3>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
-                Tell us what you're trying to change and we'll tell you honestly which test fits ·
-                and which ones you don't need.
-              </p>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted group-hover:text-foreground">
-                Contact us →
-              </p>
-            </Link>
-            <a
-              href="#gift-cards"
-              className="group flex flex-col border border-border p-8 transition-colors hover:border-foreground"
-            >
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted">For someone else</p>
-              <h3 className="mt-4 font-display text-2xl font-extrabold uppercase tracking-tight">
-                Give data, not stuff
-              </h3>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">
-                Every test, assessment and package is available as a gift card, from €40 grip tests
-                to the full Longevity workup.
-              </p>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted group-hover:text-foreground">
-                Gift cards →
-              </p>
-            </a>
-          </div>
-        </div>
-      </section>
+      <BookingCategory title="Memberships" items={memberships} note="Billed monthly · Medical oversight included" />
+      <BookingCategory title="Complete Assessments" items={assessments} note="The full picture in a single visit" />
+      <BookingCategory title="Individual Tests" items={tests} note="One number, measured properly" />
+      <BookingCategory title="Training Sessions" items={trainingSessions} note="Book one private session" />
+      <BookingCategory title="Training Packages" items={trainingPackages} note="Train regularly without a membership" />
 
-      {/* ---------- MEMBERSHIPS ---------- */}
-      <CatalogSection title="Memberships" items={memberships} note="Billed monthly · Medical oversight included" />
-
-      {/* ---------- ASSESSMENTS + COMPARISON ---------- */}
-      <CatalogSection title="Complete Assessments" items={assessments} note="The full picture in a single visit" />
-      <ComparisonTable />
-
-      {/* ---------- TESTS ---------- */}
-      <CatalogSection title="Individual Tests" items={tests} note="One number, measured properly" />
-
-      {/* ---------- PACKAGES ---------- */}
-      <CatalogSection title="Buy Packages" items={packages} note="Coached sessions & retest bundles" />
-
-      {/* ---------- GIFT CARDS ---------- */}
-      <section id="gift-cards" className="border-b border-border px-6 py-20">
-        <div className="mx-auto grid max-w-7xl items-start gap-12 md:grid-cols-2">
-          <div>
-            <Eyebrow>Gift cards</Eyebrow>
-            <SectionTitle className="mt-6">The gift of knowing.</SectionTitle>
-          </div>
-          <div>
-            <p className="text-lg leading-relaxed text-muted">
-              Most gifts get forgotten by February. A VO2max test, a body composition scan or a full
-              assessment gets talked about for years. Choose "Gift card" on any product and we'll
-              email you a code the recipient can redeem whenever suits them.
-            </p>
-            <ul className="mt-8 space-y-3 font-mono text-[11px] uppercase tracking-widest text-muted">
-              <li>· Valid 12 months</li>
-              <li>· Delivered by email, instantly</li>
-              <li>· Recipient books their own date</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- SOCIAL PROOF ---------- */}
-      <TestimonialBand items={testimonials} />
-
-      {/* ---------- MINI FAQ ---------- */}
-      <section className="px-6 py-20">
+      {/* Mini FAQ */}
+      <section className="px-6 py-16 md:py-20">
         <div className="mx-auto max-w-4xl">
           <Eyebrow>Before you book</Eyebrow>
           <div className="mt-10">
             <FaqList items={bookFaqs} />
           </div>
           <p className="mt-8 font-mono text-[11px] uppercase tracking-widest text-muted">
-            More questions? <Link to="/faq" className="text-foreground underline underline-offset-4">Read the full FAQ →</Link>
+            More questions?{" "}
+            <Link to="/faq" className="text-foreground underline underline-offset-4 hover:text-primary">
+              Read the full FAQ →
+            </Link>
           </p>
         </div>
       </section>
-
-      <BookBand text="Book appointment" />
     </SiteChrome>
   );
 }
 
-/* ---------------- Comparison table for the 3 assessments ---------------- */
-
-function ComparisonTable() {
-  const rows: { label: string; values: React.ReactNode[] }[] = [
-    { label: "Price", values: ["€490", "€890", "€1,190"] },
-    { label: "Duration", values: ["90 min", "3 hours", "3.5 hours"] },
-    {
-      label: "Builds on",
-      values: [
-        "The baseline",
-        "Foundational + VO2max & bone density",
-        "Foundational + lactate, gait & force plates",
-      ],
-    },
-    {
-      label: "Best for",
-      values: [
-        "First visit, everyone",
-        "Healthspan & prevention",
-        "Anyone chasing numbers",
-      ],
-    },
-  ];
+function BookingCategory({ title, items, note }: { title: string; items: Product[]; note?: string }) {
+  if (items.length === 0) return null;
   return (
-    <section className="border-b border-border px-6 py-20">
+    <section className="border-b border-border px-6 py-16 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <Eyebrow>Compare</Eyebrow>
-        <SectionTitle className="mt-6 max-w-3xl">Which assessment is yours?</SectionTitle>
-        <div className="mt-12 overflow-x-auto">
-          <div className="min-w-[720px]">
-            <div className="grid grid-cols-4 border-b border-border pb-4">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted">Assessment</p>
-              {assessments.map((a) => (
-                <p key={a.slug} className="font-display text-xl font-extrabold uppercase tracking-tight">
-                  {a.name}
-                  {a.slug === "foundational" && (
-                    <span className="ml-3 align-middle font-mono text-[9px] uppercase tracking-widest text-muted">
-                      [ Most popular ]
-                    </span>
-                  )}
-                </p>
-              ))}
-            </div>
-            {rows.map((r) => (
-              <div key={r.label} className="grid grid-cols-4 border-b border-border py-4">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-muted">{r.label}</p>
-                {r.values.map((v, i) => (
-                  <p key={i} className="pr-6 text-sm leading-relaxed text-foreground/85">{v}</p>
-                ))}
-              </div>
-            ))}
-            <div className="grid grid-cols-4 pt-6">
-              <p />
-              {assessments.map((a) => (
-                <Link
-                  key={a.slug}
-                  to="/assessments/$slug"
-                  params={{ slug: a.slug }}
-                  className="font-mono text-[11px] uppercase tracking-widest text-foreground underline underline-offset-4 hover:opacity-70"
-                >
-                  View {a.name} →
-                </Link>
-              ))}
-            </div>
-          </div>
+        <div className="mb-10 flex flex-wrap items-baseline justify-between gap-4">
+          <h2 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">{title}</h2>
+          {note && <p className="font-mono text-[10px] uppercase tracking-widest text-muted">{note}</p>}
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- Catalog section + cards ---------------- */
-
-function CatalogSection({ title, items, note }: { title: string; items: Product[]; note?: string }) {
-  return (
-    <section className="border-b border-border px-6 py-20">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-12 flex flex-wrap items-baseline justify-between gap-4">
-          <h2 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">
-            {title}
-          </h2>
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
-            {items.length} {items.length === 1 ? "item" : "items"}
-            {note ? `, ${note}` : ""}
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {items.map((p) => (
-            <ProductCard key={p.slug} product={p} />
+            <BookingTile key={p.slug} product={p} />
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
 
-function detailPath(p: Product): string {
-  if (p.category === "membership") return `/memberships/${p.slug}`;
-  if (p.category === "assessment") return `/assessments/${p.slug}`;
-  if (p.category === "test") return `/tests/${p.slug}`;
-  return "/book";
-}
+function BookingTile({ product }: { product: Product }) {
+  const addItem = useCart((s) => s.add);
+  const giftAdded = useRef(false);
 
-function ProductCard({ product }: { product: Product }) {
-  const add = useCart((s) => s.add);
-  const popular = POPULAR.has(product.slug);
+  const target = bookingTarget(product);
+  const book = () => {
+    if (target.kind === "momence") {
+      window.open(target.href, "_blank", "noreferrer");
+      return;
+    }
+    addItem({ slug: product.slug, name: product.name, price: product.price, giftCard: false });
+    toast.success(`${product.name} added to cart`);
+  };
+  const addGift = () => {
+    addItem({ slug: product.slug, name: `${product.name} (Gift)`, price: product.price, giftCard: true });
+    toast.success(`${product.name} gift card added`);
+    giftAdded.current = true;
+  };
+
   return (
-    <article
-      className={`relative flex flex-col border bg-card p-6 transition-colors ${
-        popular ? "border-foreground" : "border-border hover:border-foreground"
-      }`}
+    <li
+      id={`item-${product.slug}`}
+      className="flex scroll-mt-28 flex-col border border-border bg-card p-6 transition-shadow data-[highlight]:border-primary data-[highlight]:shadow-[0_0_0_2px_var(--color-primary)]"
     >
-      {popular && (
-        <p className="absolute -top-2.5 left-6 bg-background px-2 font-mono text-[9px] uppercase tracking-widest text-foreground">
-          [ Most popular ]
-        </p>
-      )}
       <div className="flex-1">
-        <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted">
-          {product.categoryLabel}
-        </p>
-        <h3 className="font-display text-2xl font-bold leading-tight">{product.name}</h3>
-        <p className="mt-3 text-sm text-muted">{product.tagline}</p>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-muted">{product.categoryLabel}</p>
+        <h3 className="mt-2 font-display text-2xl font-bold leading-tight">{product.name}</h3>
+        <p className="mt-3 text-sm text-muted">{product.shortDescription ?? product.tagline}</p>
+        {product.badges?.map((b) => (
+          <p key={b} className="mt-3 font-mono text-[9px] font-bold uppercase tracking-widest text-primary">
+            [ {b} ]
+          </p>
+        ))}
       </div>
       <div className="mt-6 flex items-baseline justify-between border-t border-border pt-4">
-        <span className="font-display text-2xl font-bold">€{product.price}</span>
-        {product.duration && <span className="font-mono text-[10px] uppercase text-muted">{product.duration}</span>}
+        <span className="font-display text-2xl font-bold">
+          €{product.price}
+          {product.category === "membership" && <span className="ml-1 text-sm font-normal text-muted">/mo</span>}
+        </span>
+        {product.duration && (
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{product.duration}</span>
+        )}
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
         <button
-          onClick={() => {
-            add({ slug: product.slug, name: product.name, price: product.price, giftCard: false });
-            toast.success(`${product.name} added to cart`);
-          }}
-          className="bg-primary py-2 font-mono text-[10px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
+          onClick={book}
+          className="bg-primary py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary-strong"
         >
-          Book · €{product.price}
+          {product.ctaLabel ?? "Book"}
         </button>
         {product.giftable ? (
           <button
-            onClick={() => {
-              add({ slug: product.slug, name: `${product.name} (Gift)`, price: product.price, giftCard: true });
-              toast.success(`${product.name} gift card added`);
-            }}
-            className="border border-border py-2 font-mono text-[10px] uppercase tracking-widest hover:border-foreground"
+            onClick={addGift}
+            className="border border-border py-2.5 font-mono text-[10px] uppercase tracking-widest hover:border-foreground"
           >
             Gift card
           </button>
         ) : (
           <Link
-            to={detailPath(product)}
-            className="border border-border py-2 text-center font-mono text-[10px] uppercase tracking-widest hover:border-foreground"
+            to={productPath(product)}
+            className="border border-border py-2.5 text-center font-mono text-[10px] uppercase tracking-widest hover:border-foreground"
           >
-            View details
+            Details
           </Link>
         )}
       </div>
-      {product.category !== "package" && (
-        <Link
-          to={detailPath(product)}
-          className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted hover:text-foreground"
-        >
-          What's included →
-        </Link>
-      )}
-    </article>
+      <Link
+        to={productPath(product)}
+        className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted hover:text-primary"
+      >
+        Full details →
+      </Link>
+    </li>
   );
 }

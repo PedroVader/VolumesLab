@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import type { Product } from "@/data/catalog";
 import { assessments, findProduct, getTests, productPath } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
+import { bookingTarget } from "@/lib/booking";
 import { useCart } from "@/lib/cart";
 import { ProductIllustration } from "./illustrations";
 import { SecondaryLink } from "./cards";
@@ -29,6 +30,11 @@ export function ProductDetail({ product }: { product: Product }) {
   const isMembership = product.category === "membership";
 
   const addToCart = () => {
+    const target = bookingTarget(product);
+    if (target.kind === "momence") {
+      window.open(target.href, "_blank", "noreferrer");
+      return;
+    }
     add({ slug: product.slug, name: product.name, price: product.price, giftCard: gift });
     toast.success(`${product.name} added to cart`);
   };

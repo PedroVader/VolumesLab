@@ -12,11 +12,13 @@ import { cn } from "@/lib/utils";
 export function PrimaryLink({
   to,
   params,
+  search,
   children,
   className = "",
 }: {
   to: string;
   params?: Record<string, string>;
+  search?: Record<string, unknown>;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -24,6 +26,7 @@ export function PrimaryLink({
     <Link
       to={to}
       params={params}
+      search={search}
       className={cn(
         "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-md",
         className,
@@ -117,7 +120,7 @@ export function MembershipCard({ m }: { m: Product }) {
 
 /* ---------------- Product card (assessments / tests / training) ---------------- */
 
-export function ProductCard({ p, ctaTo }: { p: Product; ctaTo?: string }) {
+export function ProductCard({ p }: { p: Product }) {
   const detail = productPath(p);
   return (
     <article className="flex flex-col border border-border bg-card p-6">
@@ -133,7 +136,7 @@ export function ProductCard({ p, ctaTo }: { p: Product; ctaTo?: string }) {
         {p.duration && <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{p.duration}</span>}
       </div>
       <div className="mt-4 flex items-center gap-4">
-        <PrimaryLink to={ctaTo ?? detail} className="px-5 py-2.5">
+        <PrimaryLink to="/book" search={{ add: p.slug }} className="px-5 py-2.5">
           Book
         </PrimaryLink>
         <Link to={detail} className="font-mono text-[10px] uppercase tracking-widest text-muted hover:text-primary">
