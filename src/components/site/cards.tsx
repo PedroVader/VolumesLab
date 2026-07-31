@@ -28,7 +28,7 @@ export function PrimaryLink({
       params={params}
       search={search}
       className={cn(
-        "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-md",
+        "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong",
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function SecondaryLink({
       to={to}
       params={params}
       className={cn(
-        "inline-flex w-fit items-center border border-foreground px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest transition-all duration-150 hover:-translate-y-0.5 hover:bg-foreground hover:text-primary-foreground hover:shadow-md",
+        "inline-flex w-fit items-center border border-foreground px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-primary-foreground",
         className,
       )}
     >
