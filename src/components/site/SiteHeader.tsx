@@ -62,7 +62,7 @@ export function SiteHeader() {
             <Link
               to="/book"
               onMouseEnter={() => setOpen(null)}
-              className="group inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-[12px] tracking-widest text-primary-foreground shadow-sm transition-colors hover:bg-primary-strong"
+              className="group inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-[12px] tracking-widest text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-md"
             >
               Book Now
               <HandArrow className="h-3.5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
@@ -124,7 +124,11 @@ export function SiteHeader() {
               >
                 Cart{count > 0 && <span className="ml-2">[{count}]</span>}
               </button>
-              <Link to="/book" onClick={closeMobile} className="flex-1 bg-primary px-4 py-3 text-center text-primary-foreground">
+              <Link
+                to="/book"
+                onClick={closeMobile}
+                className="flex-1 bg-primary px-4 py-3 text-center text-primary-foreground transition-colors hover:bg-primary-strong"
+              >
                 Book Now
               </Link>
             </div>
