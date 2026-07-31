@@ -108,17 +108,23 @@
     cursor: text;
   }
 
-  /* Consistent hover feedback on every button */
-  button:not(:disabled) {
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease,
-      border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  /* Consistent hover feedback on every button and button-styled link */
+  button:not(:disabled),
+  a,
+  [role="button"],
+  summary {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease,
+      border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease !important;
   }
-  button:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px hsl(0 0% 0% / 0.12);
+  button:not(:disabled):hover,
+  [role="button"]:hover,
+  summary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 22px hsl(9 74% 30% / 0.28);
   }
-  button:not(:disabled):active {
-    transform: translateY(0);
+  button:not(:disabled):active,
+  [role="button"]:active {
+    transform: translateY(-1px) scale(0.99);
   }
 }
 
