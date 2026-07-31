@@ -30,7 +30,7 @@ function LocationPage() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Location</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Churruca 5, Justicia, Madrid</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Churruca 5, Justicia, Madrid</SectionTitle>
         </div>
       </section>
       <section className="px-6 py-16">

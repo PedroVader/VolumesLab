@@ -64,7 +64,7 @@ function BookIndex() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Book appointment</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Book a Volumes Lab service</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Book a Volumes Lab service</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Choose a membership, comprehensive assessment, individual test or personal training
             option. Not sure what fits? Compare memberships or assessments before booking.

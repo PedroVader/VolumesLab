@@ -36,7 +36,7 @@ function AboutLanding() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>About Volumes Lab</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">One team, one location and one clear plan</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">One team, one location and one clear plan</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Volumes Lab brings advanced testing, medical expertise and personal training together so
             every part of the program can work from the same data.

@@ -25,7 +25,7 @@ function MembershipsLanding() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Ongoing programs</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Find the right membership</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Find the right membership</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Both memberships combine objective testing with ongoing support. Health & Performance is
             built around comprehensive training and physical performance. GLP-1 Medical is designed

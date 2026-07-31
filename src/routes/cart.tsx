@@ -24,7 +24,7 @@ function CartPage() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-4xl">
           <Eyebrow>Cart</Eyebrow>
-          <SectionTitle className="mt-6">Your selected services</SectionTitle>
+          <SectionTitle as="h1" className="mt-6">Your selected services</SectionTitle>
         </div>
       </section>
 

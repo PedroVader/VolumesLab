@@ -29,7 +29,7 @@ function LabPage() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>The lab</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">
             Testing, medical expertise and training in one location
           </SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">

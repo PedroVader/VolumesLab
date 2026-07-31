@@ -24,7 +24,7 @@ function TrainingLanding() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Personal training</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">
             Training built around your goals and starting point
           </SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">

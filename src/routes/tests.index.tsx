@@ -25,7 +25,7 @@ function TestsLanding() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Individual testing</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Measure one specific area</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Measure one specific area</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Book a single test on its own, or compare our comprehensive assessments if you want a
             coordinated view across multiple areas.

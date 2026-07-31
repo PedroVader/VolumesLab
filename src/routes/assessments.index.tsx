@@ -1,7 +1,9 @@
+import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { ProductCard } from "@/components/site/cards";
+import { track } from "@/lib/analytics";
 import { assessments, tests } from "@/data/catalog";
 
 export const Route = createFileRoute("/assessments/")({
@@ -25,13 +27,17 @@ const orderedAssessments = [...assessments].sort(
 );
 
 function AssessmentsLanding() {
+  const scrolled = useRef(false);
+  useEffect(() => {
+    track("comparison_view", { comparison_type: "assessments", page: "/assessments" });
+  }, []);
   return (
     <SiteChrome>
       {/* Hero */}
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Comprehensive assessments</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Choose the right assessment</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Choose the right assessment</SectionTitle>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Each Volumes Lab assessment combines several tests into one coordinated evaluation.
             Choose the depth that matches your goals.
@@ -53,7 +59,18 @@ function AssessmentsLanding() {
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Compare</Eyebrow>
           <SectionTitle className="mt-6 max-w-3xl">What each assessment includes</SectionTitle>
-          <div className="mt-10 overflow-x-auto">
+          <div
+            className="mt-10 overflow-x-auto"
+            role="region"
+            aria-label="Assessment comparison"
+            tabIndex={0}
+            onScroll={() => {
+              if (!scrolled.current) {
+                scrolled.current = true;
+                track("table_horizontal_scroll", { table_type: "assessments", page: "/assessments" });
+              }
+            }}
+          >
             <table className="w-full min-w-[640px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-border">
@@ -101,13 +118,29 @@ function AssessmentsLanding() {
                     </td>
                   ))}
                 </tr>
-                <tr>
+                <tr className="border-b border-border">
                   <th scope="row" className="py-4 pr-6 text-left font-mono text-[10px] uppercase tracking-widest text-muted">
                     Duration
                   </th>
                   {orderedAssessments.map((a) => (
                     <td key={a.slug} className="px-4 py-4 text-center text-sm">
                       {a.duration}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <th scope="row" className="py-6 pr-6 text-left font-mono text-[10px] uppercase tracking-widest text-muted">
+                    Book
+                  </th>
+                  {orderedAssessments.map((a) => (
+                    <td key={a.slug} className="px-4 py-6 text-center">
+                      <Link
+                        to="/book"
+                        search={{ add: a.slug }}
+                        className="inline-flex items-center bg-primary px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary-strong"
+                      >
+                        Book
+                      </Link>
                     </td>
                   ))}
                 </tr>

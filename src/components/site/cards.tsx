@@ -5,6 +5,7 @@
 import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
 import { productPath } from "@/data/catalog";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 /* ---------------- CTAs ---------------- */
@@ -15,18 +16,21 @@ export function PrimaryLink({
   search,
   children,
   className = "",
+  onClick,
 }: {
   to: string;
   params?: Record<string, string>;
   search?: Record<string, unknown>;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) {
   return (
     <Link
       to={to}
       params={params}
       search={search}
+      onClick={onClick}
       className={cn(
         "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong",
         className,
@@ -82,7 +86,11 @@ export function ServiceChoiceCard({
   to: string;
 }) {
   return (
-    <Link to={to} className="group flex flex-col border border-border bg-card p-6 transition-colors hover:border-primary">
+    <Link
+      to={to}
+      onClick={() => track("service_card_click", { service: title, source_section: "choose-how-to-start" })}
+      className="group flex flex-col border border-border bg-card p-6 transition-colors hover:border-primary"
+    >
       <h3 className="font-display text-xl font-extrabold uppercase tracking-tight group-hover:text-primary">{title}</h3>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{body}</p>
       <span className="mt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-primary">

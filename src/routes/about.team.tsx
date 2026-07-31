@@ -19,7 +19,7 @@ function TeamPage() {
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>The team</Eyebrow>
-          <SectionTitle className="mt-6 max-w-3xl">Medical and performance expertise</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">Medical and performance expertise</SectionTitle>
         </div>
       </section>
       <section className="px-6 py-16">

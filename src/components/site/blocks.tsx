@@ -4,6 +4,7 @@
 
 import { Link } from "@tanstack/react-router";
 import type { SampleMetric } from "@/data/productContent";
+import { track } from "@/lib/analytics";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -13,13 +14,21 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function SectionTitle({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+export function SectionTitle({
+  children,
+  className = "",
+  as: Tag = "h2",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  as?: "h1" | "h2" | "h3";
+}) {
   return (
-    <h2
+    <Tag
       className={`font-display text-3xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-5xl ${className}`}
     >
       {children}
-    </h2>
+    </Tag>
   );
 }
 
@@ -145,7 +154,12 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
     <ul className="divide-y divide-border border-y border-border">
       {items.map((f, i) => (
         <li key={i}>
-          <details className="group py-6">
+          <details
+            className="group py-6"
+            onToggle={(e) => {
+              if (e.currentTarget.open) track("faq_expand", { question: f.q });
+            }}
+          >
             <summary className="flex cursor-pointer list-none items-baseline justify-between gap-8">
               <span className="font-display text-xl font-bold group-hover:opacity-70">{f.q}</span>
               <span className="shrink-0 font-mono text-xs uppercase text-muted group-open:hidden">Open +</span>
