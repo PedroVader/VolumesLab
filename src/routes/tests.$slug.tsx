@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { tests } from "@/data/catalog";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ProductDetail } from "@/components/site/ProductDetail";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/tests/$slug")({
   component: Page,
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/tests/$slug")({
             { property: "og:title", content: `${loaderData.product.name}, Volumes Lab` },
             { property: "og:description", content: loaderData.product.tagline },
           ],
+          links: [canonical(`/tests/${loaderData.product.slug}`)],
         }
       : { meta: [{ title: "Test, Volumes Lab" }] },
   notFoundComponent: () => (

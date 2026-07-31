@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { MembershipCard } from "@/components/site/cards";
+import { canonical } from "@/lib/seo";
 import { memberships } from "@/data/catalog";
 
 export const Route = createFileRoute("/memberships/")({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/memberships/")({
           "Two ongoing programs combining objective testing with support: the Health & Performance Membership and the GLP-1 Medical Membership.",
       },
     ],
+    links: [canonical("/memberships")],
   }),
 });
 

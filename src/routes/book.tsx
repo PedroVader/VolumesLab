@@ -5,6 +5,8 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle, FaqList } from "@/components/site/blocks";
 import { memberships, assessments, tests, training, productPath, type Product } from "@/data/catalog";
 import { bookingTarget } from "@/lib/booking";
+import { track } from "@/lib/analytics";
+import { canonical } from "@/lib/seo";
 import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/book")({
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/book")({
       { property: "og:title", content: "Book a Service, Volumes Lab Madrid" },
       { property: "og:description", content: "Choose a membership, assessment, test or training option." },
     ],
+    links: [canonical("/book")],
   }),
 });
 
@@ -127,6 +130,12 @@ function BookingTile({ product }: { product: Product }) {
 
   const target = bookingTarget(product);
   const book = () => {
+    track("book_cta_click", {
+      product: product.slug,
+      product_category: product.category,
+      source_page: "/book",
+    });
+    if (product.slug === "glp-1") track("glp1_consultation_click", { source_page: "/book" });
     if (target.kind === "momence") {
       window.open(target.href, "_blank", "noreferrer");
       return;

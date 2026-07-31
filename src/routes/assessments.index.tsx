@@ -4,6 +4,7 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { ProductCard } from "@/components/site/cards";
 import { track } from "@/lib/analytics";
+import { canonical } from "@/lib/seo";
 import { assessments, tests } from "@/data/catalog";
 
 export const Route = createFileRoute("/assessments/")({
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/assessments/")({
           "Each Volumes Lab assessment combines several tests into one coordinated evaluation. Compare Foundational, Longevity and Performance.",
       },
     ],
+    links: [canonical("/assessments")],
   }),
 });
 

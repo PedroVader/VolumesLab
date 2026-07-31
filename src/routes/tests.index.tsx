@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { ProductCard } from "@/components/site/cards";
+import { canonical } from "@/lib/seo";
 import { testGroups, getTests } from "@/data/catalog";
 
 export const Route = createFileRoute("/tests/")({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/tests/")({
           "Book a single test on its own: VO2max, 3D body composition, bone density, metabolism, strength, mobility and more.",
       },
     ],
+    links: [canonical("/tests")],
   }),
 });
 

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/about/")({
   component: AboutLanding,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/about/")({
           "One team, one location and one clear plan. Volumes Lab brings advanced testing, medical expertise and personal training together.",
       },
     ],
+    links: [canonical("/about")],
   }),
 });
 

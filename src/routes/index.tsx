@@ -11,9 +11,11 @@ import {
   SecondaryLink,
 } from "@/components/site/cards";
 import { memberships, assessments, findProduct } from "@/data/catalog";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   component: Home,
+  head: () => ({ links: [canonical("/")] }),
 });
 
 const featuredTestSlugs = ["vo2max", "3d-body-composition", "bone-mineral-density", "metabolic-assessment"];

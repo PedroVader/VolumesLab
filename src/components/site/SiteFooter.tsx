@@ -41,11 +41,11 @@ export function SiteFooter() {
           </FooterCol>
 
           <FooterCol title="Legal">
-            <FooterLink to="/faq">Privacy</FooterLink>
-            <FooterLink to="/faq">Cookies</FooterLink>
-            <FooterLink to="/faq">Terms</FooterLink>
-            <FooterLink to="/faq">Medical disclaimer</FooterLink>
-            <FooterLink to="/faq">Cancellation policy</FooterLink>
+            <FooterLink to="/legal/privacy">Privacy</FooterLink>
+            <FooterLink to="/legal/cookies">Cookies</FooterLink>
+            <FooterLink to="/legal/terms">Terms</FooterLink>
+            <FooterLink to="/legal/medical-disclaimer">Medical disclaimer</FooterLink>
+            <FooterLink to="/legal/cancellation">Cancellation policy</FooterLink>
           </FooterCol>
 
           <FooterCol title="Contact">

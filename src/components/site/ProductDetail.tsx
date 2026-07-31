@@ -9,9 +9,17 @@ import type { Product } from "@/data/catalog";
 import { assessments, findProduct, getTests, productPath } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
 import { bookingTarget } from "@/lib/booking";
+import { track } from "@/lib/analytics";
 import { useCart } from "@/lib/cart";
 import { ProductIllustration } from "./illustrations";
+import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { SecondaryLink } from "./cards";
+
+const categoryCrumb: Record<string, Crumb> = {
+  membership: { name: "Memberships", to: "/memberships" },
+  assessment: { name: "Assessments", to: "/assessments" },
+  test: { name: "Individual Tests", to: "/tests" },
+};
 import {
   Eyebrow,
   SectionTitle,
@@ -30,6 +38,12 @@ export function ProductDetail({ product }: { product: Product }) {
   const isMembership = product.category === "membership";
 
   const addToCart = () => {
+    track("book_cta_click", {
+      product: product.slug,
+      product_category: product.category,
+      source_page: productPath(product),
+    });
+    if (product.slug === "glp-1") track("glp1_consultation_click", { source_page: productPath(product) });
     const target = bookingTarget(product);
     if (target.kind === "momence") {
       window.open(target.href, "_blank", "noreferrer");
@@ -53,7 +67,16 @@ export function ProductDetail({ product }: { product: Product }) {
       {/* ---------- HERO + BUY BOX ---------- */}
       <section className="border-b border-border px-6 py-16 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <Eyebrow>{product.categoryLabel}</Eyebrow>
+          <Breadcrumbs
+            items={[
+              { name: "Home", to: "/" },
+              categoryCrumb[product.category] ?? { name: product.categoryLabel },
+              { name: product.name },
+            ]}
+          />
+          <div className="mt-8">
+            <Eyebrow>{product.categoryLabel}</Eyebrow>
+          </div>
           <div className="mt-8 grid gap-12 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <h1 className="font-display text-5xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-7xl">

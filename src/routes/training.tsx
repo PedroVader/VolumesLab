@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { training, memberships } from "@/data/catalog";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/training")({
   component: TrainingLanding,
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/training")({
           "Book a standalone personal training session, purchase a package, or train regularly as part of a Volumes Lab membership.",
       },
     ],
+    links: [canonical("/training")],
   }),
 });
 
@@ -85,6 +87,16 @@ function TrainingLanding() {
           </div>
         </div>
       </section>
+
+      {/* Sticky mobile CTA (brief 11.2) */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md md:hidden">
+        <Link
+          to="/book"
+          className="block bg-primary py-3 text-center font-mono text-[11px] font-bold uppercase tracking-widest text-primary-foreground"
+        >
+          Book a Training Session
+        </Link>
+      </div>
     </SiteChrome>
   );
 }

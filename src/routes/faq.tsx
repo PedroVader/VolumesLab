@@ -3,6 +3,7 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow, FaqList } from "@/components/site/blocks";
 import { faqGroups } from "@/data/faq";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/faq")({
       { property: "og:title", content: "FAQ, Volumes Lab Madrid" },
       { property: "og:description", content: "Preparation, cancellations, gift cards and more." },
     ],
+    links: [canonical("/faq")],
   }),
 });
 

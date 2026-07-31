@@ -22,6 +22,7 @@ import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index
 import { Route as AboutIndexRouteImport } from './routes/about.index'
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as MembershipsSlugRouteImport } from './routes/memberships.$slug'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as BookCheckoutRouteImport } from './routes/book.checkout'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AssessmentsSlugRouteImport } from './routes/assessments.$slug'
@@ -94,6 +95,11 @@ const MembershipsSlugRoute = MembershipsSlugRouteImport.update({
   path: '/memberships/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookCheckoutRoute = BookCheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
   '/about/': typeof AboutIndexRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
   '/about': typeof AboutIndexRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/book/checkout': typeof BookCheckoutRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
   '/about/': typeof AboutIndexRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
+    | '/legal/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
     | '/about/'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
+    | '/legal/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
     | '/about'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/assessments/$slug'
     | '/blog/$slug'
     | '/book/checkout'
+    | '/legal/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
     | '/about/'
@@ -267,6 +279,7 @@ export interface RootRouteChildren {
   AboutLocationRoute: typeof AboutLocationRoute
   AboutTeamRoute: typeof AboutTeamRoute
   AssessmentsSlugRoute: typeof AssessmentsSlugRoute
+  LegalSlugRoute: typeof LegalSlugRoute
   MembershipsSlugRoute: typeof MembershipsSlugRoute
   TestsSlugRoute: typeof TestsSlugRoute
   AboutIndexRoute: typeof AboutIndexRoute
@@ -368,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/book/checkout': {
       id: '/book/checkout'
       path: '/checkout'
@@ -445,6 +465,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutLocationRoute: AboutLocationRoute,
   AboutTeamRoute: AboutTeamRoute,
   AssessmentsSlugRoute: AssessmentsSlugRoute,
+  LegalSlugRoute: LegalSlugRoute,
   MembershipsSlugRoute: MembershipsSlugRoute,
   TestsSlugRoute: TestsSlugRoute,
   AboutIndexRoute: AboutIndexRoute,
