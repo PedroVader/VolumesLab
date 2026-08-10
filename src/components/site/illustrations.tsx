@@ -123,18 +123,19 @@ function Bone() {
         <rect key={y} x={168 - i * 2} y={y} width={64 + i * 4} height="22" rx="6" {...S} strokeWidth="2" />
       ))}
       <line x1="200" y1="60" x2="200" y2="222" {...DASH} />
-      {/* hip joint */}
-      <circle cx="262" cy="230" r="22" {...S} strokeWidth="2" />
-      <circle cx="262" cy="230" r="8" {...S} />
+      {/* hip joint, kept clear of the gauge below */}
+      <circle cx="310" cy="120" r="22" {...S} strokeWidth="2" />
+      <circle cx="310" cy="120" r="8" {...S} />
+      <Label x={286} y={162}>HIP</Label>
       {/* T-score gauge */}
-      <line x1="60" y1="255" x2="340" y2="255" {...S} opacity="0.4" />
+      <line x1="60" y1="268" x2="340" y2="268" {...S} opacity="0.4" />
       {[60, 130, 200, 270, 340].map((x) => (
-        <line key={x} x1={x} y1="250" x2={x} y2="260" {...S} />
+        <line key={x} x1={x} y1="263" x2={x} y2="273" {...S} />
       ))}
-      <Crosshair x={228} y={255} />
-      <Label x={236} y={244}>T-SCORE −0.4</Label>
-      <Label x={52} y={244}>−2.5</Label>
-      <Label x={330} y={244}>+2.0</Label>
+      <Crosshair x={228} y={268} />
+      <Label x={200} y={248}>T-SCORE −0.4</Label>
+      <Label x={52} y={248}>−2.5</Label>
+      <Label x={326} y={248}>+2.0</Label>
       <Label x={30} y={30}>DXA · LUMBAR + HIP</Label>
     </g>
   );
@@ -154,8 +155,8 @@ function Gait() {
         <line key={x} x1={x} y1="100" x2={x} y2="120" {...S} />
       ))}
       <Label x={56} y={90}>172 SPM</Label>
-      <Crosshair x={300} y={185} />
-      <Label x={288} y={165}>ASYM 3.1%</Label>
+      <Crosshair x={240} y={185} />
+      <Label x={276} y={172}>ASYM 3.1%</Label>
       <Label x={30} y={30}>FOOTFALL · 3-D CAPTURE</Label>
     </g>
   );
@@ -214,7 +215,7 @@ function Mobility() {
       <path d="M200 120 A 100 100 0 0 1 290 157" {...S} opacity="0.5" />
       <Crosshair x={290} y={150} />
       <Label x={282} y={132}>88°</Label>
-      <Label x={206} y={200}>SHOULDER ER</Label>
+      <Label x={150} y={252}>SHOULDER ER</Label>
       <Label x={30} y={30}>ACTIVE RANGE · DEG</Label>
     </g>
   );
@@ -228,7 +229,7 @@ function Strength() {
       <path d="M40 250 L40 250 C 70 250 85 90 110 82 C 140 74 220 74 250 80 C 285 88 300 240 330 248" {...S} strokeWidth="2" />
       <line x1="40" y1="250" x2="370" y2="250" {...S} opacity="0.4" />
       <line x1="60" y1="86" x2="270" y2="86" {...DASH} />
-      <Label x={150} y={74}>PEAK 2.4× BW</Label>
+      <Label x={206} y={62}>PEAK 2.4× BW</Label>
       <Crosshair x={180} y={80} />
       <Label x={30} y={30}>FORCE · TIME · IMTP</Label>
       <Label x={290} y={268}>3 SEC HOLD</Label>
@@ -291,7 +292,7 @@ function Performance() {
       <line x1="30" y1="212" x2="370" y2="212" {...DASH} />
       <line x1="228" y1="188" x2="228" y2="270" {...DASH} />
       <Crosshair x={228} y={188} />
-      <Label x={238} y={180}>LT2 · 172 BPM</Label>
+      <Label x={248} y={172}>LT2 · 172 BPM</Label>
       <Label x={30} y={200}>4 MMOL</Label>
       <Label x={30} y={30}>LACTATE CURVE · MMOL/L</Label>
     </g>
@@ -334,8 +335,8 @@ function Glp1() {
           </g>
         );
       })}
-      <Label x={252} y={168}>MD CHECK-INS</Label>
-      <Label x={284} y={208}>−6.2 KG / 12 WK</Label>
+      <Label x={250} y={72}>MD CHECK-INS</Label>
+      <Label x={40} y={252}>−6.2 KG / 12 WK</Label>
       <Label x={30} y={30}>WEIGHT · SUPERVISED</Label>
     </g>
   );
@@ -347,21 +348,20 @@ function CardioPack() {
       <Grid />
       {/* HR zone bars */}
       {[
-        { x: 60, h: 40 },
-        { x: 120, h: 70 },
-        { x: 180, h: 110 },
-        { x: 240, h: 85 },
-        { x: 300, h: 55 },
+        { x: 60, h: 55 },
+        { x: 120, h: 112 },
+        { x: 180, h: 88 },
+        { x: 240, h: 62 },
+        { x: 300, h: 42 },
       ].map((b, i) => (
-        <rect key={b.x} x={b.x} y={230 - b.h} width="36" height={b.h} {...S} strokeWidth={i === 2 ? 2.5 : 1.5} />
+        <rect key={b.x} x={b.x} y={230 - b.h} width="36" height={b.h} {...S} strokeWidth={i === 1 ? 2.5 : 1.5} />
       ))}
-      <Label x={172} y={106}>ZONE 2</Label>
+      <Label x={112} y={104}>ZONE 2</Label>
       <Label x={60} y={252}>Z1</Label>
       <Label x={120} y={252}>Z2</Label>
       <Label x={180} y={252}>Z3</Label>
       <Label x={240} y={252}>Z4</Label>
       <Label x={300} y={252}>Z5</Label>
-      <Crosshair x={198} y={120} />
       <Label x={30} y={30}>4 SESSIONS · ZONE COACHED</Label>
     </g>
   );
@@ -376,8 +376,8 @@ function PtPack() {
         const h = 30 + i * 14;
         return <rect key={i} x={48 + i * 31} y={240 - h} width="18" height={h} {...S} strokeWidth={i === 9 ? 2.5 : 1.5} />;
       })}
-      <Label x={286} y={60}>S10 · RETEST</Label>
-      <Crosshair x={332} y={62} />
+      <Label x={222} y={58}>S10 · RETEST</Label>
+      <Crosshair x={336} y={58} />
       <Label x={30} y={30}>10 SESSIONS · 1:1</Label>
     </g>
   );
