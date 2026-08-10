@@ -40,16 +40,16 @@ import type { Product } from "@/data/catalog";
 export const MOMENCE_HOST_ID = "319187";
 
 /**
- * Public Momence booking page for Volumes Lab.
- *
- * TODO(client): replace with the real URL from the dashboard's top-right
- * account menu → "Your page". The value below is an UNVERIFIED guess built
- * from the host ID and must be confirmed before launch — see step 1 above.
+ * Public Momence booking page for Volumes Lab, supplied by the client from the
+ * Momence dashboard (10/08/2026). Note the slug is the business handle, not the
+ * host ID — momence.com serves its SPA with a 200 for any path, so a wrong URL
+ * here fails silently in the browser rather than 404ing. Change it only against
+ * a link copied from the dashboard.
  */
-export const BOOKING_HOME = `https://momence.com/u/${MOMENCE_HOST_ID}`;
+export const BOOKING_HOME = "https://momence.com/u/volumes-lab-ClkWKG";
 
-/** Whether BOOKING_HOME has been verified against the real Momence account. */
-export const BOOKING_HOME_VERIFIED = false;
+/** Whether BOOKING_HOME came from the real Momence account rather than a guess. */
+export const BOOKING_HOME_VERIFIED = true;
 
 /**
  * Per-SKU Momence deep links, keyed by catalogue slug.
