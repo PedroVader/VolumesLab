@@ -159,9 +159,16 @@ export function MoreInfoLink({
   );
 }
 
+/**
+ * Small "included in X" tag. Rendered as a bordered chip rather than literal
+ * [ bracket ] text: the labels are long enough to wrap, and bracket characters
+ * in the text flow leave the closing bracket stranded on its own line.
+ */
 export function IncludedBadge({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[9px] font-bold uppercase tracking-widest text-primary">[ {children} ]</p>
+    <span className="inline-flex items-center border border-primary/35 bg-primary/[0.06] px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase leading-[1.4] tracking-widest text-primary">
+      {children}
+    </span>
   );
 }
 
@@ -210,26 +217,33 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
     <article className="flex flex-col border border-border bg-card p-6">
       <h3 className="font-display text-xl font-extrabold uppercase leading-tight">{a.name}</h3>
       <p className="mt-3 text-sm leading-relaxed text-muted">{a.shortDescription ?? a.tagline}</p>
-      {a.badges?.map((b) => (
-        <div key={b} className="mt-4">
-          <IncludedBadge>{b}</IncludedBadge>
-        </div>
-      ))}
 
-      {/* The tests inside this assessment, as the architecture diagram shows */}
-      <ul className="mt-6 grid flex-1 grid-cols-2 gap-2">
+      {/* The tests inside this assessment, as the architecture diagram shows.
+          Tiles are a fixed height rather than stretching to fill the card:
+          assessments hold 4 to 8 tests, and letting the grid absorb the
+          leftover space made the same tile twice as tall on one card as the
+          next. The spacer below keeps the price and CTAs aligned instead. */}
+      <ul className="mt-6 grid grid-cols-2 gap-2">
         {included.map((t) => (
           <li key={t.slug}>
             <Link
               to="/tests/$slug"
               params={{ slug: t.slug }}
-              className="flex h-full items-center border border-border px-3 py-3 font-mono text-[9px] font-bold uppercase leading-snug tracking-widest text-muted transition-colors hover:border-foreground hover:text-foreground"
+              className="flex min-h-[46px] items-center border border-border px-3 py-2 font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-widest text-muted transition-colors hover:border-foreground hover:bg-background hover:text-foreground"
             >
               {t.name}
             </Link>
           </li>
         ))}
       </ul>
+
+      <div className="flex-1" aria-hidden />
+
+      {a.badges?.map((b) => (
+        <div key={b} className="mt-5">
+          <IncludedBadge>{b}</IncludedBadge>
+        </div>
+      ))}
 
       <PriceLine p={a} />
       <div className="mt-4 grid grid-cols-2 gap-2">

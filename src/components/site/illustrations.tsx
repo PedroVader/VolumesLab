@@ -58,23 +58,57 @@ function Vo2max() {
 }
 
 function BodyComp() {
+  // A scanner reading, not a figure: a smooth mannequin silhouette sliced by
+  // horizontal contour rings, the way a 3-D scan actually captures a body.
+  // (The previous version was a stick figure with crooked limbs.)
+  const rings = [
+    { cy: 125, rx: 35, ry: 7, edge: 200, label: "CHEST 98.2" },
+    { cy: 168, rx: 30, ry: 6, edge: 195, label: "WAIST 79.4" },
+    { cy: 205, rx: 34, ry: 7, edge: 199, label: "HIP 96.1" },
+  ];
+
   return (
     <g>
       <Grid />
-      {/* geometric body silhouette */}
-      <circle cx="200" cy="62" r="20" {...S} strokeWidth="2" />
-      <path d="M200 84 L200 150 M170 100 L230 100 M172 100 L168 165 M228 100 L232 165 M200 150 L182 235 M200 150 L218 235 M182 235 L180 258 M218 235 L220 258" {...S} strokeWidth="2" />
-      {/* segment scan lines */}
-      {[100, 122, 150, 185, 218].map((y) => (
-        <line key={y} x1="150" y1={y} x2="250" y2={y} {...DASH} />
+
+      {/* centre axis */}
+      <line x1="165" y1="38" x2="165" y2="234" {...DASH} opacity="0.35" />
+
+      {/* head and neck */}
+      <ellipse cx="165" cy="58" rx="18" ry="21" {...S} strokeWidth="2" />
+      <path d="M156 76 L155 89 M174 76 L175 89" {...S} strokeWidth="2" />
+
+      {/* torso silhouette — a broad mannequin, not an hourglass: the waist is
+          only slightly narrower than chest and hips, or it reads as a pawn */}
+      <path
+        d="M128 96 C 127 122, 132 148, 135 168 C 132 186, 130 198, 131 210
+           C 135 222, 195 222, 199 210 C 200 198, 198 186, 195 168
+           C 198 148, 203 122, 202 96 C 190 89, 140 89, 128 96 Z"
+        {...S}
+        strokeWidth="2"
+      />
+
+      {/* contour slices with callouts */}
+      {rings.map((r) => (
+        <g key={r.cy}>
+          <ellipse cx="165" cy={r.cy} rx={r.rx} ry={r.ry} {...S} opacity="0.55" />
+          <line x1={r.edge} y1={r.cy} x2="248" y2={r.cy} {...DASH} opacity="0.45" />
+          <line x1="248" y1={r.cy - 4} x2="248" y2={r.cy + 4} {...S} opacity="0.6" />
+          <Label x={256} y={r.cy + 3}>
+            {r.label}
+          </Label>
+        </g>
       ))}
-      {/* side measurement bars */}
-      <rect x="285" y="96" width="50" height="8" {...S} />
-      <rect x="285" y="118" width="78" height="8" {...S} />
-      <rect x="285" y="140" width="34" height="8" {...S} />
-      <Label x={285} y={88}>LEAN 61.2 KG</Label>
-      <Label x={285} y={166}>FAT 18.4%</Label>
-      <Crosshair x={200} y={150} />
+
+      {/* lean / fat split */}
+      <Label x={40} y={246}>LEAN 61.2 KG</Label>
+      <Label x={360} y={246} anchor="end">
+        FAT 18.4%
+      </Label>
+      <rect x="40" y="254" width="252" height="11" className="fill-foreground" opacity="0.14" />
+      <rect x="40" y="254" width="320" height="11" {...S} />
+      <line x1="292" y1="254" x2="292" y2="265" {...S} />
+
       <Label x={30} y={30}>3-D SCAN · 30 SEC</Label>
     </g>
   );
