@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { BOOKING_HOME } from "@/lib/momence";
-import { ADDRESS, CONTACT, HOURS, MAP_LINK } from "@/data/site";
+import { ADDRESS, COMPANY, CONTACT, HOURS, MAP_LINK } from "@/data/site";
 
-// Footer structure per brief section 2.3: Services, About, Visit, Legal, Contact.
-// Service links are homepage anchors; the only transactional link is the
-// outbound "Book Services" into Momence.
+// Footer structure: Services, About, Visit, Contact. The five legal pages were
+// collapsed into one /legal link in the bottom bar at the client's request.
+// Service links are homepage anchors; the only outbound link is Book Services.
 
 export function SiteFooter() {
   return (
@@ -49,14 +49,6 @@ export function SiteFooter() {
             </li>
           </FooterCol>
 
-          <FooterCol title="Legal">
-            <FooterLink to="/legal/privacy">Privacy</FooterLink>
-            <FooterLink to="/legal/cookies">Cookies</FooterLink>
-            <FooterLink to="/legal/terms">Terms</FooterLink>
-            <FooterLink to="/legal/medical-disclaimer">Medical disclaimer</FooterLink>
-            <FooterLink to="/legal/cancellation">Cancellation policy</FooterLink>
-          </FooterCol>
-
           <FooterCol title="Contact">
             <li>
               <a href={`mailto:${CONTACT.email}`} className="hover:text-primary">
@@ -83,8 +75,13 @@ export function SiteFooter() {
 
         <div className="mt-12 grid items-center gap-6 border-t border-border pt-8 md:grid-cols-3">
           <img src="/volumes-mark.png" alt="Volumes Lab" className="w-28 opacity-90 justify-self-start" />
+          {/* The LSSI requires the company identity to be permanently and directly
+              accessible, so this link sits in the footer of every page. */}
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-center md:text-center">
-            Volumes Lab © {new Date().getFullYear()}
+            © {COMPANY.legalName} ·{" "}
+            <Link to="/legal" className="underline underline-offset-4 hover:text-primary">
+              Legal &amp; Privacy
+            </Link>
           </p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-end">
             {ADDRESS.short}

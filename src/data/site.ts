@@ -17,6 +17,16 @@ export const ADDRESS = {
   full: "Calle Churruca 5, 28004 Madrid, Spain",
 } as const;
 
+// Legal identity, shown on /legal to satisfy the LSSI (Ley 34/2002, art. 10).
+// taxId and registeredAddress are legally required and still missing; the page
+// renders them as [ pending ] rather than inventing values.
+export const COMPANY = {
+  legalName: "Volumes Vision S.L.",
+  tradingName: "Volumes Lab",
+  taxId: null as string | null,
+  registeredAddress: null as string | null,
+} as const;
+
 export const CONTACT = {
   email: "hello@volumeslab.com",
   /** Display form. */
