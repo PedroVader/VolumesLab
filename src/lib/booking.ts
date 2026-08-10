@@ -1,20 +1,34 @@
-// Booking seam. Today every "Book" action adds the item to the on-site cart.
-// When a product gets a Momence booking URL (catalog `bookingUrl`, wired in the
-// Momence integration phase), the same action deep-links straight into that
-// item's Momence booking flow instead — no other code needs to change.
+// Booking seam. Every transactional intent — Book, Purchase, Enquire — leaves
+// the CMS and lands in Momence. The site itself is not transactional, so there
+// is no cart branch here any more; see src/lib/momence.ts for the link table.
 
 import type { Product } from "@/data/catalog";
+import { momenceUrl } from "@/lib/momence";
+import { track } from "@/lib/analytics";
 
-export type BookingTarget =
-  | { kind: "momence"; href: string } // external Momence booking (Phase 5)
-  | { kind: "cart" }; // interim on-site add-to-cart
-
-export function bookingTarget(product: Product): BookingTarget {
-  if (product.bookingUrl) return { kind: "momence", href: product.bookingUrl };
-  return { kind: "cart" };
+/** The external URL a product's primary CTA opens. */
+export function bookingHref(product: Product): string {
+  return momenceUrl(product);
 }
 
-// Deep-link that opens Book Now with a specific item highlighted (brief 9.5).
-export function bookNowHref(slug: string): string {
-  return `/book?add=${slug}`;
+/** Verb shown on the primary CTA. Memberships enquire; everything else books. */
+export function bookingLabel(product: Product): string {
+  if (product.ctaLabel) return product.ctaLabel;
+  return product.category === "membership" ? "Enquire" : "Book";
+}
+
+/**
+ * Analytics for a transactional click. Call from the CTA's onClick; the link
+ * itself is a plain anchor so middle-click and open-in-new-tab keep working.
+ */
+export function trackBooking(product: Product, sourcePage: string) {
+  track("book_cta_click", {
+    product: product.slug,
+    product_category: product.category,
+    destination: "momence",
+    source_page: sourcePage,
+  });
+  if (product.slug === "glp-1" || product.slug === "doctor-meeting") {
+    track("glp1_consultation_click", { source_page: sourcePage });
+  }
 }

@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
+import { BOOKING_HOME } from "@/lib/momence";
+import { ADDRESS, CONTACT, HOURS, MAP_LINK } from "@/data/site";
 
 // Footer structure per brief section 2.3: Services, About, Visit, Legal, Contact.
-// Legal links point to /faq as placeholders until dedicated legal pages exist.
+// Service links are homepage anchors; the only transactional link is the
+// outbound "Book Services" into Momence.
 
 export function SiteFooter() {
   return (
@@ -9,11 +12,16 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <FooterCol title="Services">
-            <FooterLink to="/memberships">Memberships</FooterLink>
-            <FooterLink to="/assessments">Assessments</FooterLink>
-            <FooterLink to="/tests">Individual Tests</FooterLink>
-            <FooterLink to="/training">Training</FooterLink>
-            <FooterLink to="/book">Book Now</FooterLink>
+            <FooterLink to="/" hash="tests">Tests</FooterLink>
+            <FooterLink to="/" hash="assessments">Assessments</FooterLink>
+            <FooterLink to="/" hash="medical">Medical Appointment</FooterLink>
+            <FooterLink to="/" hash="train">Train</FooterLink>
+            <FooterLink to="/" hash="memberships">Memberships</FooterLink>
+            <li>
+              <a href={BOOKING_HOME} target="_blank" rel="noreferrer" className="hover:text-primary">
+                Book Services →
+              </a>
+            </li>
           </FooterCol>
 
           <FooterCol title="About">
@@ -22,19 +30,20 @@ export function SiteFooter() {
             <FooterLink to="/about/lab">The Lab</FooterLink>
             <FooterLink to="/about/location">Location</FooterLink>
             <FooterLink to="/faq">FAQ</FooterLink>
+            <FooterLink to="/blog">Blog</FooterLink>
           </FooterCol>
 
           <FooterCol title="Visit">
-            <li className="text-muted">Churruca 5, Justicia, Madrid</li>
-            <li className="text-muted">Mon–Fri 07:00–20:00</li>
-            <li className="text-muted">Sat–Sun 09:00–18:00</li>
+            <li className="text-muted">{ADDRESS.short}</li>
+            <li className="text-muted">
+              Mon–Fri {HOURS.weekdays.value}
+            </li>
+            <li className="text-muted">
+              Sat–Sun {HOURS.weekend.value}
+            </li>
+            <li className="text-muted">{HOURS.walkIns}</li>
             <li>
-              <a
-                href="https://www.google.com/maps?q=Calle+Churruca+5,+Madrid,+Spain"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-primary"
-              >
+              <a href={MAP_LINK} target="_blank" rel="noreferrer" className="hover:text-primary">
                 Open in Maps →
               </a>
             </li>
@@ -50,13 +59,13 @@ export function SiteFooter() {
 
           <FooterCol title="Contact">
             <li>
-              <a href="mailto:hello@volumeslab.com" className="hover:text-primary">
-                hello@volumeslab.com
+              <a href={`mailto:${CONTACT.email}`} className="hover:text-primary">
+                {CONTACT.email}
               </a>
             </li>
             <li>
-              <a href="tel:+34910000000" className="hover:text-primary">
-                +34 910 000 000
+              <a href={CONTACT.phoneHref} className="hover:text-primary">
+                {CONTACT.phone}
               </a>
             </li>
             <li>
@@ -78,7 +87,7 @@ export function SiteFooter() {
             Volumes Lab © {new Date().getFullYear()}
           </p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-end">
-            Churruca 5, Justicia, Madrid
+            {ADDRESS.short}
           </p>
         </div>
       </div>
@@ -95,10 +104,10 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
   );
 }
 
-function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
+function FooterLink({ to, hash, children }: { to: string; hash?: string; children: React.ReactNode }) {
   return (
     <li>
-      <Link to={to} className="hover:text-primary">
+      <Link to={to} hash={hash} className="hover:text-primary">
         {children}
       </Link>
     </li>

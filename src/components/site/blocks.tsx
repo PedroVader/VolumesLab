@@ -192,19 +192,36 @@ export function OutcomeList({ items }: { items: string[] }) {
 
 /* ---------------- Sticky mobile book bar ---------------- */
 
-export function StickyBookBar({ price, duration, onAdd, ctaLabel }: { price: number; duration?: string; onAdd: () => void; ctaLabel: string }) {
+// Mobile sticky CTA. Like every transactional CTA it is an external anchor into
+// Momence, not an on-site action.
+export function StickyBookBar({
+  price,
+  duration,
+  href,
+  ctaLabel,
+  onClick,
+}: {
+  price: number;
+  duration?: string;
+  href: string;
+  ctaLabel: string;
+  onClick?: () => void;
+}) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md md:hidden">
       <div className="leading-tight">
         <p className="font-display text-xl font-bold">€{price}</p>
         {duration && <p className="font-mono text-[9px] uppercase tracking-widest text-muted">{duration}</p>}
       </div>
-      <button
-        onClick={onAdd}
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        onClick={onClick}
         className="flex-1 bg-primary py-3 text-center font-mono text-[11px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
       >
         {ctaLabel}
-      </button>
+      </a>
     </div>
   );
 }

@@ -9,32 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TrainingRouteImport } from './routes/training'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrainingIndexRouteImport } from './routes/training.index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as MembershipsIndexRouteImport } from './routes/memberships.index'
 import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
+import { Route as TrainingSlugRouteImport } from './routes/training.$slug'
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as MembershipsSlugRouteImport } from './routes/memberships.$slug'
+import { Route as MedicalSlugRouteImport } from './routes/medical.$slug'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
-import { Route as BookCheckoutRouteImport } from './routes/book.checkout'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AssessmentsSlugRouteImport } from './routes/assessments.$slug'
 import { Route as AboutTeamRouteImport } from './routes/about.team'
 import { Route as AboutLocationRouteImport } from './routes/about.location'
 import { Route as AboutLabRouteImport } from './routes/about.lab'
 
-const TrainingRoute = TrainingRouteImport.update({
-  id: '/training',
-  path: '/training',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
@@ -65,6 +61,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrainingIndexRoute = TrainingIndexRouteImport.update({
+  id: '/training/',
+  path: '/training/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestsIndexRoute = TestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
@@ -85,6 +86,11 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrainingSlugRoute = TrainingSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TrainingRoute,
+} as any)
 const TestsSlugRoute = TestsSlugRouteImport.update({
   id: '/tests/$slug',
   path: '/tests/$slug',
@@ -95,15 +101,15 @@ const MembershipsSlugRoute = MembershipsSlugRouteImport.update({
   path: '/memberships/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedicalSlugRoute = MedicalSlugRouteImport.update({
+  id: '/medical/$slug',
+  path: '/medical/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
-const BookCheckoutRoute = BookCheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => BookRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
@@ -134,69 +140,72 @@ const AboutLabRoute = AboutLabRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
-  '/book': typeof BookRouteWithChildren
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/training': typeof TrainingRoute
   '/about/lab': typeof AboutLabRoute
   '/about/location': typeof AboutLocationRoute
   '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/book/checkout': typeof BookCheckoutRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/medical/$slug': typeof MedicalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/training/$slug': typeof TrainingSlugRoute
   '/about/': typeof AboutIndexRoute
   '/assessments/': typeof AssessmentsIndexRoute
   '/memberships/': typeof MembershipsIndexRoute
   '/tests/': typeof TestsIndexRoute
+  '/training/': typeof TrainingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
-  '/book': typeof BookRouteWithChildren
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/training': typeof TrainingRoute
   '/about/lab': typeof AboutLabRoute
   '/about/location': typeof AboutLocationRoute
   '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/book/checkout': typeof BookCheckoutRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/medical/$slug': typeof MedicalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/training/$slug': typeof TrainingSlugRoute
   '/about': typeof AboutIndexRoute
   '/assessments': typeof AssessmentsIndexRoute
   '/memberships': typeof MembershipsIndexRoute
   '/tests': typeof TestsIndexRoute
+  '/training': typeof TrainingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
-  '/book': typeof BookRouteWithChildren
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/training': typeof TrainingRoute
   '/about/lab': typeof AboutLabRoute
   '/about/location': typeof AboutLocationRoute
   '/about/team': typeof AboutTeamRoute
   '/assessments/$slug': typeof AssessmentsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/book/checkout': typeof BookCheckoutRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/medical/$slug': typeof MedicalSlugRoute
   '/memberships/$slug': typeof MembershipsSlugRoute
   '/tests/$slug': typeof TestsSlugRoute
+  '/training/$slug': typeof TrainingSlugRoute
   '/about/': typeof AboutIndexRoute
   '/assessments/': typeof AssessmentsIndexRoute
   '/memberships/': typeof MembershipsIndexRoute
   '/tests/': typeof TestsIndexRoute
+  '/training/': typeof TrainingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -207,20 +216,21 @@ export interface FileRouteTypes {
     | '/cart'
     | '/contact'
     | '/faq'
-    | '/training'
     | '/about/lab'
     | '/about/location'
     | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
-    | '/book/checkout'
     | '/legal/$slug'
+    | '/medical/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/training/$slug'
     | '/about/'
     | '/assessments/'
     | '/memberships/'
     | '/tests/'
+    | '/training/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -229,20 +239,21 @@ export interface FileRouteTypes {
     | '/cart'
     | '/contact'
     | '/faq'
-    | '/training'
     | '/about/lab'
     | '/about/location'
     | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
-    | '/book/checkout'
     | '/legal/$slug'
+    | '/medical/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/training/$slug'
     | '/about'
     | '/assessments'
     | '/memberships'
     | '/tests'
+    | '/training'
   id:
     | '__root__'
     | '/'
@@ -251,52 +262,47 @@ export interface FileRouteTypes {
     | '/cart'
     | '/contact'
     | '/faq'
-    | '/training'
     | '/about/lab'
     | '/about/location'
     | '/about/team'
     | '/assessments/$slug'
     | '/blog/$slug'
-    | '/book/checkout'
     | '/legal/$slug'
+    | '/medical/$slug'
     | '/memberships/$slug'
     | '/tests/$slug'
+    | '/training/$slug'
     | '/about/'
     | '/assessments/'
     | '/memberships/'
     | '/tests/'
+    | '/training/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRouteWithChildren
-  BookRoute: typeof BookRouteWithChildren
+  BookRoute: typeof BookRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
-  TrainingRoute: typeof TrainingRoute
   AboutLabRoute: typeof AboutLabRoute
   AboutLocationRoute: typeof AboutLocationRoute
   AboutTeamRoute: typeof AboutTeamRoute
   AssessmentsSlugRoute: typeof AssessmentsSlugRoute
   LegalSlugRoute: typeof LegalSlugRoute
+  MedicalSlugRoute: typeof MedicalSlugRoute
   MembershipsSlugRoute: typeof MembershipsSlugRoute
   TestsSlugRoute: typeof TestsSlugRoute
   AboutIndexRoute: typeof AboutIndexRoute
   AssessmentsIndexRoute: typeof AssessmentsIndexRoute
   MembershipsIndexRoute: typeof MembershipsIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
+  TrainingIndexRoute: typeof TrainingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/training': {
-      id: '/training'
-      path: '/training'
-      fullPath: '/training'
-      preLoaderRoute: typeof TrainingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -339,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/training/': {
+      id: '/training/'
+      path: '/training'
+      fullPath: '/training/'
+      preLoaderRoute: typeof TrainingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tests/': {
       id: '/tests/'
       path: '/tests'
@@ -367,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/training/$slug': {
+      id: '/training/$slug'
+      path: '/$slug'
+      fullPath: '/training/$slug'
+      preLoaderRoute: typeof TrainingSlugRouteImport
+      parentRoute: typeof TrainingRoute
+    }
     '/tests/$slug': {
       id: '/tests/$slug'
       path: '/tests/$slug'
@@ -381,19 +401,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medical/$slug': {
+      id: '/medical/$slug'
+      path: '/medical/$slug'
+      fullPath: '/medical/$slug'
+      preLoaderRoute: typeof MedicalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
       fullPath: '/legal/$slug'
       preLoaderRoute: typeof LegalSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/book/checkout': {
-      id: '/book/checkout'
-      path: '/checkout'
-      fullPath: '/book/checkout'
-      preLoaderRoute: typeof BookCheckoutRouteImport
-      parentRoute: typeof BookRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -443,35 +463,26 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
-interface BookRouteChildren {
-  BookCheckoutRoute: typeof BookCheckoutRoute
-}
-
-const BookRouteChildren: BookRouteChildren = {
-  BookCheckoutRoute: BookCheckoutRoute,
-}
-
-const BookRouteWithChildren = BookRoute._addFileChildren(BookRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRouteWithChildren,
-  BookRoute: BookRouteWithChildren,
+  BookRoute: BookRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
-  TrainingRoute: TrainingRoute,
   AboutLabRoute: AboutLabRoute,
   AboutLocationRoute: AboutLocationRoute,
   AboutTeamRoute: AboutTeamRoute,
   AssessmentsSlugRoute: AssessmentsSlugRoute,
   LegalSlugRoute: LegalSlugRoute,
+  MedicalSlugRoute: MedicalSlugRoute,
   MembershipsSlugRoute: MembershipsSlugRoute,
   TestsSlugRoute: TestsSlugRoute,
   AboutIndexRoute: AboutIndexRoute,
   AssessmentsIndexRoute: AssessmentsIndexRoute,
   MembershipsIndexRoute: MembershipsIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
+  TrainingIndexRoute: TrainingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

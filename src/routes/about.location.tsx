@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ADDRESS, CONTACT, HOURS } from "@/data/site";
+import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { HandDrawnMap } from "@/components/site/HandDrawnMap";
 
@@ -16,12 +18,13 @@ export const Route = createFileRoute("/about/location")({
   }),
 });
 
-// [Confirm] items from the brief (section 10.4) — placeholders until approved.
+// Address, hours and contact are confirmed and come from @/data/site.
+// "Getting here" is still a [Confirm] item from the brief (section 10.4).
 const info: { label: string; value: string }[] = [
-  { label: "Address", value: "Churruca 5, Justicia, 28004 Madrid" },
-  { label: "Opening hours", value: "Mon–Fri 07:00–20:00 · Sat–Sun 09:00–18:00 [confirm]" },
+  { label: "Address", value: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.postalCode} ${ADDRESS.city}` },
+  { label: "Opening hours", value: `${HOURS.short} · ${HOURS.walkIns}` },
   { label: "Getting here", value: "Metro Alonso Martínez (L4, L5, L10), 4 min walk [confirm]" },
-  { label: "Contact", value: "hello@volumeslab.com · +34 910 000 000 [confirm]" },
+  { label: "Contact", value: `${CONTACT.email} · ${CONTACT.phone}` },
 ];
 
 function LocationPage() {
@@ -48,12 +51,7 @@ function LocationPage() {
           </dl>
         </div>
         <div className="mx-auto mt-12 max-w-7xl">
-          <Link
-            to="/book"
-            className="inline-flex items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-          >
-            Book Now
-          </Link>
+          <BookServicesLink sourcePage="/about/location" />
         </div>
       </section>
     </SiteChrome>

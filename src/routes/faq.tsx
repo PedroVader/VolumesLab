@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { CONTACT } from "@/data/site";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow, FaqList } from "@/components/site/blocks";
 import { faqGroups } from "@/data/faq";
@@ -29,7 +30,7 @@ function FaqPage() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Everything people ask before their first visit. Something missing?
-            Call <a href="tel:+34910000000" className="underline underline-offset-4 hover:text-foreground">+34 910 000 000</a> and
+            Call <a href={CONTACT.phoneHref} className="underline underline-offset-4 hover:text-foreground">{CONTACT.phone}</a> and
             ask a human.
           </p>
         </div>

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { CONTACT, HOURS } from "@/data/site";
 import { Eyebrow } from "@/components/site/blocks";
 import { teamCredentials } from "@/data/productContent";
 import { useState } from "react";
@@ -48,14 +49,14 @@ function Contact() {
                 </>
               }
             />
-            <InfoRow label="Email" value={<a className="hover:opacity-70" href="mailto:hello@volumeslab.com">hello@volumeslab.com</a>} />
-            <InfoRow label="Phone" value={<a className="hover:opacity-70" href="tel:+34910000000">+34 910 000 000</a>} />
+            <InfoRow label="Email" value={<a className="hover:opacity-70" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>} />
+            <InfoRow label="Phone" value={<a className="hover:opacity-70" href={CONTACT.phoneHref}>{CONTACT.phone}</a>} />
             <InfoRow
               label="WhatsApp"
               value={
                 <a
                   className="inline-flex items-center gap-2 border border-foreground px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-foreground hover:text-primary-foreground"
-                  href="https://wa.me/34910000000"
+                  href={`https://wa.me/${CONTACT.phone.replace(/[^0-9]/g, "")}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -63,7 +64,7 @@ function Contact() {
                 </a>
               }
             />
-            <InfoRow label="Hours" value={<>Mon–Fri · 07:00–20:00<br />Sat–Sun · 09:00–18:00</>} />
+            <InfoRow label="Hours" value={<>Mon–Fri · {HOURS.weekdays.value}<br />Sat–Sun · {HOURS.weekend.value}<br />{HOURS.walkIns}</>} />
 
             <form
               onSubmit={(e) => {

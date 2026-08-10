@@ -2,23 +2,31 @@
 // Branches by category (membership / assessment / test), pulling commercial and
 // relational data from catalog.ts and marketing copy from productContent.ts.
 
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
 import type { Product } from "@/data/catalog";
 import { assessments, findProduct, getTests, productPath } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
-import { bookingTarget } from "@/lib/booking";
-import { track } from "@/lib/analytics";
-import { useCart } from "@/lib/cart";
+import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
+import { hasDeepLink } from "@/lib/momence";
 import { ProductIllustration } from "./illustrations";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
-import { SecondaryLink } from "./cards";
+import { BookCta, SecondaryLink } from "./cards";
 
+// Section anchors on the homepage, which is now the index for every category.
 const categoryCrumb: Record<string, Crumb> = {
-  membership: { name: "Memberships", to: "/memberships" },
-  assessment: { name: "Assessments", to: "/assessments" },
-  test: { name: "Individual Tests", to: "/tests" },
+  membership: { name: "Memberships", to: "/" },
+  assessment: { name: "Assessments", to: "/" },
+  test: { name: "Individual Tests", to: "/" },
+  medical: { name: "Medical Appointment", to: "/" },
+  training: { name: "Train", to: "/" },
+};
+
+const categoryAnchor: Record<string, string> = {
+  membership: "memberships",
+  assessment: "assessments",
+  test: "tests",
+  medical: "medical",
+  training: "train",
 };
 import {
   Eyebrow,
@@ -32,26 +40,11 @@ import {
 } from "./blocks";
 
 export function ProductDetail({ product }: { product: Product }) {
-  const add = useCart((s) => s.add);
-  const [gift, setGift] = useState(false);
   const content = getProductContent(product.slug);
   const isMembership = product.category === "membership";
-
-  const addToCart = () => {
-    track("book_cta_click", {
-      product: product.slug,
-      product_category: product.category,
-      source_page: productPath(product),
-    });
-    if (product.slug === "glp-1") track("glp1_consultation_click", { source_page: productPath(product) });
-    const target = bookingTarget(product);
-    if (target.kind === "momence") {
-      window.open(target.href, "_blank", "noreferrer");
-      return;
-    }
-    add({ slug: product.slug, name: product.name, price: product.price, giftCard: gift });
-    toast.success(`${product.name} added to cart`);
-  };
+  const path = productPath(product);
+  const ctaLabel = bookingLabel(product);
+  const onBook = () => trackBooking(product, path);
 
   const includedTests = getTests(product.includedTests ?? []);
   const containingAssessments =
@@ -70,7 +63,9 @@ export function ProductDetail({ product }: { product: Product }) {
           <Breadcrumbs
             items={[
               { name: "Home", to: "/" },
-              categoryCrumb[product.category] ?? { name: product.categoryLabel },
+              categoryCrumb[product.category]
+                ? { ...categoryCrumb[product.category], hash: categoryAnchor[product.category] }
+                : { name: product.categoryLabel },
               { name: product.name },
             ]}
           />
@@ -128,22 +123,21 @@ export function ProductDetail({ product }: { product: Product }) {
                     <span className="text-sm">Calle Churruca 5, Madrid</span>
                   </div>
 
-                  {product.giftable && !isMembership && (
-                    <label className="mt-4 flex cursor-pointer items-center gap-3 py-2 font-mono text-[11px] uppercase tracking-widest">
-                      <input type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)} className="accent-primary" />
-                      Purchase as gift card
-                    </label>
-                  )}
-
-                  <button
-                    onClick={addToCart}
-                    className="mt-4 block w-full bg-primary py-4 text-center font-mono text-xs uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-                  >
-                    {product.ctaLabel ?? (gift ? "Add gift card" : "Book")}
-                  </button>
+                  <BookCta
+                    product={product}
+                    sourcePage={path}
+                    className="mt-4 w-full py-4 text-xs"
+                  />
                   <p className="mt-4 text-center font-mono text-[9px] uppercase tracking-widest text-muted">
-                    Confirmed personally within 24 hours
+                    {hasDeepLink(product)
+                      ? "Booking and payment are handled securely in Momence"
+                      : "Continue in Momence to choose a time"}
                   </p>
+                  {product.giftable && !isMembership && (
+                    <p className="mt-3 text-center font-mono text-[9px] uppercase tracking-widest text-muted">
+                      Gift cards available in Momence
+                    </p>
+                  )}
                 </div>
                 {product.priceTbd && (
                   <p className="mt-4 text-xs leading-relaxed text-muted">
@@ -331,18 +325,17 @@ export function ProductDetail({ product }: { product: Product }) {
       {/* ---------- FINAL CTA ---------- */}
       <section className="px-6 py-16 md:py-20">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4">
-          <button
-            onClick={addToCart}
-            className="inline-flex items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-          >
-            {product.ctaLabel ?? "Book"}
-          </button>
+          <BookCta product={product} sourcePage={path} className="px-6 py-3" />
           {product.category === "assessment" ? (
-            <SecondaryLink to="/assessments">Compare Assessments</SecondaryLink>
+            <SecondaryLink to="/" hash="assessments">All Assessments</SecondaryLink>
           ) : product.category === "test" ? (
-            <SecondaryLink to="/tests">View All Tests</SecondaryLink>
+            <SecondaryLink to="/" hash="tests">All Tests</SecondaryLink>
+          ) : product.category === "training" ? (
+            <SecondaryLink to="/" hash="train">All Training Options</SecondaryLink>
+          ) : product.category === "medical" ? (
+            <SecondaryLink to="/" hash="memberships">See Memberships</SecondaryLink>
           ) : (
-            <SecondaryLink to="/memberships">Compare Memberships</SecondaryLink>
+            <SecondaryLink to="/" hash="memberships">All Memberships</SecondaryLink>
           )}
         </div>
       </section>
@@ -350,8 +343,9 @@ export function ProductDetail({ product }: { product: Product }) {
       <StickyBookBar
         price={product.price}
         duration={product.duration}
-        onAdd={addToCart}
-        ctaLabel={product.ctaLabel ?? "Book"}
+        href={bookingHref(product)}
+        onClick={onBook}
+        ctaLabel={ctaLabel}
       />
     </div>
   );

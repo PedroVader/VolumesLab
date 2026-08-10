@@ -7,7 +7,13 @@
 // (measures/protocol/goodFor/categoryLabel/tagline) are retained so existing
 // components keep working while pages are rebuilt phase by phase.
 
-export type ProductCategory = "membership" | "assessment" | "test" | "training" | "package";
+export type ProductCategory =
+  | "membership"
+  | "assessment"
+  | "test"
+  | "medical"
+  | "training"
+  | "package";
 
 export type TestGroup = "body-bone" | "metabolism-cardio" | "strength-movement";
 
@@ -400,6 +406,41 @@ export const tests: Product[] = [
   },
 ];
 
+// Medical appointments (client homepage architecture, 07/08/2026):
+// "MEDICAL APPOINTMENT: Talk to a doctor about peptides / GLP-1".
+export const medical: Product[] = [
+  {
+    slug: "doctor-meeting",
+    name: "Doctor Meeting",
+    tagline: "Talk to a doctor about peptides and GLP-1.",
+    shortDescription:
+      "A 30-minute consultation with a Volumes Lab doctor to discuss peptide and GLP-1 treatment.",
+    price: 90,
+    priceTbd: true,
+    duration: "30 minutes",
+    durationTbd: true,
+    category: "medical",
+    categoryLabel: "Medical Appointment",
+    ctaLabel: "Book",
+    status: "available",
+    measures: [
+      "One-to-one consultation with a doctor",
+      "Review of your goals and medical history",
+      "Discussion of peptide and GLP-1 options",
+      "Clear next steps, including any required bloodwork",
+    ],
+    protocol: [
+      "Book a 30-minute slot with the medical team.",
+      "Discuss your goals, history and suitability for treatment.",
+      "Agree next steps, including testing and external bloodwork where needed.",
+    ],
+    goodFor: [
+      "Anyone considering medically supervised weight management or peptide therapy",
+    ],
+    giftable: false,
+  },
+];
+
 // Training: standalone session + packages (brief section 8).
 export const training: Product[] = [
   {
@@ -423,6 +464,40 @@ export const training: Product[] = [
     training: { sessionCount: 1 },
   },
   {
+    slug: "pt-pack-3",
+    name: "Personal Training, 3 sessions",
+    tagline: "A short block of sessions to get started properly.",
+    shortDescription: "Three private sessions with the Volumes Lab performance team.",
+    price: 240,
+    priceTbd: true,
+    category: "training",
+    categoryLabel: "Training Package",
+    ctaLabel: "Purchase",
+    status: "available",
+    measures: ["3 x 1h sessions", "Adapted to your ability and goals"],
+    protocol: ["Use within 2 months."],
+    goodFor: ["Anyone trying personal training before committing to more"],
+    giftable: true,
+    training: { sessionCount: 3, validity: "2 months" },
+  },
+  {
+    slug: "pt-pack-5",
+    name: "Personal Training, 5 sessions",
+    tagline: "Train regularly for a full training block.",
+    shortDescription: "Five private sessions with the Volumes Lab performance team.",
+    price: 390,
+    priceTbd: true,
+    category: "training",
+    categoryLabel: "Training Package",
+    ctaLabel: "Purchase",
+    status: "available",
+    measures: ["5 x 1h sessions", "Programme design", "Progress notes"],
+    protocol: ["Use within 3 months."],
+    goodFor: ["Anyone training consistently without a membership"],
+    giftable: true,
+    training: { sessionCount: 5, validity: "3 months" },
+  },
+  {
     slug: "pt-pack-10",
     name: "Personal Training, 10 sessions",
     tagline: "Purchase a set of sessions and train regularly without joining a membership.",
@@ -431,7 +506,7 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Select Package",
+    ctaLabel: "Purchase",
     status: "available",
     measures: ["10 x 1h sessions", "Programme design", "Retest at end"],
     protocol: ["Use within 4 months."],
@@ -448,7 +523,7 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Select Package",
+    ctaLabel: "Purchase",
     status: "available",
     measures: ["4 x 1h sessions", "Heart-rate zone coaching", "Progress notes"],
     protocol: ["Book at your own pace within 3 months."],
@@ -458,25 +533,11 @@ export const training: Product[] = [
   },
 ];
 
-// Retained for the current Book Now page until it is rebuilt (brief section 9).
-export const packages: Product[] = [
-  training[1], // pt-pack-10
-  training[2], // cardio-pack-4
-  {
-    slug: "retest-bundle",
-    name: "Quarterly Retest Bundle",
-    tagline: "Four retests over 12 months to keep your data honest.",
-    price: 690,
-    priceTbd: true,
-    category: "package",
-    categoryLabel: "Package",
-    ctaLabel: "Select Package",
-    measures: ["4 x Foundational retests"],
-    protocol: ["Booked every 12 weeks."],
-    goodFor: ["Anyone tracking progress objectively over a year"],
-    giftable: true,
-  },
-];
+// The four session options shown in the homepage TRAIN section, in the order
+// the client's architecture specifies: 1, 3, 5 and 10 sessions.
+export const trainingPacks: Product[] = ["training-session", "pt-pack-3", "pt-pack-5", "pt-pack-10"]
+  .map((slug) => training.find((t) => t.slug === slug))
+  .filter((t): t is Product => Boolean(t));
 
 // Test grouping for the Individual Tests landing page (brief section 7.1).
 export const testGroups: { key: TestGroup; label: string; testSlugs: string[] }[] = [
@@ -493,7 +554,7 @@ export const testGroups: { key: TestGroup; label: string; testSlugs: string[] }[
   },
 ];
 
-const _catalogue = [...memberships, ...assessments, ...tests, ...training, ...packages];
+const _catalogue = [...memberships, ...assessments, ...tests, ...medical, ...training];
 export const allProducts: Product[] = _catalogue.filter(
   (p, i) => _catalogue.findIndex((x) => x.slug === p.slug) === i,
 );
@@ -515,8 +576,10 @@ export function productPath(p: Pick<Product, "category" | "slug">): string {
       return `/assessments/${p.slug}`;
     case "test":
       return `/tests/${p.slug}`;
+    case "medical":
+      return `/medical/${p.slug}`;
     case "training":
     case "package":
-      return `/training`;
+      return `/training/${p.slug}`;
   }
 }

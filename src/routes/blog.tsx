@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow } from "@/components/site/blocks";
 import { posts } from "@/data/blog";
 
@@ -80,12 +81,12 @@ function BlogIndex() {
             Reading about numbers is nice. Knowing yours is better.
           </h2>
           <div className="mt-10 flex justify-center">
-            <Link
-              to="/book"
-              className="inline-flex items-center gap-2 border border-foreground bg-foreground px-6 py-3 font-display text-sm font-bold uppercase tracking-wide text-primary-foreground transition-colors hover:bg-background hover:text-foreground"
+            <BookServicesLink
+              sourcePage="/blog"
+              className="gap-2 border border-foreground bg-foreground font-display text-sm tracking-wide hover:bg-background hover:text-foreground"
             >
               Book a test →
-            </Link>
+            </BookServicesLink>
           </div>
         </div>
       </section>

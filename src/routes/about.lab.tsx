@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 
 export const Route = createFileRoute("/about/lab")({
@@ -56,12 +57,7 @@ function LabPage() {
           >
             Location
           </Link>
-          <Link
-            to="/book"
-            className="inline-flex items-center bg-primary px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"
-          >
-            Book Now
-          </Link>
+          <BookServicesLink sourcePage="/about/lab" className="px-5 py-2.5" />
         </div>
       </section>
     </SiteChrome>

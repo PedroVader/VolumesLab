@@ -4,7 +4,7 @@
 import { Link } from "@tanstack/react-router";
 import { SITE_URL } from "@/lib/seo";
 
-export type Crumb = { name: string; to?: string; params?: Record<string, string> };
+export type Crumb = { name: string; to?: string; params?: Record<string, string>; hash?: string };
 
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   const jsonLd = {
@@ -24,7 +24,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
         {items.map((c, i) => (
           <li key={c.name} className="flex items-center gap-2">
             {c.to && i < items.length - 1 ? (
-              <Link to={c.to} params={c.params} className="hover:text-primary">
+              <Link to={c.to} params={c.params} hash={c.hash} className="hover:text-primary">
                 {c.name}
               </Link>
             ) : (
