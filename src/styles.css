@@ -59,8 +59,9 @@
   --muted-foreground: hsl(0 0% 35%);
   --accent: hsl(40 10% 86%);
   --accent-foreground: hsl(0 0% 21%);
-  --destructive: hsl(0 60% 35%);
-  --destructive-foreground: hsl(40 13% 93%);
+  /* No red anywhere, by request. Error states read as ink like everything else. */
+  --destructive: hsl(0 0% 13%);
+  --destructive-foreground: hsl(0 0% 100%);
   --border: hsl(0 0% 0% / 0.14);
   --input: hsl(0 0% 0% / 0.15);
   --ring: hsl(0 0% 21%);
@@ -85,8 +86,8 @@
   --muted-foreground: hsl(0 0% 65%);
   --accent: hsl(0 0% 16%);
   --accent-foreground: hsl(0 0% 98%);
-  --destructive: hsl(0 75% 55%);
-  --destructive-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 0% 96%);
+  --destructive-foreground: hsl(0 0% 8%);
   --border: hsl(0 0% 100% / 0.12);
   --input: hsl(0 0% 100% / 0.15);
   --ring: hsl(0 0% 96%);
