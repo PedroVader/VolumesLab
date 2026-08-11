@@ -11,6 +11,7 @@ import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
 import { assessments, findProduct, getTests, productPath, trainingPacks } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
+import { productLabels as L } from "@/data/pages";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { BookCta } from "./cards";
@@ -90,7 +91,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
               {product.priceTbd && (
                 <p className="mt-4 max-w-md text-xs leading-relaxed text-muted">
-                  Price shown is indicative and pending confirmation.
+                  {L.priceTbdNote}
                 </p>
               )}
             </div>
@@ -102,7 +103,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.outcomes.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <SectionTitle>What it is</SectionTitle>
+            <SectionTitle>{L.whatItIs}</SectionTitle>
             <ul className="mt-8 max-w-3xl space-y-4">
               {content.outcomes.map((o) => (
                 <li key={o} className="flex gap-4 text-base leading-relaxed text-foreground/85">
@@ -121,7 +122,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.experience.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <SectionTitle>How it works</SectionTitle>
+            <SectionTitle>{L.howItWorks}</SectionTitle>
             <ol className="mt-10 grid gap-8 md:grid-cols-3">
               {content.experience.map((step, i) => (
                 <li key={step.title} className="border-t-2 border-primary pt-5">
@@ -138,7 +139,7 @@ export function ProductDetail({ product }: { product: Product }) {
             {content.prep.length > 0 && (
               <p className="mt-10 max-w-2xl border-t border-border pt-6 text-sm leading-relaxed text-muted">
                 <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
-                  Before you come:{" "}
+                  {L.prepPrefix}{" "}
                 </span>
                 {content.prep.join(" ")}
               </p>
@@ -154,7 +155,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.faqs.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-4xl">
-            <SectionTitle>Questions</SectionTitle>
+            <SectionTitle>{L.questions}</SectionTitle>
             <div className="mt-8">
               <FaqList items={content.faqs} />
             </div>
@@ -188,13 +189,13 @@ export function ProductDetail({ product }: { product: Product }) {
 function finalCtaTitle(product: Product): string {
   switch (product.category) {
     case "membership":
-      return "Ready to join?";
+      return L.finalCta.membership;
     case "training":
-      return "Ready to start training?";
+      return L.finalCta.training;
     case "medical":
-      return "Ready to talk to a doctor?";
+      return L.finalCta.medical;
     default:
-      return "Ready to book?";
+      return L.finalCta.default;
   }
 }
 
@@ -261,7 +262,7 @@ function TestModule({ product }: { product: Product }) {
   const inside = assessments.filter((a) => a.includedTests?.includes(product.slug));
   if (inside.length === 0) return null;
   return (
-    <ModuleSection title="Included in">
+    <ModuleSection title={L.modules.testIncludedIn}>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {inside.map((a) => (
           <li key={a.slug}>
@@ -272,7 +273,7 @@ function TestModule({ product }: { product: Product }) {
         ))}
       </ul>
       <p className="mt-6 text-sm text-muted">
-        Booking the assessment is cheaper than booking each test on its own.
+        {L.modules.testNote}
       </p>
     </ModuleSection>
   );
@@ -284,7 +285,7 @@ function AssessmentModule({ product }: { product: Product }) {
   if (tests.length === 0) return null;
   const membership = product.includedInMembership ? findProduct(product.includedInMembership) : undefined;
   return (
-    <ModuleSection title="Includes">
+    <ModuleSection title={L.modules.assessmentIncludes}>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tests.map((t) => (
           <li key={t.slug}>
@@ -314,7 +315,7 @@ function AssessmentModule({ product }: { product: Product }) {
 /** Training: the other pack sizes, with this one marked. */
 function TrainingModule({ product }: { product: Product }) {
   return (
-    <ModuleSection title="Other options">
+    <ModuleSection title={L.modules.trainingOtherOptions}>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {trainingPacks.map((p) => (
           <li key={p.slug}>
@@ -325,7 +326,7 @@ function TrainingModule({ product }: { product: Product }) {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-muted">Larger packs bring the price per session down.</p>
+      <p className="mt-6 text-sm text-muted">{L.modules.trainingNote}</p>
     </ModuleSection>
   );
 }
@@ -333,7 +334,7 @@ function TrainingModule({ product }: { product: Product }) {
 /** Membership: what you get, then how joining actually goes. */
 function MembershipModule({ product }: { product: Product }) {
   return (
-    <ModuleSection title="What's included">
+    <ModuleSection title={L.modules.membershipIncluded}>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {product.measures.map((m) => (
           <li
@@ -346,8 +347,8 @@ function MembershipModule({ product }: { product: Product }) {
       </ul>
 
       <div className="mt-12">
-        <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">How to join</h3>
-        <Flow steps={["Enquire", "15-minute call", "Join"]} />
+        <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">{L.modules.membershipHowToJoin}</h3>
+        <Flow steps={[...L.modules.membershipSteps]} />
         {product.membership?.bloodworkNote && (
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
             {product.membership.bloodworkNote}
@@ -366,15 +367,13 @@ function MembershipModule({ product }: { product: Product }) {
 /** Medical: the consultation, and what happens after it. */
 function MedicalModule() {
   return (
-    <ModuleSection title="How the consultation works">
+    <ModuleSection title={L.modules.medicalTitle}>
       <p className="max-w-2xl text-lg leading-relaxed text-foreground/85">
-        A 30-minute appointment with a Volumes Lab doctor to discuss peptide and GLP-1 treatment,
-        your history and whether it is appropriate for you.
+        {L.modules.medicalIntro}
       </p>
-      <Flow steps={["Purchase", "Book the doctor", "Consultation", "Treatment if appropriate"]} />
+      <Flow steps={[...L.modules.medicalSteps]} />
       <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
-        Treatment is prescribed only where clinically appropriate. Medication is purchased
-        separately, and any required bloodwork is completed through an external provider.
+        {L.modules.medicalNote}
       </p>
     </ModuleSection>
   );

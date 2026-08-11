@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { aboutPage } from "@/data/pages";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { canonical } from "@/lib/seo";
 
@@ -17,13 +18,6 @@ export const Route = createFileRoute("/about/")({
     links: [canonical("/about")],
   }),
 });
-
-const steps = [
-  { title: "Test", body: "Measure body composition, bone density, metabolism, cardiovascular fitness, strength and movement." },
-  { title: "Understand", body: "Review the results with the Volumes Lab medical and performance team." },
-  { title: "Treat or train", body: "Follow a personalised program or, where appropriate, a medically supervised treatment plan." },
-  { title: "Retest", body: "Measure progress and adjust the program using objective data." },
-];
 
 const links: { label: string; to: "/about/team" | "/about/lab" | "/about/location" | "/faq" }[] = [
   { label: "The team", to: "/about/team" },
@@ -51,7 +45,7 @@ function AboutLanding() {
         <div className="mx-auto max-w-7xl">
           <Eyebrow>How Volumes Lab works</Eyebrow>
           <div className="mt-10 grid gap-8 md:grid-cols-4">
-            {steps.map((s, i) => (
+            {aboutPage.steps.map((s, i) => (
               <div key={s.title} className="border-t-2 border-primary pt-6">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
                   {String(i + 1).padStart(2, "0")}

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { labPage } from "@/data/pages";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 
@@ -16,13 +17,6 @@ export const Route = createFileRoute("/about/lab")({
     ],
   }),
 });
-
-const areas = [
-  { title: "Testing areas", body: "Lab-grade equipment for body composition, bone density, metabolism, cardiovascular fitness, strength and movement." },
-  { title: "Medical room", body: "Private consultation and review with the medical team." },
-  { title: "3D body scanning", body: "Fast, repeatable body-composition scans to track change over time." },
-  { title: "Training floor", body: "A dedicated space for private personal training sessions." },
-];
 
 function LabPage() {
   return (
@@ -41,7 +35,7 @@ function LabPage() {
       </section>
       <section className="px-6 py-16">
         <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2">
-          {areas.map((a) => (
+          {labPage.areas.map((a) => (
             <div key={a.title} className="border border-border bg-card p-8">
               <h2 className="font-display text-2xl font-bold uppercase tracking-tight">{a.title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted">{a.body}</p>

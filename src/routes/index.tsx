@@ -22,6 +22,7 @@ import {
   trainingPacks,
 } from "@/data/catalog";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
+import { homePage } from "@/data/pages";
 import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -55,8 +56,8 @@ function Home() {
 
       <Section
         id="tests"
-        title="Tests"
-        description="Measure one specific area on its own."
+        title={homePage.sections.tests.title}
+        description={homePage.sections.tests.description}
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {allTests.map((t) => (
@@ -67,8 +68,8 @@ function Home() {
 
       <Section
         id="assessments"
-        title="Assessments"
-        description="Combinations of tests, run in a single visit."
+        title={homePage.sections.assessments.title}
+        description={homePage.sections.assessments.description}
       >
         <div className="grid gap-6 md:grid-cols-3">
           {assessments.map((a) => (
@@ -79,8 +80,8 @@ function Home() {
 
       <Section
         id="medical"
-        title="Medical Appointment"
-        description="Talk to a doctor about peptides and GLP-1."
+        title={homePage.sections.medical.title}
+        description={homePage.sections.medical.description}
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {medical.map((m) => (
@@ -91,8 +92,8 @@ function Home() {
 
       <Section
         id="train"
-        title="Train"
-        description="Personal training sessions with a strength and conditioning coach."
+        title={homePage.sections.train.title}
+        description={homePage.sections.train.description}
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {trainingPacks.map((t) => (
@@ -101,7 +102,9 @@ function Home() {
         </div>
       </Section>
 
-      <Section id="memberships" title="Memberships" description="Ongoing testing, training and medical support.">
+      <Section id="memberships"
+        title={homePage.sections.memberships.title}
+        description={homePage.sections.memberships.description}>
         <div className="grid gap-6 md:grid-cols-2">
           {memberships.map((m) => (
             <MembershipCard key={m.slug} m={m} />
@@ -121,7 +124,7 @@ function ContactBlock() {
         <div>
           <img src="/volumes-mark.png" alt="Volumes Lab" className="w-36 md:w-44" />
           <h1 className="mt-8 font-display text-3xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-5xl">
-            Madrid Health &amp; Performance Lab
+            {homePage.headline}
           </h1>
 
           <address className="mt-6 space-y-1 text-base not-italic leading-relaxed text-foreground/85">
@@ -182,8 +185,7 @@ function Intro() {
     <section className="border-b border-border px-6 py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
         <p className="max-w-4xl text-lg leading-relaxed text-foreground/85 md:text-xl">
-          Volumes Lab combines advanced testing, a medical team, personal training, and peptide
-          therapies in one space. Membership options available.
+          {homePage.intro}
         </p>
       </div>
     </section>
