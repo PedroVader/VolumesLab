@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrainingIndexRouteImport } from './routes/training.index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as MembershipsIndexRouteImport } from './routes/memberships.index'
+import { Route as LegalIndexRouteImport } from './routes/legal.index'
 import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
 import { Route as TrainingSlugRouteImport } from './routes/training.$slug'
@@ -76,6 +77,11 @@ const MembershipsIndexRoute = MembershipsIndexRouteImport.update({
   path: '/memberships/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalIndexRoute = LegalIndexRouteImport.update({
+  id: '/legal/',
+  path: '/legal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssessmentsIndexRoute = AssessmentsIndexRouteImport.update({
   id: '/assessments/',
   path: '/assessments/',
@@ -87,9 +93,9 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrainingSlugRoute = TrainingSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => TrainingRoute,
+  id: '/training/$slug',
+  path: '/training/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TestsSlugRoute = TestsSlugRouteImport.update({
   id: '/tests/$slug',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/training/$slug': typeof TrainingSlugRoute
   '/about/': typeof AboutIndexRoute
   '/assessments/': typeof AssessmentsIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/memberships/': typeof MembershipsIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/training/': typeof TrainingIndexRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/training/$slug': typeof TrainingSlugRoute
   '/about': typeof AboutIndexRoute
   '/assessments': typeof AssessmentsIndexRoute
+  '/legal': typeof LegalIndexRoute
   '/memberships': typeof MembershipsIndexRoute
   '/tests': typeof TestsIndexRoute
   '/training': typeof TrainingIndexRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/training/$slug': typeof TrainingSlugRoute
   '/about/': typeof AboutIndexRoute
   '/assessments/': typeof AssessmentsIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/memberships/': typeof MembershipsIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/training/': typeof TrainingIndexRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/training/$slug'
     | '/about/'
     | '/assessments/'
+    | '/legal/'
     | '/memberships/'
     | '/tests/'
     | '/training/'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/training/$slug'
     | '/about'
     | '/assessments'
+    | '/legal'
     | '/memberships'
     | '/tests'
     | '/training'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/training/$slug'
     | '/about/'
     | '/assessments/'
+    | '/legal/'
     | '/memberships/'
     | '/tests/'
     | '/training/'
@@ -294,8 +306,10 @@ export interface RootRouteChildren {
   MedicalSlugRoute: typeof MedicalSlugRoute
   MembershipsSlugRoute: typeof MembershipsSlugRoute
   TestsSlugRoute: typeof TestsSlugRoute
+  TrainingSlugRoute: typeof TrainingSlugRoute
   AboutIndexRoute: typeof AboutIndexRoute
   AssessmentsIndexRoute: typeof AssessmentsIndexRoute
+  LegalIndexRoute: typeof LegalIndexRoute
   MembershipsIndexRoute: typeof MembershipsIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   TrainingIndexRoute: typeof TrainingIndexRoute
@@ -366,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembershipsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/': {
+      id: '/legal/'
+      path: '/legal'
+      fullPath: '/legal/'
+      preLoaderRoute: typeof LegalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assessments/': {
       id: '/assessments/'
       path: '/assessments'
@@ -382,10 +403,10 @@ declare module '@tanstack/react-router' {
     }
     '/training/$slug': {
       id: '/training/$slug'
-      path: '/$slug'
+      path: '/training/$slug'
       fullPath: '/training/$slug'
       preLoaderRoute: typeof TrainingSlugRouteImport
-      parentRoute: typeof TrainingRoute
+      parentRoute: typeof rootRouteImport
     }
     '/tests/$slug': {
       id: '/tests/$slug'
@@ -478,8 +499,10 @@ const rootRouteChildren: RootRouteChildren = {
   MedicalSlugRoute: MedicalSlugRoute,
   MembershipsSlugRoute: MembershipsSlugRoute,
   TestsSlugRoute: TestsSlugRoute,
+  TrainingSlugRoute: TrainingSlugRoute,
   AboutIndexRoute: AboutIndexRoute,
   AssessmentsIndexRoute: AssessmentsIndexRoute,
+  LegalIndexRoute: LegalIndexRoute,
   MembershipsIndexRoute: MembershipsIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   TrainingIndexRoute: TrainingIndexRoute,

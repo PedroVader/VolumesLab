@@ -27,17 +27,23 @@ export type IllustrationKey =
   | "ptpack"
   | "retest";
 
+// The SKU page template was cut back to six blocks (see ProductDetail.tsx), so
+// only illustration / outcomes / experience / prep / faqs are rendered today.
+// The rest is kept optional: the copy already exists and may earn its place
+// back, but nothing has to author it for a new product.
 export type ProductContent = {
   illustration: IllustrationKey;
-  heroProof: string[]; // micro-trust items under the hero CTA
-  outcomes: string[]; // what you walk away with
-  measuresDetail: { name: string; why: string }[];
-  experience: { title: string; body: string }[]; // the visit, step by step
-  sampleReport: { title: string; metrics: SampleMetric[]; footnote: string };
-  prep: string[];
-  notFor: string[];
+  outcomes: string[]; // rendered as "What it is"
+  experience: { title: string; body: string }[]; // rendered as "How it works"
+  prep: string[]; // folded into "How it works"
   faqs: { q: string; a: string }[];
-  related: string[]; // product slugs
+
+  // Written, but not currently shown on the page.
+  heroProof?: string[];
+  measuresDetail?: { name: string; why: string }[];
+  sampleReport?: { title: string; metrics: SampleMetric[]; footnote: string };
+  notFor?: string[];
+  related?: string[];
 };
 
 export const productContent: Record<string, ProductContent> = {
@@ -616,6 +622,83 @@ export const productContent: Record<string, ProductContent> = {
       { q: "What if I miss a quarter?", a: "Retests can shift by a couple of weeks either side; the bundle stays valid for 14 months." },
     ],
     related: ["foundations", "health-performance", "longevity"],
+  },
+
+  // ---------------- MEDICAL ----------------
+  "doctor-meeting": {
+    illustration: "glp1",
+    outcomes: [
+      "A straight answer on whether GLP-1 or peptide treatment makes sense for you, from a doctor rather than a forum.",
+      "Your history, medications and goals reviewed properly before anything is prescribed.",
+      "A clear next step, including any bloodwork you need and what it would cost.",
+    ],
+    experience: [
+      { title: "Book the slot", body: "Thirty minutes with a Volumes Lab doctor. Nothing is prescribed before this conversation." },
+      { title: "The consultation", body: "Your goals, medical history and current medication, and an honest read on whether treatment is appropriate." },
+      { title: "Next steps", body: "If it fits, the doctor sets out the plan and the bloodwork required before starting. If it doesn't, they say so." },
+    ],
+    prep: ["Bring a list of any medication you currently take, and any recent bloodwork you already have."],
+    faqs: [
+      { q: "Will I leave with a prescription?", a: "Not on the day. Treatment is prescribed only where clinically appropriate, and only after the required bloodwork." },
+      { q: "Is the medication included?", a: "No. Medication is purchased separately and is not part of the consultation price." },
+      { q: "What if it's not right for me?", a: "The doctor will tell you, and point you to what would help instead. That is a useful outcome, not a wasted appointment." },
+    ],
+  },
+
+  // ---------------- TRAINING ----------------
+  "training-session": {
+    illustration: "ptpack",
+    outcomes: [
+      "One hour of private coaching with the Volumes Lab performance team.",
+      "A session built around your ability and goals, not a fixed class format.",
+      "A way to try how we train before committing to a pack or a membership.",
+    ],
+    experience: [
+      { title: "Book a slot", body: "Pick a time with the performance team." },
+      { title: "Quick intake", body: "Ten minutes on your history, injuries and what you want out of the hour." },
+      { title: "Train", body: "Strength, cardio, intervals, conditioning or mobility, depending on what serves you." },
+    ],
+    prep: ["Bring clothes you can train in and shoes you can lift in."],
+    faqs: [
+      { q: "Do I need a test first?", a: "No. Testing makes the programming sharper, but you can train without it." },
+      { q: "Can I buy several at once?", a: "Yes, and it works out cheaper. See the 3, 5 and 10 session packs." },
+    ],
+  },
+  "pt-pack-3": {
+    illustration: "ptpack",
+    outcomes: [
+      "Three private sessions, enough to learn the lifts properly rather than rush them.",
+      "A coach who knows your history by the second session.",
+      "The cheapest way to find out whether coached training suits you.",
+    ],
+    experience: [
+      { title: "Buy the pack", body: "Three sessions to use within two months." },
+      { title: "Session one", body: "Intake, movement screen and a first session built around what it shows." },
+      { title: "Sessions two and three", body: "Progress the same movements so you leave able to train on your own." },
+    ],
+    prep: ["Bring clothes you can train in and shoes you can lift in."],
+    faqs: [
+      { q: "What if I can't use them in two months?", a: "Tell us before they expire and we will work something out." },
+      { q: "Can I share them?", a: "Packs are personal, since the programming is built around one person's assessment." },
+    ],
+  },
+  "pt-pack-5": {
+    illustration: "ptpack",
+    outcomes: [
+      "Five private sessions, a full training block rather than a taster.",
+      "A programme written for you and adjusted as you go.",
+      "Notes on your progress you can keep training from afterwards.",
+    ],
+    experience: [
+      { title: "Buy the pack", body: "Five sessions to use within three months." },
+      { title: "Build the plan", body: "Intake and movement screen, then a block with a clear goal." },
+      { title: "Train and adjust", body: "Load and exercises change as you improve, not on a fixed script." },
+    ],
+    prep: ["Bring clothes you can train in and shoes you can lift in."],
+    faqs: [
+      { q: "How often should I use them?", a: "Once or twice a week works best. Spreading five sessions over three months gives you less to build on." },
+      { q: "Is testing included?", a: "No, but a Foundational Assessment first makes the programming considerably better." },
+    ],
   },
 };
 

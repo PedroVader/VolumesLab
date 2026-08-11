@@ -2,7 +2,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { memberships } from "@/data/catalog";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ProductDetail } from "@/components/site/ProductDetail";
-import { MembershipComparison } from "@/components/site/ComparisonTables";
 import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/memberships/$slug")({
@@ -39,7 +38,6 @@ function Page() {
   return (
     <SiteChrome>
       <ProductDetail product={product} />
-      <MembershipComparison currentSlug={product.slug} />
     </SiteChrome>
   );
 }

@@ -1,18 +1,22 @@
-// Brief-aligned product detail template (sections 5.2/5.3, 6.2, 7.3).
-// Branches by category (membership / assessment / test), pulling commercial and
-// relational data from catalog.ts and marketing copy from productContent.ts.
+// SKU page template, to the structure the client set (10/08/2026):
+//
+//   HERO → WHAT IT IS → HOW IT WORKS → [CATEGORY MODULE] → FAQ → CTA
+//
+// Six blocks, identical on every page except the category module. The brief
+// was "lo más más más sencillo posible", so the sample report, the metric
+// glossary and the "not for you if" list are gone; preparation notes were kept
+// but folded into How it works, since people need them before they buy.
 
 import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
-import { assessments, findProduct, getTests, productPath } from "@/data/catalog";
+import { assessments, findProduct, getTests, productPath, trainingPacks } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
-import { hasDeepLink } from "@/lib/momence";
 import { ProductIllustration } from "./illustrations";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
-import { BookCta, SecondaryLink } from "./cards";
+import { BookCta } from "./cards";
+import { Eyebrow, SectionTitle, FaqList, StickyBookBar } from "./blocks";
 
-// Section anchors on the homepage, which is now the index for every category.
 const categoryCrumb: Record<string, Crumb> = {
   membership: { name: "Memberships", to: "/" },
   assessment: { name: "Assessments", to: "/" },
@@ -28,37 +32,16 @@ const categoryAnchor: Record<string, string> = {
   medical: "medical",
   training: "train",
 };
-import {
-  Eyebrow,
-  SectionTitle,
-  OutcomeList,
-  VisitSteps,
-  SampleReport,
-  FaqList,
-  PrepList,
-  StickyBookBar,
-} from "./blocks";
 
 export function ProductDetail({ product }: { product: Product }) {
   const content = getProductContent(product.slug);
-  const isMembership = product.category === "membership";
   const path = productPath(product);
-  const ctaLabel = bookingLabel(product);
-  const onBook = () => trackBooking(product, path);
-
-  const includedTests = getTests(product.includedTests ?? []);
-  const containingAssessments =
-    product.category === "test"
-      ? assessments.filter((a) => a.includedTests?.includes(product.slug))
-      : [];
-  const linkedMembership = product.includedInMembership
-    ? findProduct(product.includedInMembership)
-    : undefined;
+  const isMembership = product.category === "membership";
 
   return (
     <div className="bg-background pb-20 md:pb-0">
-      {/* ---------- HERO + BUY BOX ---------- */}
-      <section className="border-b border-border px-6 py-16 md:py-24">
+      {/* ─────────────── 1 · HERO ─────────────── */}
+      <section className="border-b border-border px-6 py-14 md:py-20">
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs
             items={[
@@ -69,108 +52,73 @@ export function ProductDetail({ product }: { product: Product }) {
               { name: product.name },
             ]}
           />
-          <div className="mt-8">
-            <Eyebrow>{product.categoryLabel}</Eyebrow>
-          </div>
-          <div className="mt-8 grid gap-12 lg:grid-cols-12">
+
+          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-7">
-              <h1 className="font-display text-5xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-7xl">
+              <Eyebrow>{product.categoryLabel}</Eyebrow>
+              <h1 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-6xl">
                 {product.name}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg text-muted text-pretty">{product.tagline}</p>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty">
+                {product.shortDescription ?? product.tagline}
+              </p>
 
               {product.badges?.map((b) => (
-                <p key={b} className="mt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
+                <p key={b} className="mt-5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
                   [ {b} ]
                 </p>
               ))}
 
-              {content && (
-                <figure className="mt-10 border border-border bg-card p-4">
-                  <ProductIllustration k={content.illustration} className="h-auto w-full" />
-                  <figcaption className="mt-3 border-t border-border pt-3 font-mono text-[9px] uppercase tracking-widest text-muted">
-                    Fig. 01, measured on lab-grade equipment at Calle Churruca 5
-                  </figcaption>
-                </figure>
+              <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+                <span className="font-display text-3xl font-bold">
+                  €{product.price}
+                  {isMembership && <span className="ml-1 text-base font-normal text-muted">/mo</span>}
+                </span>
+                {product.duration && (
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+                    {product.duration}
+                  </span>
+                )}
+                {product.membership?.commitment && (
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+                    {product.membership.commitment}
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-8">
+                <BookCta product={product} sourcePage={path} className="px-8 py-4 text-xs" />
+              </div>
+              {product.priceTbd && (
+                <p className="mt-4 max-w-md text-xs leading-relaxed text-muted">
+                  Price shown is indicative and pending confirmation.
+                </p>
               )}
             </div>
 
-            {/* Buy box */}
-            <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-20">
-                <div className="border border-border p-6">
-                  <div className="flex items-baseline justify-between border-b border-border pb-4">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Price</span>
-                    <span className="font-display text-3xl font-bold">
-                      €{product.price}
-                      {isMembership && <span className="ml-1 text-base font-normal text-muted">/mo</span>}
-                    </span>
-                  </div>
-                  {product.duration && (
-                    <div className="flex items-center justify-between border-b border-border py-4">
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Duration</span>
-                      <span className="text-sm">{product.duration}</span>
-                    </div>
-                  )}
-                  {product.membership?.commitment && (
-                    <div className="flex items-center justify-between border-b border-border py-4">
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Commitment</span>
-                      <span className="text-sm">{product.membership.commitment}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between border-b border-border py-4">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Location</span>
-                    <span className="text-sm">Calle Churruca 5, Madrid</span>
-                  </div>
-
-                  <BookCta
-                    product={product}
-                    sourcePage={path}
-                    className="mt-4 w-full py-4 text-xs"
-                  />
-                  <p className="mt-4 text-center font-mono text-[9px] uppercase tracking-widest text-muted">
-                    {hasDeepLink(product)
-                      ? "Booking and payment are handled securely in Momence"
-                      : "Continue in Momence to choose a time"}
-                  </p>
-                  {product.giftable && !isMembership && (
-                    <p className="mt-3 text-center font-mono text-[9px] uppercase tracking-widest text-muted">
-                      Gift cards available in Momence
-                    </p>
-                  )}
+            {content && (
+              <figure className="lg:col-span-5">
+                <div className="border border-border bg-card p-4">
+                  <ProductIllustration k={content.illustration} className="h-auto w-full" />
                 </div>
-                {product.priceTbd && (
-                  <p className="mt-4 text-xs leading-relaxed text-muted">
-                    Price shown is indicative and pending confirmation.
-                  </p>
-                )}
-              </div>
-            </div>
+              </figure>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ---------- ASSESSMENT: what is included (canonical test links) ---------- */}
-      {includedTests.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
+      {/* ─────────────── 2 · WHAT IT IS ─────────────── */}
+      {content && content.outcomes.length > 0 && (
+        <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <Eyebrow>What is included</Eyebrow>
-            <SectionTitle className="mt-6 max-w-3xl">The tests in this assessment</SectionTitle>
-            <ul className="mt-10 divide-y divide-border border-y border-border">
-              {includedTests.map((t) => (
-                <li key={t.slug}>
-                  <Link
-                    to="/tests/$slug"
-                    params={{ slug: t.slug }}
-                    className="group flex items-baseline justify-between gap-6 py-5"
-                  >
-                    <span className="font-display text-xl font-bold uppercase tracking-tight group-hover:text-primary">
-                      {t.name}
-                    </span>
-                    <span className="shrink-0 font-mono text-[10px] uppercase tracking-widest text-muted group-hover:text-primary">
-                      View test →
-                    </span>
-                  </Link>
+            <SectionTitle>What it is</SectionTitle>
+            <ul className="mt-8 max-w-3xl space-y-4">
+              {content.outcomes.map((o) => (
+                <li key={o} className="flex gap-4 text-base leading-relaxed text-foreground/85">
+                  <span aria-hidden className="mt-1 font-mono text-[11px] text-primary">
+                    ·
+                  </span>
+                  {o}
                 </li>
               ))}
             </ul>
@@ -178,165 +126,58 @@ export function ProductDetail({ product }: { product: Product }) {
         </section>
       )}
 
-      {/* ---------- MEMBERSHIP: medical / bloodwork / medication callouts ---------- */}
-      {isMembership && product.membership && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
+      {/* ─────────────── 3 · HOW IT WORKS ─────────────── */}
+      {content && content.experience.length > 0 && (
+        <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <Eyebrow>What is included</Eyebrow>
-            <ul className="mt-10 divide-y divide-border border-y border-border">
-              {product.measures.map((m) => (
-                <li key={m} className="flex gap-4 py-4">
-                  <span aria-hidden className="mt-0.5 font-mono text-[11px] text-primary">✓</span>
-                  <span className="text-base leading-relaxed text-foreground/85">{m}</span>
+            <SectionTitle>How it works</SectionTitle>
+            <ol className="mt-10 grid gap-8 md:grid-cols-3">
+              {content.experience.map((step, i) => (
+                <li key={step.title} className="border-t-2 border-primary pt-5">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-3 font-display text-xl font-extrabold uppercase tracking-tight">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>
                 </li>
               ))}
-            </ul>
-            {(product.membership.bloodworkNote || product.membership.medicationNote) && (
-              <div className="mt-10 grid gap-6 md:grid-cols-2">
-                {product.membership.bloodworkNote && (
-                  <Callout title="Required before treatment">{product.membership.bloodworkNote}</Callout>
-                )}
-                {product.membership.medicationNote && (
-                  <Callout title="Medication cost">{product.membership.medicationNote}</Callout>
-                )}
-              </div>
+            </ol>
+            {content.prep.length > 0 && (
+              <p className="mt-10 max-w-2xl border-t border-border pt-6 text-sm leading-relaxed text-muted">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
+                  Before you come:{" "}
+                </span>
+                {content.prep.join(" ")}
+              </p>
             )}
           </div>
         </section>
       )}
 
-      {/* ---------- WHAT YOU LEARN / WHY IT MATTERS ---------- */}
-      {content && content.outcomes.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
-          <div className="mx-auto max-w-7xl">
-            <Eyebrow>{product.category === "test" ? "Why it matters" : "What you will learn"}</Eyebrow>
-            <div className="mt-10">
-              <OutcomeList items={content.outcomes} />
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ─────────────── 4 · CATEGORY MODULE ─────────────── */}
+      <CategoryModule product={product} />
 
-      {/* ---------- WHAT HAPPENS / THE VISIT ---------- */}
-      {content && content.experience.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
-          <div className="mx-auto max-w-7xl">
-            <Eyebrow>{isMembership ? "The member journey" : "What happens on the day"}</Eyebrow>
-            <div className="mt-12">
-              <VisitSteps steps={content.experience} />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- YOUR RESULTS ---------- */}
-      {content && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
-          <div className="mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <Eyebrow>Your results</Eyebrow>
-              <SectionTitle className="mt-6">Reviewed with you, in person.</SectionTitle>
-              <p className="mt-6 text-base leading-relaxed text-muted">
-                Every result is benchmarked against your age group and reviewed with the team.
-              </p>
-            </div>
-            <div className="lg:col-span-8">
-              <SampleReport
-                title={content.sampleReport.title}
-                metrics={content.sampleReport.metrics}
-                footnote={content.sampleReport.footnote}
-              />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- HOW TO PREPARE ---------- */}
-      {content && content.prep.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
-          <div className="mx-auto max-w-3xl">
-            <Eyebrow>How to prepare</Eyebrow>
-            <div className="mt-8">
-              <PrepList items={content.prep} />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- TEST: part of an assessment ---------- */}
-      {containingAssessments.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
-          <div className="mx-auto max-w-7xl">
-            <Eyebrow>Part of an assessment</Eyebrow>
-            <SectionTitle className="mt-6 max-w-3xl">This test is included in</SectionTitle>
-            <div className="mt-8 grid gap-6 md:grid-cols-3">
-              {containingAssessments.map((a) => (
-                <Link
-                  key={a.slug}
-                  to="/assessments/$slug"
-                  params={{ slug: a.slug }}
-                  className="group flex flex-col border border-border p-6 transition-colors hover:border-primary"
-                >
-                  <span className="font-display text-xl font-bold uppercase tracking-tight group-hover:text-primary">
-                    {a.name}
-                  </span>
-                  <span className="mt-6 font-mono text-[10px] uppercase tracking-widest text-muted group-hover:text-primary">
-                    View assessment →
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- MEMBERSHIP CONNECTION (assessment) ---------- */}
-      {linkedMembership && (
-        <section className="border-b border-border px-6 py-16">
-          <div className="mx-auto max-w-7xl">
-            <Eyebrow>Membership connection</Eyebrow>
-            <p className="mt-6 max-w-2xl text-lg text-foreground/85">
-              This assessment is included in the{" "}
-              <Link
-                to="/memberships/$slug"
-                params={{ slug: linkedMembership.slug }}
-                className="underline decoration-primary underline-offset-4 hover:text-primary"
-              >
-                {linkedMembership.name} Membership
-              </Link>
-              .
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- FAQ ---------- */}
+      {/* ─────────────── 5 · FAQ ─────────────── */}
       {content && content.faqs.length > 0 && (
-        <section className="border-b border-border px-6 py-16 md:py-20">
+        <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-4xl">
-            <Eyebrow>Questions</Eyebrow>
-            <div className="mt-10">
+            <SectionTitle>Questions</SectionTitle>
+            <div className="mt-8">
               <FaqList items={content.faqs} />
             </div>
           </div>
         </section>
       )}
 
-      {/* ---------- FINAL CTA ---------- */}
+      {/* ─────────────── 6 · FINAL CTA ─────────────── */}
       <section className="px-6 py-16 md:py-20">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4">
-          <BookCta product={product} sourcePage={path} className="px-6 py-3" />
-          {product.category === "assessment" ? (
-            <SecondaryLink to="/" hash="assessments">All Assessments</SecondaryLink>
-          ) : product.category === "test" ? (
-            <SecondaryLink to="/" hash="tests">All Tests</SecondaryLink>
-          ) : product.category === "training" ? (
-            <SecondaryLink to="/" hash="train">All Training Options</SecondaryLink>
-          ) : product.category === "medical" ? (
-            <SecondaryLink to="/" hash="memberships">See Memberships</SecondaryLink>
-          ) : (
-            <SecondaryLink to="/" hash="memberships">All Memberships</SecondaryLink>
-          )}
+        <div className="mx-auto max-w-7xl">
+          <SectionTitle className="max-w-2xl">{finalCtaTitle(product)}</SectionTitle>
+          <div className="mt-8">
+            <BookCta product={product} sourcePage={path} className="px-8 py-4 text-xs" />
+          </div>
         </div>
       </section>
 
@@ -344,18 +185,226 @@ export function ProductDetail({ product }: { product: Product }) {
         price={product.price}
         duration={product.duration}
         href={bookingHref(product)}
-        onClick={onBook}
-        ctaLabel={ctaLabel}
+        onClick={() => trackBooking(product, path)}
+        ctaLabel={bookingLabel(product)}
       />
     </div>
   );
 }
 
-function Callout({ title, children }: { title: string; children: React.ReactNode }) {
+// Short and category-appropriate. Interpolating the product name produced
+// things like "Ready to book your Personal Training, 5 sessions?".
+function finalCtaTitle(product: Product): string {
+  switch (product.category) {
+    case "membership":
+      return "Ready to join?";
+    case "training":
+      return "Ready to start training?";
+    case "medical":
+      return "Ready to talk to a doctor?";
+    default:
+      return "Ready to book?";
+  }
+}
+
+/* ───────────────────────── Category modules ─────────────────────────
+   The only part of the page that changes between categories. Each one
+   answers the question that category's buyer actually asks. */
+
+function CategoryModule({ product }: { product: Product }) {
+  switch (product.category) {
+    case "test":
+      return <TestModule product={product} />;
+    case "assessment":
+      return <AssessmentModule product={product} />;
+    case "training":
+      return <TrainingModule product={product} />;
+    case "membership":
+      return <MembershipModule product={product} />;
+    case "medical":
+      return <MedicalModule />;
+    default:
+      return null;
+  }
+}
+
+function ModuleSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border border-border bg-card p-6">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">{title}</p>
-      <p className="mt-3 text-sm leading-relaxed text-muted">{children}</p>
-    </div>
+    <section className="border-b border-border px-6 py-14 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <SectionTitle>{title}</SectionTitle>
+        <div className="mt-8">{children}</div>
+      </div>
+    </section>
+  );
+}
+
+/** A linked tile. Used for every module so the boxes read as one system. */
+function Tile({
+  to,
+  params,
+  children,
+  current = false,
+}: {
+  to: string;
+  params?: Record<string, string>;
+  children: React.ReactNode;
+  current?: boolean;
+}) {
+  const className = `flex h-full items-center justify-between gap-3 border px-4 py-4 font-mono text-[10px] font-bold uppercase leading-snug tracking-widest transition-colors ${
+    current
+      ? "border-primary bg-card text-primary"
+      : "border-border text-muted hover:border-foreground hover:text-foreground"
+  }`;
+  if (current) return <span className={className}>{children}</span>;
+  return (
+    <Link to={to} params={params} className={className}>
+      {children}
+      <span aria-hidden>→</span>
+    </Link>
+  );
+}
+
+/** Test: which assessments already contain this test. */
+function TestModule({ product }: { product: Product }) {
+  const inside = assessments.filter((a) => a.includedTests?.includes(product.slug));
+  if (inside.length === 0) return null;
+  return (
+    <ModuleSection title="Included in">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {inside.map((a) => (
+          <li key={a.slug}>
+            <Tile to="/assessments/$slug" params={{ slug: a.slug }}>
+              {a.name} Assessment
+            </Tile>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-sm text-muted">
+        Booking the assessment is cheaper than booking each test on its own.
+      </p>
+    </ModuleSection>
+  );
+}
+
+/** Assessment: every test it contains, each linking to its own page. */
+function AssessmentModule({ product }: { product: Product }) {
+  const tests = getTests(product.includedTests ?? []);
+  if (tests.length === 0) return null;
+  const membership = product.includedInMembership ? findProduct(product.includedInMembership) : undefined;
+  return (
+    <ModuleSection title="Includes">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {tests.map((t) => (
+          <li key={t.slug}>
+            <Tile to="/tests/$slug" params={{ slug: t.slug }}>
+              {t.name}
+            </Tile>
+          </li>
+        ))}
+      </ul>
+      {membership && (
+        <p className="mt-6 text-sm text-muted">
+          Included in the{" "}
+          <Link
+            to="/memberships/$slug"
+            params={{ slug: membership.slug }}
+            className="underline decoration-primary underline-offset-4 hover:text-primary"
+          >
+            {membership.name} Membership
+          </Link>
+          .
+        </p>
+      )}
+    </ModuleSection>
+  );
+}
+
+/** Training: the other pack sizes, with this one marked. */
+function TrainingModule({ product }: { product: Product }) {
+  return (
+    <ModuleSection title="Other options">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {trainingPacks.map((p) => (
+          <li key={p.slug}>
+            <Tile to="/training/$slug" params={{ slug: p.slug }} current={p.slug === product.slug}>
+              {p.training?.sessionCount === 1 ? "1 session" : `${p.training?.sessionCount} sessions`}
+              {p.slug !== product.slug && <span className="sr-only"> at €{p.price}</span>}
+            </Tile>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-sm text-muted">Larger packs bring the price per session down.</p>
+    </ModuleSection>
+  );
+}
+
+/** Membership: what you get, then how joining actually goes. */
+function MembershipModule({ product }: { product: Product }) {
+  return (
+    <ModuleSection title="What's included">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {product.measures.map((m) => (
+          <li
+            key={m}
+            className="flex h-full items-center border border-border px-4 py-4 font-mono text-[10px] font-bold uppercase leading-snug tracking-widest text-muted"
+          >
+            {m}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-12">
+        <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">How to join</h3>
+        <Flow steps={["Enquire", "15-minute call", "Join"]} />
+        {product.membership?.bloodworkNote && (
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
+            {product.membership.bloodworkNote}
+          </p>
+        )}
+        {product.membership?.medicationNote && (
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+            {product.membership.medicationNote}
+          </p>
+        )}
+      </div>
+    </ModuleSection>
+  );
+}
+
+/** Medical: the consultation, and what happens after it. */
+function MedicalModule() {
+  return (
+    <ModuleSection title="How the consultation works">
+      <p className="max-w-2xl text-lg leading-relaxed text-foreground/85">
+        A 30-minute appointment with a Volumes Lab doctor to discuss peptide and GLP-1 treatment,
+        your history and whether it is appropriate for you.
+      </p>
+      <Flow steps={["Purchase", "Book the doctor", "Consultation", "Treatment if appropriate"]} />
+      <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
+        Treatment is prescribed only where clinically appropriate. Medication is purchased
+        separately, and any required bloodwork is completed through an external provider.
+      </p>
+    </ModuleSection>
+  );
+}
+
+/** Small left-to-right step flow, used by the membership and medical modules. */
+function Flow({ steps }: { steps: string[] }) {
+  return (
+    <ol className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-3">
+      {steps.map((s, i) => (
+        <li key={s} className="flex items-center gap-3">
+          <span className="border border-border px-4 py-3 font-mono text-[10px] font-bold uppercase tracking-widest">
+            {s}
+          </span>
+          {i < steps.length - 1 && (
+            <span aria-hidden className="font-mono text-primary">
+              →
+            </span>
+          )}
+        </li>
+      ))}
+    </ol>
   );
 }
