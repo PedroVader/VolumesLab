@@ -32,13 +32,13 @@ export type IllustrationKey =
 // The rest is kept optional: the copy already exists and may earn its place
 // back, but nothing has to author it for a new product.
 export type ProductContent = {
-  illustration: IllustrationKey;
   outcomes: string[]; // rendered as "What it is"
   experience: { title: string; body: string }[]; // rendered as "How it works"
   prep: string[]; // folded into "How it works"
   faqs: { q: string; a: string }[];
 
   // Written, but not currently shown on the page.
+  illustration?: IllustrationKey; // drawings were removed from the pages
   heroProof?: string[];
   measuresDetail?: { name: string; why: string }[];
   sampleReport?: { title: string; metrics: SampleMetric[]; footnote: string };

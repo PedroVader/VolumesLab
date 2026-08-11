@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import { ADDRESS, CONTACT, HOURS } from "@/data/site";
+import { ADDRESS, CONTACT, HOURS, MAP_EMBED } from "@/data/site";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
-import { HandDrawnMap } from "@/components/site/HandDrawnMap";
 
 export const Route = createFileRoute("/about/location")({
   component: LocationPage,
@@ -39,7 +38,13 @@ function LocationPage() {
       <section className="px-6 py-16">
         <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
           <div className="border border-border bg-card">
-            <HandDrawnMap />
+            <iframe
+              title={`Volumes Lab, ${ADDRESS.full}`}
+              src={MAP_EMBED}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="block h-[320px] w-full md:h-[420px]"
+            />
           </div>
           <dl className="divide-y divide-border border-y border-border">
             {info.map((row) => (

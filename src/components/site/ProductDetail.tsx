@@ -12,7 +12,6 @@ import type { Product } from "@/data/catalog";
 import { assessments, findProduct, getTests, productPath, trainingPacks } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
-import { ProductIllustration } from "./illustrations";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { BookCta } from "./cards";
 import { Eyebrow, SectionTitle, FaqList, StickyBookBar } from "./blocks";
@@ -53,8 +52,8 @@ export function ProductDetail({ product }: { product: Product }) {
             ]}
           />
 
-          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-start">
-            <div className="lg:col-span-7">
+          <div className="mt-10">
+            <div className="max-w-3xl">
               <Eyebrow>{product.categoryLabel}</Eyebrow>
               <h1 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-6xl">
                 {product.name}
@@ -95,14 +94,6 @@ export function ProductDetail({ product }: { product: Product }) {
                 </p>
               )}
             </div>
-
-            {content && (
-              <figure className="lg:col-span-5">
-                <div className="border border-border bg-card p-4">
-                  <ProductIllustration k={content.illustration} className="h-auto w-full" />
-                </div>
-              </figure>
-            )}
           </div>
         </div>
       </section>

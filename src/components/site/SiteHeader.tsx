@@ -9,7 +9,6 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { BOOKING_HOME } from "@/lib/momence";
 import { track } from "@/lib/analytics";
-import { HandArrow } from "./illustrations";
 
 type NavItem = { label: string; hash?: string; to?: string };
 
@@ -120,7 +119,9 @@ function BookServicesButton({
       className={`group inline-flex items-center gap-2 bg-primary px-5 py-2.5 font-mono text-[12px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong ${className}`}
     >
       Book Services
-      <HandArrow className="h-3.5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
+      <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
+        →
+      </span>
     </a>
   );
 }
