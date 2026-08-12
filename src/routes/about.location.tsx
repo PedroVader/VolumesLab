@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { metaTags } from "@/data/meta";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED } from "@/data/site";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
@@ -7,13 +8,7 @@ import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 export const Route = createFileRoute("/about/location")({
   component: LocationPage,
   head: () => ({
-    meta: [
-      { title: "Location, Volumes Lab Madrid" },
-      {
-        name: "description",
-        content: "Volumes Lab, Churruca 5, Justicia, Madrid. Map, access, transport and opening hours.",
-      },
-    ],
+    meta: metaTags("location"),
   }),
 });
 

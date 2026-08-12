@@ -101,3 +101,52 @@ export const labPage = {
     { title: "Training floor", body: "A dedicated space for private personal training sessions." },
   ],
 } as const;
+
+// The legal page body. Kept as labelled paragraphs rather than one blob so the
+// CMS can present them as separate fields and nobody has to edit HTML.
+export const legalPage = {
+  title: "Legal & Privacy",
+  companyHeading: "Company information",
+  labels: {
+    legalName: "Registered name",
+    tradingName: "Trading as",
+    taxId: "Tax ID (NIF/CIF)",
+    registeredAddress: "Registered address",
+    premises: "Premises",
+    email: "Email",
+    phone: "Phone",
+    pending: "pending",
+  },
+  privacyHeading: "Privacy notice",
+  privacy: [
+    {
+      lead: "Who is responsible.",
+      body: "{company}, at the contact details above, is the data controller for the personal data collected through this website.",
+    },
+    {
+      lead: "What this website collects.",
+      body: "This site is informational. It does not take bookings or payments and does not require an account. If you write to us using the contact form or by email, we receive the name, email address and message you send. We use anonymous, aggregated analytics to understand how the site is used; these do not identify you individually.",
+    },
+    {
+      lead: "Why, and on what basis.",
+      body: "We use your message solely to reply to it, on the basis of your request. We keep it only as long as needed to deal with your enquiry and to meet any legal obligation.",
+    },
+    {
+      lead: "Booking and payment happen elsewhere.",
+      body: "When you choose to book or buy, you leave this website for our booking platform, Momence, which acts as processor and handles the appointment and the payment under its own terms and privacy policy. Any health or clinical information you give us as a patient is handled outside this website, under the information we provide you at the clinic.",
+    },
+    {
+      lead: "Who else sees your data.",
+      body: "Our website hosting and analytics providers process data on our behalf under contract. We do not sell your personal data or share it for advertising.",
+    },
+    {
+      lead: "Your rights.",
+      body: "You can ask us for access to your data, or to correct, delete, restrict or object to its use, or to receive it in a portable form. Write to {email}. You may also lodge a complaint with the Spanish data protection authority, the Agencia Española de Protección de Datos (aepd.es).",
+    },
+    {
+      lead: "Cookies.",
+      body: "This site sets only the cookies and local storage strictly necessary for it to work. It does not use advertising or tracking cookies.",
+    },
+  ],
+  backLink: "Back to Volumes Lab",
+} as const;

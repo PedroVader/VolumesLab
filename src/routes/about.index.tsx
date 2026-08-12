@@ -3,18 +3,12 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { aboutPage } from "@/data/pages";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { canonical } from "@/lib/seo";
+import { metaTags } from "@/data/meta";
 
 export const Route = createFileRoute("/about/")({
   component: AboutLanding,
   head: () => ({
-    meta: [
-      { title: "About, Volumes Lab Madrid" },
-      {
-        name: "description",
-        content:
-          "One team, one location and one clear plan. Volumes Lab brings advanced testing, medical expertise and personal training together.",
-      },
-    ],
+    meta: metaTags("about"),
     links: [canonical("/about")],
   }),
 });

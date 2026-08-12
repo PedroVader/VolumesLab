@@ -1,15 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { metaTags } from "@/data/meta";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 import { teamCredentials } from "@/data/productContent";
 
 export const Route = createFileRoute("/about/team")({
   component: TeamPage,
   head: () => ({
-    meta: [
-      { title: "The Team, Volumes Lab Madrid" },
-      { name: "description", content: "The medical and performance team behind Volumes Lab." },
-    ],
+    meta: metaTags("team"),
   }),
 });
 

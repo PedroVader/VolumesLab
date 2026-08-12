@@ -1,31 +1,27 @@
-// Single legal page, per the client's instruction (10/08/2026): replace the
-// five separate legal pages with one small page, noindex, holding the company
-// identity the LSSI requires plus a compact privacy notice for what this site
-// itself does.
-//
-// The LSSI (Ley 34/2002, art. 10) requires the identifying details below to be
-// "permanently, easily and directly accessible" — hence the persistent footer
+// Single legal page, per the client's instruction (10/08/2026): one small page,
+// noindex, holding the company identity the LSSI (Ley 34/2002, art. 10)
+// requires to be "permanently, easily and directly accessible", plus a compact
+// privacy notice for what this site itself does. Hence the persistent footer
 // link rather than a page buried in a menu.
 //
-// PENDING: CIF and registered address are not filled in. They are legally
-// required and the page is incomplete until the client supplies them.
+// All copy lives in @/data/pages so it can be edited rather than deployed. The
+// {company} and {email} placeholders are filled from @/data/site, so the legal
+// entity and contact address are never typed twice.
+//
+// PENDING: tax ID and registered address are legally required and still empty.
+// They render as [ pending ] rather than being invented.
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { canonical } from "@/lib/seo";
+import { metaTags } from "@/data/meta";
 import { ADDRESS, COMPANY, CONTACT } from "@/data/site";
+import { legalPage as L } from "@/data/pages";
 
 export const Route = createFileRoute("/legal/")({
   component: LegalPage,
   head: () => ({
-    meta: [
-      { title: "Legal & Privacy, Volumes Lab" },
-      { name: "robots", content: "noindex, follow" },
-      {
-        name: "description",
-        content: "Company information and privacy notice for volumeslab.com.",
-      },
-    ],
+    meta: metaTags("legal"),
     links: [canonical("/legal")],
   }),
 });
@@ -36,26 +32,25 @@ function LegalPage() {
       <section className="px-6 py-16 md:py-24">
         <div className="mx-auto max-w-2xl">
           <h1 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">
-            Legal &amp; Privacy
+            {L.title}
           </h1>
 
-          {/* ---- LSSI company identity ---- */}
           <div className="mt-12">
             <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              Company information
+              {L.companyHeading}
             </h2>
             <dl className="mt-5 divide-y divide-border border-y border-border text-sm">
-              <Row label="Registered name">{COMPANY.legalName}</Row>
-              <Row label="Trading as">{COMPANY.tradingName}</Row>
-              <Row label="Tax ID (NIF/CIF)">{COMPANY.taxId ?? <Pending />}</Row>
-              <Row label="Registered address">{COMPANY.registeredAddress ?? <Pending />}</Row>
-              <Row label="Premises">{ADDRESS.full}</Row>
-              <Row label="Email">
+              <Row label={L.labels.legalName}>{COMPANY.legalName}</Row>
+              <Row label={L.labels.tradingName}>{COMPANY.tradingName}</Row>
+              <Row label={L.labels.taxId}>{COMPANY.taxId ?? <Pending />}</Row>
+              <Row label={L.labels.registeredAddress}>{COMPANY.registeredAddress ?? <Pending />}</Row>
+              <Row label={L.labels.premises}>{ADDRESS.full}</Row>
+              <Row label={L.labels.email}>
                 <a href={`mailto:${CONTACT.email}`} className="underline underline-offset-4 hover:text-primary">
                   {CONTACT.email}
                 </a>
               </Row>
-              <Row label="Phone">
+              <Row label={L.labels.phone}>
                 <a href={CONTACT.phoneHref} className="underline underline-offset-4 hover:text-primary">
                   {CONTACT.phone}
                 </a>
@@ -63,72 +58,23 @@ function LegalPage() {
             </dl>
           </div>
 
-          {/* ---- Privacy notice, scoped to what this website does ---- */}
           <div className="mt-14">
             <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              Privacy notice
+              {L.privacyHeading}
             </h2>
             <div className="mt-5 space-y-5 text-base leading-relaxed text-foreground/85">
-              <p>
-                <strong className="font-semibold">Who is responsible.</strong> {COMPANY.legalName},
-                at the contact details above, is the data controller for the personal data collected
-                through this website.
-              </p>
-              <p>
-                <strong className="font-semibold">What this website collects.</strong> This site is
-                informational. It does not take bookings or payments and does not require an account.
-                If you write to us using the contact form or by email, we receive the name, email
-                address and message you send. We use anonymous, aggregated analytics to understand
-                how the site is used; these do not identify you individually.
-              </p>
-              <p>
-                <strong className="font-semibold">Why, and on what basis.</strong> We use your
-                message solely to reply to it, on the basis of your request. We keep it only as long
-                as needed to deal with your enquiry and to meet any legal obligation.
-              </p>
-              <p>
-                <strong className="font-semibold">Booking and payment happen elsewhere.</strong> When
-                you choose to book or buy, you leave this website for our booking platform, Momence,
-                which acts as processor and handles the appointment and the payment under its own
-                terms and privacy policy. Any health or clinical information you give us as a
-                patient is handled outside this website, under the information we provide you at the
-                clinic.
-              </p>
-              <p>
-                <strong className="font-semibold">Who else sees your data.</strong> Our website
-                hosting and analytics providers process data on our behalf under contract. We do not
-                sell your personal data or share it for advertising.
-              </p>
-              <p>
-                <strong className="font-semibold">Your rights.</strong> You can ask us for access to
-                your data, or to correct, delete, restrict or object to its use, or to receive it in
-                a portable form. Write to{" "}
-                <a href={`mailto:${CONTACT.email}`} className="underline underline-offset-4 hover:text-primary">
-                  {CONTACT.email}
-                </a>
-                . You may also lodge a complaint with the Spanish data protection authority, the
-                Agencia Española de Protección de Datos (
-                <a
-                  href="https://www.aepd.es"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  aepd.es
-                </a>
-                ).
-              </p>
-              <p>
-                <strong className="font-semibold">Cookies.</strong> This site sets only the cookies
-                and local storage strictly necessary for it to work. It does not use advertising or
-                tracking cookies.
-              </p>
+              {L.privacy.map((p) => (
+                <p key={p.lead}>
+                  <strong className="font-semibold">{p.lead}</strong>{" "}
+                  {p.body.replace("{company}", COMPANY.legalName).replace("{email}", CONTACT.email)}
+                </p>
+              ))}
             </div>
           </div>
 
           <p className="mt-14 border-t border-border pt-6 font-mono text-[10px] uppercase tracking-widest text-muted">
             <Link to="/" className="hover:text-primary">
-              ← Back to Volumes Lab
+              ← {L.backLink}
             </Link>
           </p>
         </div>
@@ -149,5 +95,9 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 function Pending() {
-  return <span className="font-mono text-[11px] uppercase tracking-widest text-primary">[ pending ]</span>;
+  return (
+    <span className="font-mono text-[11px] uppercase tracking-widest text-primary">
+      [ {L.labels.pending} ]
+    </span>
+  );
 }

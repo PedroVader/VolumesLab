@@ -24,23 +24,12 @@ import {
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
 import { homePage } from "@/data/pages";
 import { canonical } from "@/lib/seo";
+import { metaTags } from "@/data/meta";
 
 export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
-    meta: [
-      { title: "Volumes Lab, Madrid Health & Performance Lab" },
-      {
-        name: "description",
-        content:
-          "Volumes Lab combines advanced testing, a medical team, personal training and peptide therapies in one space in central Madrid. Membership options available.",
-      },
-      { property: "og:title", content: "Volumes Lab, Madrid Health & Performance Lab" },
-      {
-        property: "og:description",
-        content: "Advanced testing, a medical team, personal training and peptide therapies in one space.",
-      },
-    ],
+    meta: metaTags("home"),
     links: [canonical("/")],
   }),
 });

@@ -5,16 +5,12 @@ import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow, FaqList } from "@/components/site/blocks";
 import { faqGroups } from "@/data/faq";
 import { canonical } from "@/lib/seo";
+import { metaTags } from "@/data/meta";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
   head: () => ({
-    meta: [
-      { title: "FAQ, Volumes Lab Madrid" },
-      { name: "description", content: "Answers to common questions about testing, preparation, results, memberships and gift cards at Volumes Lab, Madrid." },
-      { property: "og:title", content: "FAQ, Volumes Lab Madrid" },
-      { property: "og:description", content: "Preparation, cancellations, gift cards and more." },
-    ],
+    meta: metaTags("faq"),
     links: [canonical("/faq")],
   }),
 });

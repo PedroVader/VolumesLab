@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { metaTags } from "@/data/meta";
 import { CONTACT, HOURS } from "@/data/site";
 import { Eyebrow } from "@/components/site/blocks";
 import { teamCredentials } from "@/data/productContent";
@@ -9,12 +10,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/contact")({
   component: Contact,
   head: () => ({
-    meta: [
-      { title: "Contact, Volumes Lab Madrid" },
-      { name: "description", content: "Visit Volumes Lab at Calle Churruca 5, Chamberí, Madrid. Email, phone, WhatsApp, metro and parking." },
-      { property: "og:title", content: "Contact, Volumes Lab Madrid" },
-      { property: "og:description", content: "Calle Churruca 5, Madrid. Reach the team." },
-    ],
+    meta: metaTags("contact"),
   }),
 });
 

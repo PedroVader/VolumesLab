@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { metaTags } from "@/data/meta";
 import { labPage } from "@/data/pages";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
@@ -7,14 +8,7 @@ import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 export const Route = createFileRoute("/about/lab")({
   component: LabPage,
   head: () => ({
-    meta: [
-      { title: "The Lab, Volumes Lab Madrid" },
-      {
-        name: "description",
-        content:
-          "Testing, medical expertise and training in one location. The integrated Volumes Lab model.",
-      },
-    ],
+    meta: metaTags("lab"),
   }),
 });
 

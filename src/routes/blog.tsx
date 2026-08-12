@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { metaTags } from "@/data/meta";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow } from "@/components/site/blocks";
 import { posts } from "@/data/blog";
@@ -7,19 +8,7 @@ import { posts } from "@/data/blog";
 export const Route = createFileRoute("/blog")({
   component: BlogIndex,
   head: () => ({
-    meta: [
-      { title: "Journal, Volumes Lab Madrid" },
-      {
-        name: "description",
-        content:
-          "Field notes on VO2max, strength, body composition and longevity from the Volumes performance lab in Madrid.",
-      },
-      { property: "og:title", content: "Journal, Volumes Lab Madrid" },
-      {
-        property: "og:description",
-        content: "Field notes on performance testing and longevity training.",
-      },
-    ],
+    meta: metaTags("blog"),
   }),
 });
 
