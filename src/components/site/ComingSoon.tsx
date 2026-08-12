@@ -10,10 +10,12 @@ import { CONTACT } from "@/data/site";
 export function ComingSoon() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center text-foreground selection:bg-primary selection:text-primary-foreground">
+      {/* The triangle mark the client supplied (12/08), keyed to transparency
+          so it sits on the page colour rather than in a white box. */}
       <img
-        src="/volumes-mark.png"
+        src="/volumes-triangle.png"
         alt="Volumes Lab"
-        className="w-64 max-w-[70vw] md:w-80"
+        className="w-64 max-w-[70vw] md:w-96"
       />
 
       <p className="mt-12 font-mono text-[12px] uppercase tracking-widest text-foreground/85 md:text-sm">
