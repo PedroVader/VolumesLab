@@ -1,3 +1,8 @@
+// Launch switch. While true, every route serves the "Opening Soon" placeholder
+// and the full site stays built but unreachable. Flip to false at launch
+// (mid-October per the client) and everything comes back exactly as it is.
+export const COMING_SOON = true;
+
 // Contact and opening hours — single source of truth.
 //
 // These values were drifting across the footer, the location page, the contact

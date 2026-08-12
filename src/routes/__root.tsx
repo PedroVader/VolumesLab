@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
+import { COMING_SOON } from "@/data/site";
+import { ComingSoon } from "@/components/site/ComingSoon";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -74,7 +76,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Volumes Lab, Human Health & Performance Lab in Madrid" },
+      {
+        title: COMING_SOON
+          ? "Volumes Lab, Madrid · Opening Soon"
+          : "Volumes Lab, Human Health & Performance Lab in Madrid",
+      },
       {
         name: "description",
         content:
@@ -136,6 +142,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Pre-launch gate: while COMING_SOON is on, every route (including deep
+  // links people may have saved) shows the placeholder instead of the site.
+  if (COMING_SOON) {
+    return <ComingSoon />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
