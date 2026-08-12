@@ -8,6 +8,8 @@
 // Dynamic pages (a test, an assessment, a post) build their meta from the item
 // itself and are not listed here; editing the product edits its meta.
 
+import { COMING_SOON } from "@/data/site";
+
 export type PageMeta = {
   /** Browser tab and search result title. */
   title: string;
@@ -78,6 +80,14 @@ export type PageMetaKey = keyof typeof pageMeta;
 
 /** Build the meta tags for a page from its entry above. */
 export function metaTags(key: PageMetaKey) {
+  // While the pre-launch gate is up, every page shows the placeholder, so
+  // every page should also read as the placeholder in tabs and shares.
+  if (COMING_SOON) {
+    return [
+      { title: "Volumes Lab, Madrid · Opening Soon" },
+      { name: "description", content: "Volumes Lab. Churruca 5, 28004 Madrid. Opening soon." },
+    ];
+  }
   // `satisfies` keeps the keys literal but narrows each entry to its own
   // shape, so widen it back to PageMeta before reading optional fields.
   const m: PageMeta = pageMeta[key];
