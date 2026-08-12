@@ -14,24 +14,21 @@ export function ComingSoon() {
           so it sits on the page colour rather than in a white box. */}
       <img
         src="/volumes-triangle.png"
-        alt="Volumes Lab"
+        alt=""
         className="w-64 max-w-[70vw] md:w-96"
       />
 
-      <p className="mt-12 font-mono text-[12px] uppercase tracking-widest text-foreground/85 md:text-sm">
-        Churruca 5 (28004, Madrid)
+      <h1 className="mt-10 font-display text-3xl font-extrabold uppercase tracking-tight md:text-5xl">
+        Volumes Lab
+      </h1>
+
+      <p className="mt-8 font-mono text-[12px] uppercase tracking-widest text-foreground/85 md:text-sm">
+        Opening soon · Churruca 5 (28004, Madrid)
       </p>
 
-      <p className="mt-6 font-display text-4xl font-extrabold uppercase tracking-tight md:text-6xl">
-        Opening Soon
-      </p>
-
-      <a
-        href={`mailto:${CONTACT.email}`}
-        className="mt-10 font-mono text-[12px] uppercase tracking-widest underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground md:text-sm"
-      >
+      <p className="mt-4 font-mono text-[12px] lowercase tracking-widest text-foreground/85 md:text-sm">
         {CONTACT.email}
-      </a>
+      </p>
     </main>
   );
 }
