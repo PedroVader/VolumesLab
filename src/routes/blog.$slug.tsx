@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow } from "@/components/site/blocks";
-import { getPost, posts } from "@/data/blog";
+import { cmsPost, cmsPosts } from "@/lib/cms";
 
 // Map article categories to the product that measures what the article teaches.
 const categoryProduct: Record<string, { slug: string; kind: string; name: string; pitch: string }> = {
@@ -27,10 +27,11 @@ const categoryProduct: Record<string, { slug: string; kind: string; name: string
 };
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
+  loader: async ({ params }) => {
+    const [post, all] = await Promise.all([cmsPost(params.slug), cmsPosts()]);
     if (!post) throw notFound();
-    return { post };
+    const others = all.filter((p) => p.slug !== post.slug).slice(0, 3);
+    return { post, others };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -58,8 +59,8 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function PostPage() {
-  const { post } = Route.useLoaderData();
-  const others = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const { post, others } = Route.useLoaderData();
+
   const product = categoryProduct[post.category];
 
   return (

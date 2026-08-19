@@ -3,12 +3,14 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { CONTACT } from "@/data/site";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow, FaqList } from "@/components/site/blocks";
-import { faqGroups } from "@/data/faq";
+import { cmsFaqGroups } from "@/lib/cms";
 import { canonical } from "@/lib/seo";
 import { metaTags } from "@/data/meta";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
+  // FAQ content is editable in the CMS; fetched per request with fallback.
+  loader: () => cmsFaqGroups().then((faqGroups) => ({ faqGroups })),
   head: () => ({
     meta: metaTags("faq"),
     links: [canonical("/faq")],
@@ -16,6 +18,7 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  const { faqGroups } = Route.useLoaderData();
   return (
     <SiteChrome>
       <section className="border-b border-border px-6 py-24">

@@ -3,16 +3,21 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow } from "@/components/site/blocks";
-import { posts } from "@/data/blog";
+import { cmsPosts } from "@/lib/cms";
 
 export const Route = createFileRoute("/blog")({
   component: BlogIndex,
+  // Posts come from the CMS at request time (30s cache), so publishing in
+  // Payload shows up here without a deploy. Falls back to the bundled posts
+  // if the CMS is unreachable.
+  loader: () => cmsPosts().then((posts) => ({ posts })),
   head: () => ({
     meta: metaTags("blog"),
   }),
 });
 
 function BlogIndex() {
+  const { posts } = Route.useLoaderData();
   return (
     <SiteChrome>
       <section className="border-b border-border px-6 py-24">
