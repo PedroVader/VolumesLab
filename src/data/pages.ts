@@ -38,8 +38,8 @@ export const homePage = {
       title: "Memberships",
       description: "Ongoing testing, training and medical support.",
     },
-  } satisfies Record<string, SectionCopy>,
-} as const;
+  } as Record<'tests'|'assessments'|'medical'|'train'|'memberships', SectionCopy>,
+};
 
 // The SKU template is one component rendering 19 pages, so a single edit here
 // changes every product page at once.
@@ -73,7 +73,7 @@ export const productLabels = {
     medical: "Ready to talk to a doctor?",
     default: "Ready to book?",
   },
-} as const;
+};
 
 export const aboutPage = {
   steps: [
@@ -88,7 +88,7 @@ export const aboutPage = {
     },
     { title: "Retest", body: "Measure progress and adjust the program using objective data." },
   ],
-} as const;
+};
 
 export const labPage = {
   areas: [
@@ -100,7 +100,7 @@ export const labPage = {
     { title: "3D body scanning", body: "Fast, repeatable body-composition scans to track change over time." },
     { title: "Training floor", body: "A dedicated space for private personal training sessions." },
   ],
-} as const;
+};
 
 // The legal page body. Kept as labelled paragraphs rather than one blob so the
 // CMS can present them as separate fields and nobody has to edit HTML.
@@ -149,4 +149,4 @@ export const legalPage = {
     },
   ],
   backLink: "Back to Volumes Lab",
-} as const;
+};

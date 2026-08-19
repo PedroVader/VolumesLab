@@ -13,6 +13,7 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { COMING_SOON } from "@/data/site";
 import { ComingSoon } from "@/components/site/ComingSoon";
+import { cmsSiteContent, applyCmsContent } from "@/lib/cms-content";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -72,6 +73,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  // One CMS fetch per page load. The bundle is serialized to the client, and
+  // applyCmsContent pours it over the data modules on both sides before
+  // anything renders, so every page shows what the panel says. Null (CMS
+  // down) means the apply step is skipped and the bundled snapshot serves.
+  loader: () => cmsSiteContent().then((cms) => ({ cms })),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -142,6 +148,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { cms } = Route.useLoaderData();
+  applyCmsContent(cms);
 
   // Pre-launch gate: while COMING_SOON is on, every route (including deep
   // links people may have saved) shows the placeholder instead of the site.

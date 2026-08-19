@@ -20,17 +20,22 @@ export const ADDRESS = {
   short: "Churruca 5 (Justicia), 28004",
   /** Full form used in address blocks and structured data. */
   full: "Calle Churruca 5, 28004 Madrid, Spain",
-} as const;
+};
 
 // Legal identity, shown on /legal to satisfy the LSSI (Ley 34/2002, art. 10).
 // taxId and registeredAddress are legally required and still missing; the page
 // renders them as [ pending ] rather than inventing values.
-export const COMPANY = {
+export const COMPANY: {
+  legalName: string;
+  tradingName: string;
+  taxId: string | null;
+  registeredAddress: string | null;
+} = {
   legalName: "Volumes Vision S.L.",
   tradingName: "Volumes Lab",
-  taxId: null as string | null,
-  registeredAddress: null as string | null,
-} as const;
+  taxId: null,
+  registeredAddress: null,
+};
 
 export const CONTACT = {
   email: "hello@volumeslab.com",
@@ -38,7 +43,7 @@ export const CONTACT = {
   phone: "+34 600 000 123",
   /** tel: href form. */
   phoneHref: "tel:+34600000123",
-} as const;
+};
 
 export const HOURS = {
   weekdays: { label: "Monday to Friday", value: "9h00 to 20h00" },
@@ -46,7 +51,7 @@ export const HOURS = {
   /** Compact one-line form. */
   short: "Mon–Fri 9h00–20h00 · Sat–Sun 9h00–15h00",
   walkIns: "Walk-ins welcome",
-} as const;
+};
 
 /** Opening hours in schema.org format, for JSON-LD. */
 export const OPENING_HOURS_SPEC = [
@@ -55,6 +60,6 @@ export const OPENING_HOURS_SPEC = [
 ] as const;
 
 /** Google Maps query string shared by the map link and the embedded iframe. */
-export const MAP_QUERY = ADDRESS.full;
-export const MAP_LINK = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}`;
-export const MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;
+export let MAP_QUERY = ADDRESS.full;
+export let MAP_LINK = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}`;
+export let MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;

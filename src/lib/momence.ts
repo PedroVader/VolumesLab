@@ -46,7 +46,14 @@ export const MOMENCE_HOST_ID = "319187";
  * here fails silently in the browser rather than 404ing. Change it only against
  * a link copied from the dashboard.
  */
-export const BOOKING_HOME = "https://momence.com/u/volumes-lab-ClkWKG";
+// `let` so the CMS-applied value (Site settings → momence.bookingHome) can
+// update it; ESM live bindings propagate to every importer.
+export let BOOKING_HOME = "https://momence.com/u/volumes-lab-ClkWKG";
+
+/** Used by the CMS apply step. */
+export function setBookingHome(url: string) {
+  if (url) BOOKING_HOME = url;
+}
 
 /** Whether BOOKING_HOME came from the real Momence account rather than a guess. */
 export const BOOKING_HOME_VERIFIED = true;
