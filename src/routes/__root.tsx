@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
@@ -145,7 +145,26 @@ function RootComponent() {
 
   // Pre-launch gate: while COMING_SOON is on, every route (including deep
   // links people may have saved) shows the placeholder instead of the site.
-  if (COMING_SOON) {
+  //
+  // Preview bypass for the team: opening any URL with ?preview=volumes2026
+  // unlocks the full site in that browser (stored locally); ?preview=off
+  // locks it again. Search engines and visitors always get the placeholder,
+  // since the server renders it and the unlock only happens client-side.
+  const [preview, setPreview] = useState(false);
+  useEffect(() => {
+    if (!COMING_SOON) return;
+    const q = new URLSearchParams(window.location.search).get("preview");
+    if (q === "volumes2026") {
+      localStorage.setItem("vl-preview", "1");
+      setPreview(true);
+    } else if (q === "off") {
+      localStorage.removeItem("vl-preview");
+    } else if (localStorage.getItem("vl-preview") === "1") {
+      setPreview(true);
+    }
+  }, []);
+
+  if (COMING_SOON && !preview) {
     return <ComingSoon />;
   }
 
