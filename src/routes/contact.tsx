@@ -3,7 +3,6 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
 import { CONTACT, HOURS } from "@/data/site";
 import { Eyebrow } from "@/components/site/blocks";
-import { teamCredentials } from "@/data/productContent";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -95,20 +94,8 @@ function Contact() {
               />
             </div>
 
-            <div className="border border-border">
-              <p className="border-b border-border px-6 py-4 font-mono text-[10px] uppercase tracking-widest text-foreground">
-                [ Who you'll meet ]
-              </p>
-              <ul className="divide-y divide-border">
-                {teamCredentials.map((t) => (
-                  <li key={t.role} className="px-6 py-4">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-warm">{t.name}</p>
-                    <p className="mt-1 font-display text-lg font-bold uppercase tracking-tight">{t.role}</p>
-                    <p className="mt-1 text-sm text-muted">{t.detail}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+{/* "Who you'll meet" hidden with the team view (client request, 24/08).
+                Restore from git history when the team content is real. */}
           </div>
         </div>
       </section>

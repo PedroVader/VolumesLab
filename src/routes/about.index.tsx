@@ -13,8 +13,7 @@ export const Route = createFileRoute("/about/")({
   }),
 });
 
-const links: { label: string; to: "/about/team" | "/about/lab" | "/about/location" | "/faq" }[] = [
-  { label: "The team", to: "/about/team" },
+const links: { label: string; to: "/about/lab" | "/about/location" | "/faq" }[] = [
   { label: "The lab", to: "/about/lab" },
   { label: "Location", to: "/about/location" },
   { label: "FAQ", to: "/faq" },

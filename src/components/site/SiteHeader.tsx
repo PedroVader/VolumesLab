@@ -18,7 +18,7 @@ const navItems: NavItem[] = [
   { label: "Medical", hash: "medical" },
   { label: "Train", hash: "train" },
   { label: "Memberships", hash: "memberships" },
-  { label: "Team", to: "/about/team" },
+  // Team hidden temporarily (client request, 24/08) until people and photos exist.
   { label: "The Lab", to: "/about/lab" },
 ];
 

@@ -26,7 +26,6 @@ export function SiteFooter() {
 
           <FooterCol title="About">
             <FooterLink to="/about">What We Do</FooterLink>
-            <FooterLink to="/about/team">Team</FooterLink>
             <FooterLink to="/about/lab">The Lab</FooterLink>
             <FooterLink to="/about/location">Location</FooterLink>
             <FooterLink to="/faq">FAQ</FooterLink>
