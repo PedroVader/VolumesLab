@@ -51,8 +51,8 @@ async function get(path: string): Promise<CmsDoc | null> {
 }
 
 export type CmsBundle = {
+  /** Docs from the five service collections, each tagged with its category. */
   products: CmsDoc[];
-  content: CmsDoc[];
   site: CmsDoc | null;
   home: CmsDoc | null;
   labels: CmsDoc | null;
@@ -68,9 +68,18 @@ let lastGood: CmsBundle | null = null;
  * the caller then skips the apply step and the bundled snapshot serves.
  */
 export async function cmsSiteContent(): Promise<CmsBundle | null> {
-  const [products, content, site, home, labels, about, legal, meta] = await Promise.all([
-    get("/api/products?limit=100&depth=1"),
-    get("/api/product-content?limit=100&depth=1"),
+  // One collection per category since the 25/08 restructure; each doc carries
+  // its page content too, so there is no separate product-content fetch.
+  const categoryOf: Record<string, string> = {
+    tests: "test",
+    assessments: "assessment",
+    medical: "medical",
+    training: "training",
+    memberships: "membership",
+  };
+  const serviceCollections = Object.keys(categoryOf);
+  const [svcResults, site, home, labels, about, legal, meta] = await Promise.all([
+    Promise.all(serviceCollections.map((c) => get(`/api/${c}?limit=100&depth=1`))),
     get("/api/globals/site-settings"),
     get("/api/globals/home-page"),
     get("/api/globals/product-labels"),
@@ -79,11 +88,15 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     get("/api/globals/page-meta"),
   ]);
 
-  if (!products?.docs) return lastGood;
+  const products: CmsDoc[] = [];
+  svcResults.forEach((res, i) => {
+    const cat = categoryOf[serviceCollections[i]];
+    for (const d of (res?.docs as CmsDoc[]) ?? []) products.push({ ...d, category: cat });
+  });
+  if (!products.length) return lastGood;
 
   const bundle: CmsBundle = {
-    products: (products.docs as CmsDoc[]) ?? [],
-    content: (content?.docs as CmsDoc[]) ?? [],
+    products,
     site,
     home,
     labels,
@@ -181,16 +194,11 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   for (const doc of bundle.products) {
     const slug = str(doc.slug);
     const target = slug ? bySlug.get(slug) : undefined;
-    if (target) applyProduct(target, doc);
-    // Products created in the CMS with no bundled counterpart are skipped:
-    // they have no commercial data until the Momence wiring provides it.
-  }
-
-  // ---- product page copy ----
-  for (const doc of bundle.content) {
-    const slug = relSlug(doc.product) ?? str(doc.title);
-    const target = slug ? productContent[slug] : undefined;
-    if (target) applyContent(target, doc);
+    if (!target) continue; // CMS-only docs lack commercial data until Momence wiring
+    applyProduct(target, doc);
+    // page copy rides on the same doc since the restructure
+    const content = slug ? productContent[slug] : undefined;
+    if (content) applyContent(content, doc);
   }
 
   // ---- site settings ----
