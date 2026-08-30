@@ -55,11 +55,6 @@ export function SiteFooter() {
               </a>
             </li>
             <li>
-              <a href={CONTACT.phoneHref} className="hover:text-primary">
-                {CONTACT.phone}
-              </a>
-            </li>
-            <li>
               <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-primary">
                 Instagram
               </a>

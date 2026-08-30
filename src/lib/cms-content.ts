@@ -95,6 +95,12 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
   });
   if (!products.length) return lastGood;
 
+  // The phone was removed from every page (30/08); strip it from the bundle
+  // too so the number does not ship inside the serialized payload either.
+  if (site && typeof site.contact === "object" && site.contact) {
+    delete (site.contact as CmsDoc).phone;
+  }
+
   const bundle: CmsBundle = {
     products,
     site,

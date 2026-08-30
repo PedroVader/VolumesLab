@@ -50,11 +50,7 @@ function LegalPage() {
                   {CONTACT.email}
                 </a>
               </Row>
-              <Row label={L.labels.phone}>
-                <a href={CONTACT.phoneHref} className="underline underline-offset-4 hover:text-primary">
-                  {CONTACT.phone}
-                </a>
-              </Row>
+{/* Phone row removed site-wide (30/08) until a real number exists. */}
             </dl>
           </div>
 

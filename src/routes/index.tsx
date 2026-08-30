@@ -130,10 +130,6 @@ function ContactBlock() {
             <p>
               <a href={`mailto:${CONTACT.email}`} className="hover:text-primary">
                 {CONTACT.email}
-              </a>{" "}
-              /{" "}
-              <a href={CONTACT.phoneHref} className="hover:text-primary">
-                {CONTACT.phone}
               </a>
             </p>
           </address>

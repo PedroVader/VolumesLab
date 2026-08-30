@@ -18,7 +18,7 @@ const info: { label: string; value: string }[] = [
   { label: "Address", value: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.postalCode} ${ADDRESS.city}` },
   { label: "Opening hours", value: `${HOURS.short} · ${HOURS.walkIns}` },
   { label: "Getting here", value: "Metro Alonso Martínez (L4, L5, L10), 4 min walk [confirm]" },
-  { label: "Contact", value: `${CONTACT.email} · ${CONTACT.phone}` },
+  { label: "Contact", value: CONTACT.email },
 ];
 
 function LocationPage() {

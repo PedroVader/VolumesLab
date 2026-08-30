@@ -45,20 +45,7 @@ function Contact() {
               }
             />
             <InfoRow label="Email" value={<a className="hover:opacity-70" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>} />
-            <InfoRow label="Phone" value={<a className="hover:opacity-70" href={CONTACT.phoneHref}>{CONTACT.phone}</a>} />
-            <InfoRow
-              label="WhatsApp"
-              value={
-                <a
-                  className="inline-flex items-center gap-2 border border-foreground px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-foreground hover:text-primary-foreground"
-                  href={`https://wa.me/${CONTACT.phone.replace(/[^0-9]/g, "")}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Message us →
-                </a>
-              }
-            />
+{/* Phone and WhatsApp removed site-wide (30/08) until a real number exists. */}
             <InfoRow label="Hours" value={<>Mon–Fri · {HOURS.weekdays.value}<br />Sat–Sun · {HOURS.weekend.value}<br />{HOURS.walkIns}</>} />
 
             <form

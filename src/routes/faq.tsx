@@ -29,8 +29,11 @@ function FaqPage() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted">
             Everything people ask before their first visit. Something missing?
-            Call <a href={CONTACT.phoneHref} className="underline underline-offset-4 hover:text-foreground">{CONTACT.phone}</a> and
-            ask a human.
+            Write to{" "}
+            <a href={`mailto:${CONTACT.email}`} className="underline underline-offset-4 hover:text-foreground">
+              {CONTACT.email}
+            </a>{" "}
+            and ask a human.
           </p>
         </div>
       </section>
