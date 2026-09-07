@@ -1,0 +1,126 @@
+article:
+  working_title: "Resting Energy Expenditure: What It Is and How It Is Measured"
+  proposed_url: "/blog/resting-energy-expenditure"
+  primary_query: "resting energy expenditure"
+  intent: "Understand what REE means, how indirect calorimetry measures it, and how a measured value differs from an equation"
+  article_type: "FAQ-style product explainer"
+  market: "Madrid, Spain"
+  language: "en-GB"
+  checked_at: "2026-09-07"
+
+serp:
+  search_context: "English-language web search from Spain; desktop; results were assessed by intent rather than retained as fixed positions"
+  comparable_results:
+    - url: "https://www.ncbi.nlm.nih.gov/books/NBK591031/"
+      reason_comparable: "Authoritative explanation of energy-expenditure components and indirect calorimetry"
+      strengths:
+        - "Defines REE within total energy expenditure"
+        - "Explains oxygen and carbon-dioxide measurement"
+      weaknesses:
+        - "Reference-book format is denser than a consumer explainer"
+    - url: "https://pubmed.ncbi.nlm.nih.gov/26038298/"
+      reason_comparable: "Evidence review of best practices for resting indirect calorimetry"
+      strengths:
+        - "Shows that preparation and resting conditions affect measurement quality"
+      weaknesses:
+        - "Does not present a simple product-oriented overview"
+    - url: "https://pubmed.ncbi.nlm.nih.gov/37632665/"
+      reason_comparable: "Systematic review of measured versus equation-predicted RMR in athletes"
+      strengths:
+        - "Separates average bias from individual precision"
+      weaknesses:
+        - "Population is specific to athletes"
+  common_patterns:
+    - "Pages frequently use BMR, RMR, and REE as if they were always identical"
+    - "Commercial pages often jump from one resting measurement to a daily calorie target without explaining additional components"
+    - "Many pages do not distinguish a measurement from a predictive equation"
+  user_questions:
+    - "What does resting energy expenditure include?"
+    - "How does indirect calorimetry work?"
+    - "Is REE the same as total daily energy expenditure?"
+    - "Why can a measured result differ from an equation?"
+  content_gaps:
+    - priority: "CRITICAL"
+      gap: "Define REE early and distinguish it from total daily energy expenditure"
+    - priority: "HIGH"
+      gap: "Explain indirect calorimetry in plain language without converting the result into a nutrition prescription"
+    - priority: "HIGH"
+      gap: "Explain that BMR and RMR are related terms but depend on testing definitions and conditions"
+
+sources:
+  - url: "https://www.ncbi.nlm.nih.gov/books/NBK591031/"
+    title: "Factors Affecting Energy Expenditure and Requirements"
+    publisher: "National Academies via NCBI Bookshelf"
+    kind: "authoritative reference"
+    checked_at: "2026-09-07"
+    supports:
+      - "REE is one component of total energy expenditure"
+      - "Indirect calorimetry uses measured oxygen consumption and carbon-dioxide production"
+  - url: "https://pubmed.ncbi.nlm.nih.gov/26038298/"
+    title: "Best practices for performing indirect calorimetry"
+    publisher: "Journal of the Academy of Nutrition and Dietetics via PubMed"
+    kind: "evidence review"
+    checked_at: "2026-09-07"
+    supports:
+      - "Standardised resting conditions are important for measurement quality"
+  - url: "https://pubmed.ncbi.nlm.nih.gov/37632665/"
+    title: "Accuracy of Resting Metabolic Rate Prediction Equations in Athletes"
+    publisher: "Sports Medicine via PubMed"
+    kind: "systematic review and meta-analysis"
+    checked_at: "2026-09-07"
+    supports:
+      - "Prediction equations vary in average accuracy and individual precision"
+  - url: "https://pubmed.ncbi.nlm.nih.gov/15883556/"
+    title: "Comparison of predictive equations for resting metabolic rate in adults"
+    publisher: "Journal of the American Dietetic Association via PubMed"
+    kind: "systematic review"
+    checked_at: "2026-09-07"
+    supports:
+      - "Predictive equations can have meaningful individual error"
+
+claims:
+  verified_facts:
+    - "REE is the energy used by the body at rest and is one part of total daily energy expenditure"
+    - "Indirect calorimetry estimates energy expenditure from respiratory gas exchange, principally oxygen consumption and carbon-dioxide production"
+    - "Predictive equations estimate resting expenditure from variables such as age, sex, height, weight, or body composition, depending on the equation"
+    - "A measured REE value is not the same as total daily energy expenditure"
+  external_observations: []
+  editorial_inferences:
+    - "The article should explain the output and boundary of the test, not prescribe an intake target"
+  firsthand_evidence:
+    - "src/data/catalog.ts confirms a Volumes Lab Metabolic Assessment using indirect calorimetry"
+  recommendations: []
+
+conflicts:
+  - "The catalogue uses 'resting metabolic rate', while the approved topic uses 'resting energy expenditure'; the article should explain the terminology without claiming perfect equivalence"
+unknowns:
+  - "Exact Volumes Lab equipment, interface, measured duration, preparation protocol, and report fields"
+  - "Whether substrate-utilisation reporting will be included in the final service"
+  - "Final byline, reviewer, domain, and canonical URL"
+must_not_claim:
+  - "That one REE measurement is a diet prescription"
+  - "That the result equals total daily calorie needs"
+  - "That the test diagnoses a metabolic condition"
+  - "That Volumes Lab uses a specific device or protocol not confirmed by the client"
+volatile_facts_to_recheck:
+  - "Volumes Lab service process and report fields"
+
+internal_links:
+  outgoing:
+    - destination: "/tests/metabolic-assessment"
+      anchor: "Metabolic Assessment"
+      purpose: "Connect the method explanation with the relevant confirmed product"
+  incoming_opportunities:
+    - source: "/tests/metabolic-assessment"
+      anchor: "how resting energy expenditure is measured"
+      purpose: "Answer a pre-booking question"
+
+media:
+  images: []
+  videos: []
+
+decision:
+  refresh_or_create: "create"
+  cannibalization_risk: "Low. No existing article targets the definition and measurement of REE."
+  unique_value: "A concise explanation of the measured quantity, method, terminology, and limits of the result"
+  evidence_sufficient_to_draft: true

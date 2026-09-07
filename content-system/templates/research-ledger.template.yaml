@@ -1,0 +1,44 @@
+article:
+  working_title: PENDING
+  proposed_url: PENDING
+  primary_query: PENDING
+  intent: PENDING
+  article_type: PENDING
+  market: "Madrid, Spain"
+  language: "en-GB"
+  checked_at: PENDING
+
+serp:
+  search_context: PENDING
+  comparable_results: []
+  common_patterns: []
+  user_questions: []
+  content_gaps: []
+
+sources: []
+
+claims:
+  verified_facts: []
+  external_observations: []
+  editorial_inferences: []
+  firsthand_evidence: []
+  recommendations: []
+
+conflicts: []
+unknowns: []
+must_not_claim: []
+volatile_facts_to_recheck: []
+
+internal_links:
+  outgoing: []
+  incoming_opportunities: []
+
+media:
+  images: []
+  videos: []
+
+decision:
+  refresh_or_create: PENDING
+  cannibalization_risk: PENDING
+  unique_value: PENDING
+  evidence_sufficient_to_draft: false

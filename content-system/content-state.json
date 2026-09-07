@@ -1,0 +1,66 @@
+{
+  "lastUpdated": "2026-09-07",
+  "publicationAuthorized": false,
+  "items": [
+    {
+      "id": "estimated-vs-lab-vo2max",
+      "title": "Estimated vs Laboratory-Measured VO2max: What Is the Difference?",
+      "state": "drafted",
+      "review": "pending"
+    },
+    {
+      "id": "dexa-vs-bioelectrical-impedance",
+      "title": "DEXA vs Bioelectrical Impedance: Which Measures Body Composition More Accurately?",
+      "state": "drafted",
+      "review": "pending"
+    },
+    {
+      "id": "resting-energy-expenditure",
+      "title": "Resting Energy Expenditure: What It Is and How It Is Measured",
+      "state": "drafted",
+      "review": "pending"
+    },
+    {
+      "id": "wearable-vo2max-accuracy",
+      "title": "How Accurate Is the VO2max Estimate on Garmin, Apple Watch or Polar?",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "lactate-vs-stress-vs-cpet",
+      "title": "Lactate Testing vs Exercise Stress Testing vs CPET: What Is the Difference?",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "interpret-dexa-body-composition",
+      "title": "How to Interpret a DEXA Body Composition Scan",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "indirect-calorimetry-vs-bmr-equations",
+      "title": "Indirect Calorimetry vs BMR Equations: Why Estimated Calories Can Be Wrong",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "dexa-body-composition-vs-bone-density",
+      "title": "DEXA Body Composition Scan vs Bone Density Scan: What Is the Difference?",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "dexa-scan-frequency",
+      "title": "How Often Should You Repeat a DEXA Body Composition Scan?",
+      "state": "not-started",
+      "review": "pending"
+    },
+    {
+      "id": "bia-preparation-factors",
+      "title": "How Hydration, Food and Exercise Affect Bioelectrical Impedance Results",
+      "state": "not-started",
+      "review": "pending"
+    }
+  ]
+}

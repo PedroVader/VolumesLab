@@ -1,0 +1,79 @@
+site:
+  name: "Volumes Lab"
+  domain: "PENDING"
+  production_url: "PENDING; volumesvision.com currently shows a placeholder"
+  repository: "git@github.com:PedroVader/VolumesLab.git"
+  cms: "https://cms.volumeslab.com/admin"
+  cms_api: "https://volumes-cms.vercel.app"
+  editable_content_source: "Payload CMS for published posts; src/data/blog.ts as repository fallback"
+  generated_output: "TanStack Start routes"
+
+market:
+  primary_country: "Spain"
+  primary_city: "Madrid"
+  primary_language: "en-GB"
+  audience: "English-speaking adults and athletes comparing measurement and performance-testing services in Madrid"
+  regulated_topic: true
+  required_human_review:
+    - "Client editorial review for every article"
+    - "Qualified professional review for clinical interpretation, eligibility, contraindications, or patient-specific meaning"
+
+editorial:
+  voice: "Direct, restrained, factual, specific, and non-advisory"
+  terminology: "Use the product names confirmed in src/data/catalog.ts; spell VO2max consistently in prose and use DXA/DEXA only where the distinction is explained"
+  first_person_allowed: "Only for documented Volumes Lab process statements"
+  authors:
+    - "Volumes Lab, final byline and reviewer credentials PENDING"
+  prohibited_public_terms:
+    - "longevity"
+    - "biohacking"
+    - "biological age"
+  prohibited_claims:
+    - "Medical advice, diagnosis, or treatment recommendations"
+    - "Exercise or nutrition prescriptions"
+    - "Unsupported superiority, outcome, safety, or lifespan claims"
+    - "Undocumented first-hand experience or customer outcomes"
+  disclosure_rule: "Educational test information only; exact visible disclaimer wording PENDING client approval"
+  editorial_guide: "content-system/editorial-rules.md"
+
+content_system:
+  content_roots:
+    - "content-system/drafts"
+    - "src/data/blog.ts"
+    - "Payload CMS: Blog & FAQ -> Posts"
+  page_types:
+    - "Product page"
+    - "FAQ-style blog explainer"
+  taxonomy: "Product-led: cardiovascular testing, body composition, metabolism, strength and movement"
+  url_conventions: "Existing route /blog/{slug}; proposed slugs require confirmation at implementation"
+  internal_linking_rules: "Each article may link to one directly relevant product page when the product and process are confirmed"
+  image_rights_policy: "Use documented original imagery or properly licensed assets; do not present generated imagery as evidence"
+  video_policy: "No video unless it materially explains a test and rights, accuracy, privacy, and accessibility are verified"
+
+seo:
+  canonical_source: "PENDING; no article-specific canonical was found in the current route"
+  sitemap_source: "PENDING"
+  hreflang_rules: "No alternate language routes currently confirmed"
+  redirect_source: "PENDING"
+  structured_data_rules: "PENDING; no Article structured data was found in the current route"
+  search_console_source: "PENDING"
+  analytics_source: "PENDING"
+
+workflow:
+  branch_policy: "Use review branches; never rewrite pushed Lovable history"
+  validation_commands:
+    - "git diff --check"
+    - "npm run lint"
+    - "npm run build"
+  visual_review_process: "Review representative desktop and mobile article pages after the rich-text renderer is implemented"
+  approval_process: "Client word-by-word approval, plus qualified review where required"
+  publish_process: "Enter approved content in Payload CMS only after explicit publication authorization"
+  live_verification_process: "Check article URL, title, description, canonical, structured data, internal links, mobile and desktop rendering after publication"
+
+state:
+  content_inventory: "content-system/content-state.json"
+  research_ledger_location: "content-system/research"
+  article_brief_location: "content-system/briefs"
+  drafts_location: "content-system/drafts"
+  learnings_file: "content-system/reviews/learnings.md"
+  last_verified_at: "2026-09-07"

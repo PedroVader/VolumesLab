@@ -1,0 +1,126 @@
+article:
+  working_title: "Estimated vs Laboratory-Measured VO2max: What Is the Difference?"
+  proposed_url: "/blog/estimated-vs-laboratory-measured-vo2max"
+  primary_query: "estimated vs measured VO2max"
+  intent: "Understand why a wearable or field estimate may differ from a laboratory result"
+  article_type: "FAQ-style product explainer"
+  market: "Madrid, Spain"
+  language: "en-GB"
+  checked_at: "2026-09-07"
+
+serp:
+  search_context: "English-language web search from Spain; desktop; exact rankings were not retained because results can vary by location and personalisation"
+  comparable_results:
+    - url: "https://support.apple.com/en-us/108790"
+      reason_comparable: "Explains how a major wearable produces a cardiorespiratory-fitness estimate"
+      strengths:
+        - "Names the activities and user inputs involved"
+        - "Clearly describes the result as an estimate"
+      weaknesses:
+        - "Specific to one manufacturer"
+        - "Does not explain a laboratory CPET workflow in depth"
+    - url: "https://professional.heart.org/en/science-news/2016-focused-update-clinical-recommendations-for-cardiopulmonary-exercise-testing-data-assessment/commentary"
+      reason_comparable: "Authoritative explanation of gas-exchange measurement during CPET"
+      strengths:
+        - "Distinguishes directly measured respiratory variables from work-rate estimates"
+      weaknesses:
+        - "Written for clinicians rather than a general reader"
+    - url: "https://pubmed.ncbi.nlm.nih.gov/35072942/"
+      reason_comparable: "Systematic review of consumer wearable estimates compared with criterion measures"
+      strengths:
+        - "Shows that group-level bias and individual-level error are different questions"
+      weaknesses:
+        - "Combines devices and protocols, so it cannot define the accuracy of every current model"
+  common_patterns:
+    - "Search results often call a lab result 'real' and a wearable result 'wrong', which is too absolute"
+    - "User discussions focus on discrepancies between a watch number and a lab number"
+    - "Many pages fail to distinguish measurement method, exercise modality, and test protocol"
+  user_questions:
+    - "Does a watch measure oxygen uptake directly?"
+    - "What does a laboratory test measure?"
+    - "Why can two results differ?"
+    - "Can results from different methods be compared directly?"
+  content_gaps:
+    - priority: "CRITICAL"
+      gap: "A neutral, early explanation that estimates and direct gas-exchange measurements are different methods, not interchangeable labels"
+    - priority: "HIGH"
+      gap: "A compact comparison of inputs, setting, output, and limitations"
+    - priority: "HIGH"
+      gap: "A non-advisory explanation of why modality and protocol can change the result"
+
+sources:
+  - url: "https://support.apple.com/en-us/108790"
+    title: "Set up Cardio Fitness Levels"
+    publisher: "Apple Support"
+    kind: "official"
+    checked_at: "2026-09-07"
+    supports:
+      - "Apple Watch estimates VO2max using heart and motion sensors during specified outdoor activities"
+      - "The estimate uses personal information and may be affected by heart-rate-altering medication settings"
+  - url: "https://professional.heart.org/en/science-news/2016-focused-update-clinical-recommendations-for-cardiopulmonary-exercise-testing-data-assessment/commentary"
+    title: "Clinical Recommendations for Cardiopulmonary Exercise Testing Data Assessment"
+    publisher: "American Heart Association"
+    kind: "official"
+    checked_at: "2026-09-07"
+    supports:
+      - "CPET records respiratory gas exchange and other physiological variables during exercise"
+  - url: "https://pubmed.ncbi.nlm.nih.gov/35072942/"
+    title: "Validity of Consumer-Based Physical Activity Monitors for Estimating VO2max"
+    publisher: "PubMed"
+    kind: "systematic review and meta-analysis"
+    checked_at: "2026-09-07"
+    supports:
+      - "Population-level agreement does not eliminate potentially large individual error"
+  - url: "https://pubmed.ncbi.nlm.nih.gov/39083800/"
+    title: "Validity of Apple Watch Series 7 for Measuring VO2max"
+    publisher: "PubMed"
+    kind: "validation study"
+    checked_at: "2026-09-07"
+    supports:
+      - "Device-specific validation results should not be generalised to every wearable or user"
+
+claims:
+  verified_facts:
+    - "Wearable devices can estimate VO2max from sensor data and user inputs without directly measuring respiratory gases"
+    - "Laboratory CPET measures oxygen uptake and carbon-dioxide output from respiratory gas exchange during a controlled exercise protocol"
+    - "Validation performance varies across devices, protocols, populations, and individuals"
+  external_observations: []
+  editorial_inferences:
+    - "The most useful comparison is methodological: what each result is based on and under what conditions it was obtained"
+  firsthand_evidence:
+    - "src/data/catalog.ts confirms that Volumes Lab lists a VO2Max Test with a graded treadmill or bike protocol"
+  recommendations: []
+
+conflicts:
+  - "The catalogue lists the VO2max protocol but does not confirm the exact analyser, mask, calibration standard, or reporting fields"
+unknowns:
+  - "Exact Volumes Lab equipment and breath-analysis protocol"
+  - "Final byline and qualified reviewer"
+  - "Final production domain and canonical URL"
+must_not_claim:
+  - "That every wearable is inaccurate"
+  - "That a laboratory value is infallible"
+  - "That the test diagnoses disease or predicts an individual's outcome"
+  - "That Volumes Lab uses a specific analyser or protocol not confirmed by the client"
+volatile_facts_to_recheck:
+  - "Current device feature names and supported activity types"
+
+internal_links:
+  outgoing:
+    - destination: "/tests/vo2max"
+      anchor: "VO2Max Test"
+      purpose: "Connect the measurement-method explanation with the relevant confirmed product"
+  incoming_opportunities:
+    - source: "/tests/vo2max"
+      anchor: "estimated and laboratory-measured VO2max"
+      purpose: "Answer a pre-booking comparison question"
+
+media:
+  images: []
+  videos: []
+
+decision:
+  refresh_or_create: "create"
+  cannibalization_risk: "Low. Existing bundled post targets why VO2max matters, but it should be retired or rewritten separately because it conflicts with current editorial rules. Do not let both compete for the same comparison intent."
+  unique_value: "A restrained method comparison tied to the actual VO2Max product, without training or health advice"
+  evidence_sufficient_to_draft: true

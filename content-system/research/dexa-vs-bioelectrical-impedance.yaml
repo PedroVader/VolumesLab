@@ -1,0 +1,116 @@
+article:
+  working_title: "DEXA vs Bioelectrical Impedance: Which Measures Body Composition More Accurately?"
+  proposed_url: "/blog/dexa-vs-bioelectrical-impedance"
+  primary_query: "DEXA vs bioelectrical impedance"
+  intent: "Compare how DXA and BIA estimate body composition and understand why their outputs differ"
+  article_type: "FAQ-style method comparison"
+  market: "Madrid, Spain"
+  language: "en-GB"
+  checked_at: "2026-09-07"
+
+serp:
+  search_context: "English-language web search from Spain; desktop; results were assessed by intent, not treated as fixed ranking positions"
+  comparable_results:
+    - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6452160/"
+      reason_comparable: "Direct comparison of consumer BIA devices with DXA and MRI"
+      strengths:
+        - "Shows device-specific agreement and systematic differences"
+        - "Avoids treating all BIA devices as one method"
+      weaknesses:
+        - "Research format is not accessible to a general reader"
+    - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9813632/"
+      reason_comparable: "Explains that repeatability and agreement with DXA are separate issues"
+      strengths:
+        - "Documents high precision alongside systematic offset"
+      weaknesses:
+        - "One device and study population cannot represent every system"
+    - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6560329/"
+      reason_comparable: "Critical overview of BIA and DXA for body-composition assessment"
+      strengths:
+        - "Explains the physical principles and limitations of both methods"
+      weaknesses:
+        - "Contains clinical framing beyond the intended Volumes Lab article scope"
+  common_patterns:
+    - "Comparison pages often reduce the answer to a universal winner"
+    - "Consumer pages frequently mix accuracy, precision, repeatability, and convenience"
+    - "The effect of device model and measurement conditions is often underexplained"
+  user_questions:
+    - "What does each method actually measure?"
+    - "Why can body-fat percentage differ between methods?"
+    - "Can results from DXA and BIA be compared directly?"
+    - "Does a repeatable device necessarily agree with DXA?"
+  content_gaps:
+    - priority: "CRITICAL"
+      gap: "Explain that both methods estimate body compartments through different physical measurements and models"
+    - priority: "HIGH"
+      gap: "Separate repeatability from agreement between methods"
+    - priority: "HIGH"
+      gap: "State that device, protocol, hydration, posture, and analysis assumptions can affect comparisons without giving preparation advice"
+
+sources:
+  - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6452160/"
+    title: "Accuracy of Bioelectrical Impedance Consumer Devices for Measurement of Body Composition"
+    publisher: "Scientific Reports via PubMed Central"
+    kind: "comparative study"
+    checked_at: "2026-09-07"
+    supports:
+      - "Agreement between BIA and criterion methods is device and compartment dependent"
+      - "Systematic underestimation or overestimation can occur"
+  - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9813632/"
+    title: "High precision but systematic offset in standing BIA compared with DXA"
+    publisher: "BMJ Nutrition, Prevention & Health via PubMed Central"
+    kind: "comparative study"
+    checked_at: "2026-09-07"
+    supports:
+      - "A method can be repeatable yet show systematic differences from DXA"
+  - url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6560329/"
+    title: "Assessment of Body Composition Using BIA and DXA: A Critical Overview"
+    publisher: "Contrast Media & Molecular Imaging via PubMed Central"
+    kind: "critical review"
+    checked_at: "2026-09-07"
+    supports:
+      - "BIA uses tissue electrical properties and predictive models"
+      - "DXA uses X-ray attenuation to estimate bone, fat, and lean compartments"
+
+claims:
+  verified_facts:
+    - "DXA estimates bone mineral, fat mass, and lean soft tissue from differential X-ray attenuation"
+    - "BIA measures impedance to a low-level electrical current and uses equations to estimate body compartments"
+    - "Results from the two methods are not automatically interchangeable"
+    - "Repeatability within one method does not prove agreement with another method"
+  external_observations: []
+  editorial_inferences:
+    - "A useful answer should define accuracy relative to the intended use, device, protocol, and compartment rather than promise one universal winner"
+  firsthand_evidence:
+    - "src/data/catalog.ts lists a 3D Body Composition test and a separate Bone Mineral Density test"
+  recommendations: []
+
+conflicts:
+  - "The approved topic assumes DEXA body composition relevance, while the current product catalogue does not list DEXA body composition as a standalone Volumes Lab product"
+unknowns:
+  - "Whether Volumes Lab will offer whole-body DXA body-composition reporting"
+  - "Which body-composition equipment and analysis protocol will be used"
+  - "The correct product page for a future call to action"
+  - "Final byline, reviewer, domain, and canonical URL"
+must_not_claim:
+  - "That Volumes Lab currently offers a DEXA body composition scan"
+  - "That DXA is perfectly accurate"
+  - "That all BIA devices are inaccurate"
+  - "That either method diagnoses a condition or determines a treatment"
+volatile_facts_to_recheck:
+  - "Volumes Lab service list and equipment"
+
+internal_links:
+  outgoing: []
+  incoming_opportunities: []
+
+media:
+  images: []
+  videos: []
+
+decision:
+  refresh_or_create: "create after service confirmation"
+  cannibalization_risk: "Medium. The bundled body-composition article is adjacent and should be retired or consolidated before publication."
+  unique_value: "A precise explanation of measurement, estimation, agreement, and repeatability without turning the article into health guidance"
+  evidence_sufficient_to_draft: true
+  evidence_sufficient_to_publish: false
