@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { applyCmsContent, cmsSiteContent, type CmsBundle } from '../src/lib/cms-content';
 import { tests, assessments, training, allProducts, findProduct, trainingPacks } from '../src/data/catalog';
 import { productContent } from '../src/data/productContent';
-import { homePage, productLabels } from '../src/data/pages';
+import { homePage, productLabels, faqPage, blogPage } from '../src/data/pages';
 import { pageMeta } from '../src/data/meta';
 import { CONTACT, ADDRESS, PAGES } from '../src/data/site';
 import { LINKS } from '../src/lib/momence';
@@ -146,4 +146,24 @@ test('pages switch off and on from the CMS', () => {
   applyCmsContent(bundle([], [], { pages: { legal: true } }));
   assert.equal(PAGES.legal, true);
   assert.equal(PAGES.blog, true, 'a missing key means on');
+});
+
+test('FAQ and Blog page framing is editable and clears when cleared', () => {
+  const band = faqPage.band;
+  applyCmsContent(bundle([], [], {
+    faq: { headline: 'Preguntas.', intro: 'Escribe a {email}.', band: '' },
+    blog: { headline: 'Notas', cta: { headline: 'Reserva ya', button: '' } },
+  }));
+  assert.equal(faqPage.headline, 'Preguntas.');
+  assert.equal(faqPage.intro, 'Escribe a {email}.');
+  assert.equal(faqPage.band, '', 'a cleared band removes the band');
+  assert.equal(faqPage.eyebrow, 'Frequently asked', 'a field the CMS does not carry keeps its value');
+  assert.equal(blogPage.headline, 'Notas');
+  assert.equal(blogPage.cta.headline, 'Reserva ya');
+  assert.equal(blogPage.cta.button, '');
+  assert.equal(blogPage.cta.eyebrow, 'Your turn');
+  applyCmsContent(bundle([], [], { faq: null, blog: null }));
+  assert.equal(faqPage.headline, 'Preguntas.', 'no global in the bundle changes nothing');
+  applyCmsContent(bundle([], [], { faq: { band } }));
+  assert.equal(faqPage.band, band);
 });

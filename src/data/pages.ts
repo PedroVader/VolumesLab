@@ -6,6 +6,8 @@
 //   productLabels   -> global "Product page labels"
 //   aboutPage       -> global "About"
 //   labPage         -> global "The Lab"
+//   faqPage         -> global "FAQ page"
+//   blogPage        -> global "Blog page"
 //
 // Commercial values (price, duration, availability) are deliberately absent.
 // Momence owns those; putting them here too would create a second source of
@@ -106,6 +108,30 @@ export const labPage = {
     },
     { title: "Training floor", body: "A dedicated space for private personal training sessions." },
   ],
+};
+
+// FAQ page framing. The questions themselves are the Faqs collection; this is
+// the heading above them and the band below. {email} in the intro becomes a
+// mailto link to the contact email.
+export const faqPage = {
+  eyebrow: "Frequently asked",
+  headline: "Questions.",
+  intro:
+    "Everything people ask before their first visit. Something missing? Write to {email} and ask a human.",
+  band: "Still curious? Come see the lab.",
+};
+
+// Blog index framing. The posts themselves are the Posts collection.
+export const blogPage = {
+  eyebrow: "Journal / 01",
+  headline: "Field notes on performance & longevity.",
+  intro:
+    "Short essays from the lab floor. What we measure, what the numbers mean, and how we translate them into training.",
+  cta: {
+    eyebrow: "Your turn",
+    headline: "Reading about numbers is nice. Knowing yours is better.",
+    button: "Book a test",
+  },
 };
 
 // The legal page body. Kept as labelled paragraphs rather than one blob so the

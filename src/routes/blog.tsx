@@ -5,6 +5,7 @@ import { metaTags } from "@/data/meta";
 import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow } from "@/components/site/blocks";
 import { cmsPosts } from "@/lib/cms";
+import { blogPage } from "@/data/pages";
 
 export const Route = createFileRoute("/blog")({
   beforeLoad: pageGate("blog"),
@@ -22,18 +23,21 @@ function BlogIndex() {
   const { posts } = Route.useLoaderData();
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <Eyebrow>Journal / 01</Eyebrow>
-          <h1 className="mt-6 font-display text-5xl font-extrabold tracking-tight md:text-7xl">
-            Field notes on performance & longevity.
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg text-muted">
-            Short essays from the lab floor. What we measure, what the numbers mean,
-            and how we translate them into training.
-          </p>
-        </div>
-      </section>
+      {(blogPage.eyebrow || blogPage.headline || blogPage.intro) && (
+        <section className="border-b border-border px-6 py-24">
+          <div className="mx-auto max-w-6xl">
+            {blogPage.eyebrow && <Eyebrow>{blogPage.eyebrow}</Eyebrow>}
+            {blogPage.headline && (
+              <h1 className="mt-6 font-display text-5xl font-extrabold tracking-tight md:text-7xl">
+                {blogPage.headline}
+              </h1>
+            )}
+            {blogPage.intro && (
+              <p className="mt-8 max-w-2xl text-lg text-muted">{blogPage.intro}</p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
@@ -69,23 +73,29 @@ function BlogIndex() {
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="border-t border-border px-6 py-24">
-        <div className="mx-auto max-w-4xl text-center">
-          <Eyebrow>Your turn</Eyebrow>
-          <h2 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-5xl">
-            Reading about numbers is nice. Knowing yours is better.
-          </h2>
-          <div className="mt-10 flex justify-center">
-            <BookServicesLink
-              sourcePage="/blog"
-              className="gap-2 border border-foreground bg-foreground font-display text-sm tracking-wide hover:bg-background hover:text-foreground"
-            >
-              Book a test →
-            </BookServicesLink>
+      {/* Closing CTA. Editable in the CMS (Blog page); cleared = gone. */}
+      {(blogPage.cta.eyebrow || blogPage.cta.headline || blogPage.cta.button) && (
+        <section className="border-t border-border px-6 py-24">
+          <div className="mx-auto max-w-4xl text-center">
+            {blogPage.cta.eyebrow && <Eyebrow>{blogPage.cta.eyebrow}</Eyebrow>}
+            {blogPage.cta.headline && (
+              <h2 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-5xl">
+                {blogPage.cta.headline}
+              </h2>
+            )}
+            {blogPage.cta.button && (
+              <div className="mt-10 flex justify-center">
+                <BookServicesLink
+                  sourcePage="/blog"
+                  className="gap-2 border border-foreground bg-foreground font-display text-sm tracking-wide hover:bg-background hover:text-foreground"
+                >
+                  {blogPage.cta.button} →
+                </BookServicesLink>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </SiteChrome>
   );
 }

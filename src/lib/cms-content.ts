@@ -31,7 +31,7 @@ import {
   type ProductCategory,
 } from "@/data/catalog";
 import { productContent, type ProductContent } from "@/data/productContent";
-import { homePage, productLabels, aboutPage, labPage, legalPage } from "@/data/pages";
+import { homePage, productLabels, aboutPage, labPage, legalPage, faqPage, blogPage } from "@/data/pages";
 import { pageMeta, type PageMeta, type PageMetaKey } from "@/data/meta";
 import { ADDRESS, CONTACT, HOURS, COMPANY, PAGES, setMapLink, type PageKey } from "@/data/site";
 import { LINKS, setBookingHome } from "@/lib/momence";
@@ -72,6 +72,8 @@ export type CmsBundle = {
   legal: CmsDoc | null;
   meta: CmsDoc | null;
   pages?: CmsDoc | null;
+  faq?: CmsDoc | null;
+  blog?: CmsDoc | null;
 };
 
 // Last successful read of each collection, per instance, so a blip after the
@@ -107,7 +109,7 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     memberships: "membership",
   };
   const serviceCollections = Object.keys(categoryOf);
-  const [svcResults, site, home, labels, about, legal, meta, pages] = await Promise.all([
+  const [svcResults, site, home, labels, about, legal, meta, pages, faq, blog] = await Promise.all([
     Promise.all(serviceCollections.map(getCollection)),
     get("/api/globals/site-settings"),
     get("/api/globals/home-page"),
@@ -116,6 +118,8 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     get("/api/globals/legal-page"),
     get("/api/globals/page-meta"),
     get("/api/globals/page-visibility"),
+    get("/api/globals/faq-page"),
+    get("/api/globals/blog-page"),
   ]);
 
   const products: CmsDoc[] = [];
@@ -126,7 +130,9 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     categories.push(cat);
     for (const d of res) products.push({ ...d, category: cat });
   });
-  if (!categories.length && !site && !home && !labels && !about && !legal && !meta && !pages)
+  if (
+    !categories.length && !site && !home && !labels && !about && !legal && !meta && !pages && !faq && !blog
+  )
     return null;
 
   // The phone was removed from every page (30/08); strip it from the bundle
@@ -135,7 +141,7 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     delete (site.contact as CmsDoc).phone;
   }
 
-  return { products, categories, site, home, labels, about, legal, meta, pages };
+  return { products, categories, site, home, labels, about, legal, meta, pages, faq, blog };
 }
 
 /* ────────────────────────── apply over modules ────────────────────────── */
@@ -458,6 +464,29 @@ export function applyCmsContent(bundle: CmsBundle | null) {
       target.description = str(m.description) ?? target.description;
       target.shareTitle = str(m.shareTitle) ?? target.shareTitle;
       target.shareDescription = str(m.shareDescription) ?? target.shareDescription;
+    }
+  }
+
+  // ---- FAQ page framing (the questions are the Faqs collection) ----
+  if (bundle.faq) {
+    const f = bundle.faq;
+    faqPage.eyebrow = own(f, "eyebrow", faqPage.eyebrow);
+    faqPage.headline = own(f, "headline", faqPage.headline);
+    faqPage.intro = own(f, "intro", faqPage.intro);
+    faqPage.band = own(f, "band", faqPage.band);
+  }
+
+  // ---- Blog index framing (the posts are the Posts collection) ----
+  if (bundle.blog) {
+    const b = bundle.blog;
+    blogPage.eyebrow = own(b, "eyebrow", blogPage.eyebrow);
+    blogPage.headline = own(b, "headline", blogPage.headline);
+    blogPage.intro = own(b, "intro", blogPage.intro);
+    const cta = b.cta as CmsDoc | undefined;
+    if (cta) {
+      blogPage.cta.eyebrow = own(cta, "eyebrow", blogPage.cta.eyebrow);
+      blogPage.cta.headline = own(cta, "headline", blogPage.cta.headline);
+      blogPage.cta.button = own(cta, "button", blogPage.cta.button);
     }
   }
 
