@@ -1,17 +1,29 @@
-// Provider-agnostic analytics layer (brief section 11.7).
-// Events are pushed to a dataLayer-style queue and (in dev) logged. Connect a
-// real provider (GA4, Segment, Plausible, …) later by consuming window.dataLayer
-// — no call sites need to change. No third-party provider is wired here.
+// Analytics events are sent only after the visitor has explicitly consented.
+// Keeping this check here means every existing call site follows the same rule.
 
 export type AnalyticsProps = Record<string, string | number | boolean | undefined>;
 
+export const ANALYTICS_CONSENT_KEY = "volumeslab-analytics-consent";
+
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+export function hasAnalyticsConsent(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.localStorage.getItem(ANALYTICS_CONSENT_KEY) === "granted"
+  );
+}
+
 export function track(event: string, props: AnalyticsProps = {}): void {
-  if (typeof window !== "undefined") {
-    const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
-    (w.dataLayer ||= []).push({ event, ...props });
+  if (hasAnalyticsConsent() && window.gtag) {
+    window.gtag("event", event, props);
   }
   if (import.meta.env?.DEV) {
-    // eslint-disable-next-line no-console
     console.debug("[analytics]", event, props);
   }
 }

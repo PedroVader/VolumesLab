@@ -38,7 +38,7 @@ export const homePage = {
       title: "Memberships",
       description: "Ongoing testing, training and medical support.",
     },
-  } as Record<'tests'|'assessments'|'medical'|'train'|'memberships', SectionCopy>,
+  } as Record<"tests" | "assessments" | "medical" | "train" | "memberships", SectionCopy>,
 };
 
 // The SKU template is one component rendering 19 pages, so a single edit here
@@ -81,7 +81,10 @@ export const aboutPage = {
       title: "Test",
       body: "Measure body composition, bone density, metabolism, cardiovascular fitness, strength and movement.",
     },
-    { title: "Understand", body: "Review the results with the Volumes Lab medical and performance team." },
+    {
+      title: "Understand",
+      body: "Review the results with the Volumes Lab medical and performance team.",
+    },
     {
       title: "Treat or train",
       body: "Follow a personalised program or, where appropriate, a medically supervised treatment plan.",
@@ -97,7 +100,10 @@ export const labPage = {
       body: "Lab-grade equipment for body composition, bone density, metabolism, cardiovascular fitness, strength and movement.",
     },
     { title: "Medical room", body: "Private consultation and review with the medical team." },
-    { title: "3D body scanning", body: "Fast, repeatable body-composition scans to track change over time." },
+    {
+      title: "3D body scanning",
+      body: "Fast, repeatable body-composition scans to track change over time.",
+    },
     { title: "Training floor", body: "A dedicated space for private personal training sessions." },
   ],
 };
@@ -145,7 +151,7 @@ export const legalPage = {
     },
     {
       lead: "Cookies.",
-      body: "This site sets only the cookies and local storage strictly necessary for it to work. It does not use advertising or tracking cookies.",
+      body: "This site uses essential local storage and, only if you accept, Google Analytics cookies to understand aggregate website usage. We do not use analytics data for advertising. You can change your choice at any time using Cookie settings.",
     },
   ],
   backLink: "Back to Volumes Lab",

@@ -13,6 +13,7 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { COMING_SOON } from "@/data/site";
 import { ComingSoon } from "@/components/site/ComingSoon";
+import { Analytics } from "@/components/site/Analytics";
 import { cmsSiteContent, applyCmsContent } from "@/lib/cms-content";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -82,7 +83,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     applyCmsContent(cms);
     return { cmsJson: JSON.stringify(cms) };
   },
-  loader: ({ context }) => ({ cms: JSON.parse(context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>> }),
+  loader: ({ context }) => ({
+    cms: JSON.parse(context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>>,
+  }),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -98,6 +101,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Madrid's first boutique Human Health & Performance Lab. VO2max, body composition, strength, mobility and metabolic testing, measured properly, reviewed by physicians. Calle Churruca 5, Chamberí.",
       },
       { name: "author", content: "Volumes Lab" },
+      {
+        name: "google-site-verification",
+        content: "4kb-AzLiDfJ2LQ-CTOg2VczM1vmRfYB2C5NNX29aha0",
+      },
       { property: "og:title", content: "Volumes Lab, Human Health & Performance Lab in Madrid" },
       {
         property: "og:description",
@@ -107,7 +114,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Volumes Lab, Human Health & Performance Lab in Madrid" },
-      { name: "twitter:description", content: "Lab-grade health and performance testing in central Madrid." },
+      {
+        name: "twitter:description",
+        content: "Lab-grade health and performance testing in central Madrid.",
+      },
       { property: "og:image", content: "https://www.volumeslab.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "625" },
@@ -178,13 +188,21 @@ function RootComponent() {
   }, []);
 
   if (COMING_SOON && !preview) {
-    return <ComingSoon />;
+    return (
+      <>
+        <ComingSoon />
+        <Analytics />
+      </>
+    );
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="bottom-right" theme="light" />
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+        <Toaster position="bottom-right" theme="light" />
+      </QueryClientProvider>
+      <Analytics />
+    </>
   );
 }
