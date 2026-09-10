@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
-import { CONTACT, HOURS, MAP_EMBED } from "@/data/site";
+import { ADDRESS, CONTACT, HOURS, MAP_EMBED } from "@/data/site";
+import { contactPage as C } from "@/data/pages";
 import { Eyebrow } from "@/components/site/blocks";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,33 +20,25 @@ function Contact() {
   const [sent, setSent] = useState(false);
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <Eyebrow>Contact</Eyebrow>
-          <h1 className="mt-6 font-display text-5xl font-extrabold tracking-tight md:text-7xl">
-            Come see the lab.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            Fifteen minutes from anywhere in central Madrid. Drop in for a look around ·
-            the coffee is on us and there is no sales pitch, we promise.
-          </p>
-        </div>
-      </section>
+      {(C.eyebrow || C.headline || C.intro) && (
+        <section className="border-b border-border px-6 py-24">
+          <div className="mx-auto max-w-7xl">
+            {C.eyebrow && <Eyebrow>{C.eyebrow}</Eyebrow>}
+            {C.headline && (
+              <h1 className="mt-6 font-display text-5xl font-extrabold tracking-tight md:text-7xl">
+                {C.headline}
+              </h1>
+            )}
+            {C.intro && <p className="mt-6 max-w-2xl text-lg text-muted">{C.intro}</p>}
+          </div>
+        </section>
+      )}
 
       <section className="px-6 py-24">
         <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2">
           <div className="space-y-10">
-            <InfoRow label="Address" value={<>Calle Churruca 5<br />28004 Madrid, Spain</>} />
-            <InfoRow
-              label="Getting here"
-              value={
-                <>
-                  Metro: Alonso Martínez (L4, L5, L10) · 4 min walk<br />
-                  Bus: lines 3, 21, 37, 149<br />
-                  Parking: Barceló &amp; Villa de París · 5 min walk
-                </>
-              }
-            />
+            {ADDRESS.full && <InfoRow label="Address" value={<Lines text={addressLines(ADDRESS.full)} />} />}
+            {C.gettingHere && <InfoRow label="Getting here" value={<Lines text={C.gettingHere} />} />}
             <InfoRow label="Email" value={<a className="hover:opacity-70" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>} />
 {/* Phone and WhatsApp removed site-wide (30/08) until a real number exists. */}
             {(HOURS.weekdays.value || HOURS.weekend.value || HOURS.walkIns) && (
@@ -70,10 +63,10 @@ function Contact() {
               }}
               className="space-y-4 border-t border-border pt-10"
             >
-              <p className="font-mono text-xs uppercase tracking-widest text-foreground">[ Send a message ]</p>
-              <p className="text-sm text-muted">
-                We reply within one working day, usually much faster.
-              </p>
+              {C.form.title && (
+                <p className="font-mono text-xs uppercase tracking-widest text-foreground">[ {C.form.title} ]</p>
+              )}
+              {C.form.intro && <p className="text-sm text-muted">{C.form.intro}</p>}
               <input required name="name" placeholder="Your name" className="w-full border border-border bg-transparent px-4 py-3 text-sm focus:border-foreground focus:outline-none" />
               <input required name="email" type="email" placeholder="Email" className="w-full border border-border bg-transparent px-4 py-3 text-sm focus:border-foreground focus:outline-none" />
               <textarea required name="message" placeholder="Tell us what you're trying to change, we'll point you to the right test" rows={5} className="w-full border border-border bg-transparent px-4 py-3 text-sm focus:border-foreground focus:outline-none" />
@@ -100,6 +93,27 @@ function Contact() {
         </div>
       </section>
     </SiteChrome>
+  );
+}
+
+// "Calle Churruca 5, 28004 Madrid, Spain" → street on its own line, the rest below.
+function addressLines(full: string) {
+  const [street, ...rest] = full.split(/,\s*/);
+  return rest.length ? `${street}\n${rest.join(", ")}` : street;
+}
+
+// Multi-line CMS text: one line per row.
+function Lines({ text }: { text: string }) {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim());
+  return (
+    <>
+      {lines.map((line, i) => (
+        <span key={i}>
+          {line}
+          {i < lines.length - 1 && <br />}
+        </span>
+      ))}
+    </>
   );
 }
 

@@ -8,6 +8,7 @@
 //   labPage         -> global "The Lab"
 //   faqPage         -> global "FAQ page"
 //   blogPage        -> global "Blog page"
+//   contactPage     -> global "Contact page"
 //
 // Commercial values (price, duration, availability) are deliberately absent.
 // Momence owns those; putting them here too would create a second source of
@@ -131,6 +132,22 @@ export const blogPage = {
     eyebrow: "Your turn",
     headline: "Reading about numbers is nice. Knowing yours is better.",
     button: "Book a test",
+  },
+};
+
+// Contact page copy. Address, email and hours come from src/data/site.ts
+// (CMS: Contact, Address & Hours); this is the wording around them.
+export const contactPage = {
+  eyebrow: "Contact",
+  headline: "Come see the lab.",
+  intro:
+    "Fifteen minutes from anywhere in central Madrid. Drop in for a look around · the coffee is on us and there is no sales pitch, we promise.",
+  /** One line per row, as shown on the page. */
+  gettingHere:
+    "Metro: Alonso Martínez (L4, L5, L10) · 4 min walk\nBus: lines 3, 21, 37, 149\nParking: Barceló & Villa de París · 5 min walk",
+  form: {
+    title: "Send a message",
+    intro: "We reply within one working day, usually much faster.",
   },
 };
 

@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { applyCmsContent, cmsSiteContent, type CmsBundle } from '../src/lib/cms-content';
 import { tests, assessments, training, allProducts, findProduct, trainingPacks } from '../src/data/catalog';
 import { productContent } from '../src/data/productContent';
-import { homePage, productLabels, faqPage, blogPage } from '../src/data/pages';
+import { homePage, productLabels, faqPage, blogPage, contactPage } from '../src/data/pages';
 import { pageMeta } from '../src/data/meta';
 import { CONTACT, ADDRESS, PAGES } from '../src/data/site';
 import { LINKS } from '../src/lib/momence';
@@ -166,4 +166,15 @@ test('FAQ and Blog page framing is editable and clears when cleared', () => {
   assert.equal(faqPage.headline, 'Preguntas.', 'no global in the bundle changes nothing');
   applyCmsContent(bundle([], [], { faq: { band } }));
   assert.equal(faqPage.band, band);
+});
+
+test('Contact page wording is editable and clears when cleared', () => {
+  applyCmsContent(bundle([], [], {
+    contact: { headline: 'Ven a vernos.', gettingHere: 'Metro: X\nBus: Y', form: { intro: '' } },
+  }));
+  assert.equal(contactPage.headline, 'Ven a vernos.');
+  assert.equal(contactPage.gettingHere, 'Metro: X\nBus: Y');
+  assert.equal(contactPage.form.intro, '');
+  assert.equal(contactPage.form.title, 'Send a message', 'a field the CMS does not carry keeps its value');
+  assert.equal(contactPage.eyebrow, 'Contact');
 });

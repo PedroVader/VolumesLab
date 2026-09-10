@@ -11,6 +11,8 @@ Two new entries in the **Pages** group:
 
 The questions and the posts themselves keep living under FAQs and Blog. Nothing is mandatory; a cleared field disappears from the site.
 
+- **Contact page** (added right after): eyebrow ("Contact"), headline ("Come see the lab."), intro, "Getting here" (one line per row; empty hides the block) and the message form's label and intro. The address row now reads the address from Contact, Address & Hours instead of a hardcoded string. Migration `20260910_213000_contact_page_copy` creates `contact_page`.
+
 ## Release order
 
 Same as the previous rollout:
