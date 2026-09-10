@@ -16,9 +16,7 @@ import { track } from "@/lib/analytics";
 import { BookCta } from "./cards";
 import { Eyebrow, SectionTitle } from "./blocks";
 
-const orderedAssessments = [...assessments].sort(
-  (a, b) => (a.comparisonOrder ?? 0) - (b.comparisonOrder ?? 0),
-);
+
 
 /* ---------------- Shared shell ---------------- */
 
@@ -120,6 +118,9 @@ function RowLabel({ children, tight = false }: { children: React.ReactNode; tigh
 /* ---------------- Assessments ---------------- */
 
 export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) {
+  const orderedAssessments = [...assessments].sort(
+    (a, b) => (a.comparisonOrder ?? 0) - (b.comparisonOrder ?? 0),
+  );
   return (
     <ComparisonSection
       kind="assessments"
@@ -174,7 +175,7 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
                 key={a.slug}
                 className={`px-4 py-4 text-center font-display text-lg font-bold ${a.slug === currentSlug ? "bg-card" : ""}`}
               >
-                €{a.price}
+                {a.price === 0 && a.priceTbd ? "Price on booking" : `€${a.price}`}
               </td>
             ))}
           </tr>
@@ -237,7 +238,7 @@ const membershipRows: { label: string; value: (m: Product) => React.ReactNode }[
   { label: "Bloodwork", value: (m) => m.membership?.bloodworkNote },
   { label: "Medication", value: (m) => m.membership?.medicationNote },
   { label: "Commitment", value: (m) => m.membership?.commitment },
-  { label: "Price", value: (m) => `€${m.price} per month` },
+  { label: "Price", value: (m) => m.price === 0 && m.priceTbd ? "Price on booking" : `€${m.price} per month` },
 ];
 
 export function MembershipComparison({ currentSlug }: { currentSlug?: string }) {

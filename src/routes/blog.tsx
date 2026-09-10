@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
 import { BookServicesLink } from "@/components/site/cards";
@@ -6,6 +7,7 @@ import { Eyebrow } from "@/components/site/blocks";
 import { cmsPosts } from "@/lib/cms";
 
 export const Route = createFileRoute("/blog")({
+  beforeLoad: pageGate("blog"),
   component: BlogIndex,
   // Posts come from the CMS at request time (30s cache), so publishing in
   // Payload shows up here without a deploy. Falls back to the bundled posts

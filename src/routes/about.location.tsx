@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED } from "@/data/site";
@@ -6,6 +7,7 @@ import { BookServicesLink } from "@/components/site/cards";
 import { Eyebrow, SectionTitle } from "@/components/site/blocks";
 
 export const Route = createFileRoute("/about/location")({
+  beforeLoad: pageGate("location"),
   component: LocationPage,
   head: () => ({
     meta: metaTags("location"),
@@ -14,20 +16,30 @@ export const Route = createFileRoute("/about/location")({
 
 // Address, hours and contact are confirmed and come from @/data/site.
 // "Getting here" is still a [Confirm] item from the brief (section 10.4).
-const info: { label: string; value: string }[] = [
-  { label: "Address", value: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.postalCode} ${ADDRESS.city}` },
-  { label: "Opening hours", value: `${HOURS.short} · ${HOURS.walkIns}` },
-  { label: "Getting here", value: "Metro Alonso Martínez (L4, L5, L10), 4 min walk [confirm]" },
-  { label: "Contact", value: CONTACT.email },
-];
+// Built per render: the values come from the CMS and can change between requests.
+const infoRows = (): { label: string; value: string }[] =>
+  [
+    {
+      label: "Address",
+      value: [ADDRESS.street, ADDRESS.district, `${ADDRESS.postalCode} ${ADDRESS.city}`.trim()]
+        .filter(Boolean)
+        .join(", "),
+    },
+    { label: "Opening hours", value: [HOURS.short, HOURS.walkIns].filter(Boolean).join(" · ") },
+    { label: "Getting here", value: "Metro Alonso Martínez (L4, L5, L10), 4 min walk [confirm]" },
+    { label: "Contact", value: CONTACT.email },
+  ].filter((r) => r.value);
 
 function LocationPage() {
+  const info = infoRows();
   return (
     <SiteChrome>
       <section className="border-b border-border px-6 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Location</Eyebrow>
-          <SectionTitle as="h1" className="mt-6 max-w-3xl">Churruca 5, Justicia, Madrid</SectionTitle>
+          <SectionTitle as="h1" className="mt-6 max-w-3xl">
+            Churruca 5, Justicia, Madrid
+          </SectionTitle>
         </div>
       </section>
       <section className="px-6 py-16">
@@ -44,7 +56,9 @@ function LocationPage() {
           <dl className="divide-y divide-border border-y border-border">
             {info.map((row) => (
               <div key={row.label} className="py-5">
-                <dt className="font-mono text-[10px] uppercase tracking-widest text-muted">{row.label}</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-widest text-muted">
+                  {row.label}
+                </dt>
                 <dd className="mt-1 text-base text-foreground/85">{row.value}</dd>
               </div>
             ))}

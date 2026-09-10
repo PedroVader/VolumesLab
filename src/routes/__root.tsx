@@ -76,8 +76,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   // One CMS fetch per page load. The bundle is serialized to the client, and
   // applyCmsContent pours it over the data modules on both sides before
   // anything renders, so every page shows what the panel says. Null (CMS
-  // down) means the apply step is skipped and the bundled snapshot serves.
-  loader: () => cmsSiteContent().then((cms) => ({ cms })),
+  // down) preserves page copy; service visibility comes from the CMS bundle.
+  beforeLoad: async () => {
+    const cms = await cmsSiteContent();
+    applyCmsContent(cms);
+    return { cmsJson: JSON.stringify(cms) };
+  },
+  loader: ({ context }) => ({ cms: JSON.parse(context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>> }),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -103,11 +108,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Volumes Lab, Human Health & Performance Lab in Madrid" },
       { name: "twitter:description", content: "Lab-grade health and performance testing in central Madrid." },
-      { property: "og:image", content: "https://volumes-lab.vercel.app/og-image.png" },
+      { property: "og:image", content: "https://www.volumeslab.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "625" },
-      { property: "og:url", content: "https://volumes-lab.vercel.app" },
-      { name: "twitter:image", content: "https://volumes-lab.vercel.app/og-image.png" },
+      { property: "og:url", content: "https://www.volumeslab.com" },
+      { name: "twitter:image", content: "https://www.volumeslab.com/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

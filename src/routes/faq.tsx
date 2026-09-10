@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { CONTACT } from "@/data/site";
 import { BookBand } from "@/components/site/BookBand";
@@ -8,6 +9,7 @@ import { canonical } from "@/lib/seo";
 import { metaTags } from "@/data/meta";
 
 export const Route = createFileRoute("/faq")({
+  beforeLoad: pageGate("faq"),
   component: FaqPage,
   // FAQ content is editable in the CMS; fetched per request with fallback.
   loader: () => cmsFaqGroups().then((faqGroups) => ({ faqGroups })),

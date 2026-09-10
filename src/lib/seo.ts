@@ -1,6 +1,6 @@
 // SEO helpers (brief section 11.8). Single place for the canonical base URL.
 
-export const SITE_URL = "https://volumes-lab.vercel.app";
+export const SITE_URL = "https://www.volumeslab.com";
 
 export function canonical(path: string): { rel: "canonical"; href: string } {
   const clean = path === "/" ? "" : path.replace(/\/$/, "");

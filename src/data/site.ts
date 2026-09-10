@@ -4,6 +4,21 @@
 // the client's request. Flip to false to relaunch.
 export const COMING_SOON = true;
 
+// Pages the client can switch off from the CMS ("Pages on / off"). A page
+// that is off leaves the menus and the footer and its URL returns 404. The
+// homepage and the service pages are not here: services have their own Live
+// checkbox, one by one.
+export const PAGES = {
+  about: true,
+  lab: true,
+  location: true,
+  contact: true,
+  faq: true,
+  blog: true,
+  legal: true,
+};
+export type PageKey = keyof typeof PAGES;
+
 // Contact and opening hours — single source of truth.
 //
 // These values were drifting across the footer, the location page, the contact
@@ -60,7 +75,16 @@ export const OPENING_HOURS_SPEC = [
   { days: ["Saturday", "Sunday"], opens: "09:00", closes: "15:00" },
 ] as const;
 
-/** Google Maps query string shared by the map link and the embedded iframe. */
-export let MAP_QUERY = ADDRESS.full;
-export let MAP_LINK = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}`;
-export let MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;
+/** Google Maps query for the embedded iframe: the business pin, not just the street. */
+export const MAP_QUERY = `${ADDRESS.name}, ${ADDRESS.full}`;
+export const MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`;
+
+// Share link of the Volumes Lab place on Google Maps, supplied by the client
+// (10/09/2026). Editable in the CMS: Contact, Address & Hours → Address → Google Maps link.
+// `let` so the CMS-applied value can replace it; ESM live bindings propagate.
+export let MAP_LINK = "https://maps.app.goo.gl/tqEVDEmC5sPg9y1W8";
+
+/** Used by the CMS apply step. An empty value keeps the current link. */
+export function setMapLink(url: string) {
+  if (url) MAP_LINK = url;
+}

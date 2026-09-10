@@ -535,7 +535,8 @@ export const training: Product[] = [
 
 // The four session options shown in the homepage TRAIN section, in the order
 // the client's architecture specifies: 1, 3, 5 and 10 sessions.
-export const trainingPacks: Product[] = ["training-session", "pt-pack-3", "pt-pack-5", "pt-pack-10"]
+export const TRAINING_PACK_SLUGS = ["training-session", "pt-pack-3", "pt-pack-5", "pt-pack-10"];
+export const trainingPacks: Product[] = TRAINING_PACK_SLUGS
   .map((slug) => training.find((t) => t.slug === slug))
   .filter((t): t is Product => Boolean(t));
 

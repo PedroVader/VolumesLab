@@ -1,18 +1,22 @@
 // Full-site content from the CMS, and the apply step that makes it count.
 //
-// Eleven files read the catalogue and page copy as plain module imports. Rather
-// than rewire every one of them through loaders, the root route fetches ONE
-// bundle per request and `applyCmsContent` pours it over the bundled data
-// modules in place. ESM live bindings propagate the update to every importer,
-// so the whole site becomes editable from a single seam.
+// The root route fetches ONE bundle per request and `applyCmsContent` pours it
+// over the bundled data modules in place. ESM live bindings propagate the
+// update to every importer, so the whole site is editable from a single seam.
 //
-// The contract stays the one agreed with the client:
-//   · Editorial content only. Prices, durations and availability are Momence's;
-//     the CMS collections do not carry those fields, and this module never
-//     touches them — CMS fields are merged onto the bundled product, keeping
-//     its commercial values intact.
-//   · If the CMS is down: last good copy, then the bundled snapshot. The apply
-//     step simply doesn't run and the site renders exactly as deployed.
+// The contract with the client:
+//   · The CMS owns editorial content and, since 10/09/2026, which services and
+//     pages exist: a service is on the site only while its Live checkbox is
+//     ticked, and a page only while it is ticked in "Pages on / off".
+//   · Prices and durations stay Momence's. The CMS has no such fields, and a
+//     service the CMS knows but the bundle does not shows "Price on booking".
+//   · No CMS field is mandatory. A field the editor clears is cleared on the
+//     site too, except for the handful that must never be empty for the site
+//     to work (contact email, the Momence home link, SEO titles), which fall
+//     back to the bundled value.
+//   · If the CMS is down: whatever was last applied in this instance, or the
+//     bundled snapshot on a cold one. The site never empties because of an
+//     outage.
 
 import {
   memberships,
@@ -22,12 +26,14 @@ import {
   training,
   trainingPacks,
   allProducts,
+  TRAINING_PACK_SLUGS,
   type Product,
+  type ProductCategory,
 } from "@/data/catalog";
 import { productContent, type ProductContent } from "@/data/productContent";
 import { homePage, productLabels, aboutPage, labPage, legalPage } from "@/data/pages";
 import { pageMeta, type PageMeta, type PageMetaKey } from "@/data/meta";
-import { ADDRESS, CONTACT, HOURS, COMPANY } from "@/data/site";
+import { ADDRESS, CONTACT, HOURS, COMPANY, PAGES, setMapLink, type PageKey } from "@/data/site";
 import { LINKS, setBookingHome } from "@/lib/momence";
 
 const CMS_URL = "https://volumes-cms.vercel.app";
@@ -53,23 +59,46 @@ async function get(path: string): Promise<CmsDoc | null> {
 export type CmsBundle = {
   /** Docs from the five service collections, each tagged with its category. */
   products: CmsDoc[];
+  /**
+   * Categories whose collection loaded. Only these are authoritative: an empty
+   * collection that loaded removes every service in that category, while a
+   * category that failed to load keeps whatever the site currently shows.
+   */
+  categories?: string[];
   site: CmsDoc | null;
   home: CmsDoc | null;
   labels: CmsDoc | null;
   about: CmsDoc | null;
   legal: CmsDoc | null;
   meta: CmsDoc | null;
+  pages?: CmsDoc | null;
 };
 
-let lastGood: CmsBundle | null = null;
+// Last successful read of each collection, per instance, so a blip after the
+// first request serves the previous list instead of nothing.
+const collectionCache = new Map<string, CmsDoc[]>();
+
+async function getCollection(collection: string): Promise<CmsDoc[] | null> {
+  const docs: CmsDoc[] = [];
+  let page = 1;
+  while (true) {
+    const result = await get(`/api/${collection}?limit=100&depth=1&page=${page}`);
+    if (!result || !Array.isArray(result.docs)) return collectionCache.get(collection) ?? null;
+    docs.push(...(result.docs as CmsDoc[]));
+    if (!result.hasNextPage) break;
+    page++;
+  }
+  collectionCache.set(collection, docs);
+  return docs;
+}
 
 /**
  * Fetches everything the site renders, in parallel. Null on total failure —
- * the caller then skips the apply step and the bundled snapshot serves.
+ * the caller then skips the apply step and the current content keeps serving.
  */
 export async function cmsSiteContent(): Promise<CmsBundle | null> {
   // One collection per category since the 25/08 restructure; each doc carries
-  // its page content too, so there is no separate product-content fetch.
+  // its category so the apply step can find the bundled counterpart.
   const categoryOf: Record<string, string> = {
     tests: "test",
     assessments: "assessment",
@@ -78,22 +107,27 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     memberships: "membership",
   };
   const serviceCollections = Object.keys(categoryOf);
-  const [svcResults, site, home, labels, about, legal, meta] = await Promise.all([
-    Promise.all(serviceCollections.map((c) => get(`/api/${c}?limit=100&depth=1`))),
+  const [svcResults, site, home, labels, about, legal, meta, pages] = await Promise.all([
+    Promise.all(serviceCollections.map(getCollection)),
     get("/api/globals/site-settings"),
     get("/api/globals/home-page"),
     get("/api/globals/product-labels"),
     get("/api/globals/about-page"),
     get("/api/globals/legal-page"),
     get("/api/globals/page-meta"),
+    get("/api/globals/page-visibility"),
   ]);
 
   const products: CmsDoc[] = [];
+  const categories: string[] = [];
   svcResults.forEach((res, i) => {
+    if (!res) return;
     const cat = categoryOf[serviceCollections[i]];
-    for (const d of (res?.docs as CmsDoc[]) ?? []) products.push({ ...d, category: cat });
+    categories.push(cat);
+    for (const d of res) products.push({ ...d, category: cat });
   });
-  if (!products.length) return lastGood;
+  if (!categories.length && !site && !home && !labels && !about && !legal && !meta && !pages)
+    return null;
 
   // The phone was removed from every page (30/08); strip it from the bundle
   // too so the number does not ship inside the serialized payload either.
@@ -101,63 +135,64 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     delete (site.contact as CmsDoc).phone;
   }
 
-  const bundle: CmsBundle = {
-    products,
-    site,
-    home,
-    labels,
-    about,
-    legal,
-    meta,
-  };
-  lastGood = bundle;
-  return bundle;
+  return { products, categories, site, home, labels, about, legal, meta, pages };
 }
 
 /* ────────────────────────── apply over modules ────────────────────────── */
 
-const str = (v: unknown): string | undefined =>
-  typeof v === "string" && v.trim() ? v : undefined;
+const str = (v: unknown): string | undefined => (typeof v === "string" && v.trim() ? v : undefined);
+
+/**
+ * Editable copy: a field the CMS carries wins even when empty, because an
+ * editor cleared it on purpose. A field the CMS does not carry (older CMS
+ * deploy, never saved) keeps the current value.
+ */
+const own = (doc: CmsDoc, key: string, current: string): string =>
+  key in doc ? (str(doc[key]) ?? "") : current;
 
 const texts = (v: unknown): string[] | undefined =>
-  Array.isArray(v) ? v.map((x) => str((x as CmsDoc)?.text)).filter((x): x is string => !!x) : undefined;
+  Array.isArray(v)
+    ? v.map((x) => str((x as CmsDoc)?.text)).filter((x): x is string => !!x)
+    : undefined;
 
 /** Relationship value → slug, whether depth resolved it to a doc or left an id. */
 const relSlug = (v: unknown): string | undefined =>
   typeof v === "object" && v !== null ? str((v as CmsDoc).slug) : undefined;
 
 function applyProduct(target: Product, doc: CmsDoc) {
+  // A service with no name would be unreachable in the panel and unreadable
+  // on a card, so the name is the one product field that never goes empty.
   target.name = str(doc.name) ?? target.name;
-  target.categoryLabel = str(doc.categoryLabel) ?? target.categoryLabel;
-  target.shortDescription = str(doc.shortDescription) ?? target.shortDescription;
+  target.categoryLabel = own(doc, "categoryLabel", target.categoryLabel);
+  target.shortDescription = own(doc, "shortDescription", target.shortDescription ?? "");
   const badges = texts(doc.badges);
   if (badges) target.badges = badges;
   const included = texts(doc.included);
   if (included) target.measures = included;
 
-  const momenceUrl = str(doc.momenceUrl);
-  if (momenceUrl) {
+  // Empty = the general booking page (bookingHref falls back to it).
+  if ("momenceUrl" in doc) {
+    const momenceUrl = str(doc.momenceUrl) ?? "";
     target.bookingUrl = momenceUrl;
     LINKS[target.slug] = momenceUrl;
   }
 
   if (Array.isArray(doc.includedTests)) {
-    const slugs = doc.includedTests.map(relSlug).filter((s): s is string => !!s);
-    if (slugs.length) target.includedTests = slugs;
+    target.includedTests = doc.includedTests.map(relSlug).filter((s): s is string => !!s);
   }
-  const membershipSlug = relSlug(doc.includedInMembership);
-  if (membershipSlug) target.includedInMembership = membershipSlug;
+  if ("includedInMembership" in doc)
+    target.includedInMembership = relSlug(doc.includedInMembership);
 
   if (typeof doc.membership === "object" && doc.membership && target.membership) {
     const m = doc.membership as CmsDoc;
     const t = target.membership;
-    t.goal = str(m.goal) ?? t.goal;
-    t.trainingFrequency = str(m.trainingFrequency) ?? t.trainingFrequency;
-    t.doctorInvolvement = str(m.doctorInvolvement) ?? t.doctorInvolvement;
-    t.retesting = str(m.retesting) ?? t.retesting;
-    t.commitment = str(m.commitment) ?? t.commitment;
-    t.medicationNote = str(m.medicationNote) ?? t.medicationNote;
-    t.bloodworkNote = str(m.bloodworkNote) ?? t.bloodworkNote;
+    t.goal = own(m, "goal", t.goal);
+    t.trainingFrequency = own(m, "trainingFrequency", t.trainingFrequency ?? "");
+    t.doctorInvolvement = own(m, "doctorInvolvement", t.doctorInvolvement ?? "");
+    t.retesting = own(m, "retesting", t.retesting ?? "");
+    t.commitment = own(m, "commitment", t.commitment ?? "");
+    t.medicationNote = own(m, "medicationNote", t.medicationNote ?? "");
+    t.bloodworkNote = own(m, "bloodworkNote", t.bloodworkNote ?? "");
   }
 }
 
@@ -165,53 +200,133 @@ function applyContent(target: ProductContent, doc: CmsDoc) {
   const outcomes = texts(doc.outcomes);
   if (outcomes) target.outcomes = outcomes;
   if (Array.isArray(doc.experience)) {
-    const steps = (doc.experience as CmsDoc[])
+    target.experience = (doc.experience as CmsDoc[])
       .map((e) => ({ title: str(e.title) ?? "", body: str(e.body) ?? "" }))
       .filter((e) => e.title);
-    if (steps.length) target.experience = steps;
   }
   const prep = texts(doc.prep);
   if (prep) target.prep = prep;
   if (Array.isArray(doc.faqs)) {
-    const faqs = (doc.faqs as CmsDoc[])
+    target.faqs = (doc.faqs as CmsDoc[])
       .map((f) => ({ q: str(f.q) ?? "", a: str(f.a) ?? "" }))
       .filter((f) => f.q && f.a);
-    if (faqs.length) target.faqs = faqs;
   }
 }
+
+// Immutable baselines: a service hidden and later restored gets its commercial
+// data back, and a field removed in the CMS cannot leak from an earlier request.
+const baselineProducts = structuredClone(allProducts);
+const baselineContent = structuredClone(productContent);
+const baselineLinks = { ...LINKS };
+const collections: Partial<Record<ProductCategory, Product[]>> = {
+  membership: memberships,
+  assessment: assessments,
+  test: tests,
+  medical,
+  training,
+};
+
+function newProduct(slug: string, category: ProductCategory, doc: CmsDoc): Product {
+  return {
+    slug,
+    category,
+    name: str(doc.name) ?? slug,
+    categoryLabel: "",
+    tagline: "",
+    price: 0,
+    priceTbd: true,
+    durationTbd: true,
+    measures: [],
+    protocol: [],
+    goodFor: [],
+    status: "available",
+    ...(category === "membership" ? { membership: { goal: "" } } : {}),
+  };
+}
+
+function applyCatalogue(bundle: CmsBundle) {
+  const fetched = new Set(bundle.categories ?? bundle.products.map((d) => String(d.category)));
+
+  // Categories that did not load keep exactly what the site shows now.
+  const kept = allProducts.filter((p) => !fetched.has(p.category));
+  const keptSlugs = new Set(kept.map((p) => p.slug));
+  for (const key of Object.keys(productContent))
+    if (!keptSlugs.has(key)) delete productContent[key];
+  for (const [slug, content] of Object.entries(baselineContent)) {
+    if (!keptSlugs.has(slug)) productContent[slug] = structuredClone(content);
+  }
+  for (const key of Object.keys(LINKS)) if (!keptSlugs.has(key)) delete LINKS[key];
+  for (const [slug, url] of Object.entries(baselineLinks))
+    if (!keptSlugs.has(slug)) LINKS[slug] = url;
+
+  const next: Product[] = [...kept];
+  for (const doc of bundle.products) {
+    const slug = str(doc.slug);
+    const category = doc.category as ProductCategory;
+    if (!slug || !collections[category] || doc.live === false) continue;
+    const baseline = baselineProducts.find((p) => p.slug === slug && p.category === category);
+    const product = baseline ? structuredClone(baseline) : newProduct(slug, category, doc);
+    applyProduct(product, doc);
+    // The CMS short description is the only description the editor can see,
+    // so it is also what the page's meta description reads.
+    if (product.shortDescription) product.tagline = product.shortDescription;
+    if (category === "training" && doc.training && typeof doc.training === "object") {
+      product.training = { ...product.training, ...(doc.training as object) };
+    }
+    next.push(product);
+    const content = productContent[slug] ?? {
+      outcomes: [],
+      experience: [],
+      prep: [],
+      goodFor: [],
+      faqs: [],
+    };
+    applyContent(content, doc);
+    productContent[slug] = content;
+  }
+
+  for (const [category, target] of Object.entries(collections)) {
+    if (fetched.has(category))
+      target.splice(0, target.length, ...next.filter((p) => p.category === category));
+  }
+  allProducts.splice(0, allProducts.length, ...Object.values(collections).flatMap((c) => c ?? []));
+  trainingPacks.splice(
+    0,
+    trainingPacks.length,
+    ...TRAINING_PACK_SLUGS.map((s) => training.find((t) => t.slug === s)).filter(
+      (t): t is Product => !!t,
+    ),
+  );
+}
+
+/** Array of {key: text} rows → strings; undefined when the CMS has no such field. */
+const rows = (v: unknown, key: string): string[] | undefined =>
+  Array.isArray(v)
+    ? (v as CmsDoc[]).map((x) => str(x[key])).filter((x): x is string => !!x)
+    : undefined;
 
 let appliedStamp = "";
 
 /**
- * Pours the bundle over the data modules. Idempotent, synchronous, and cheap:
- * runs at the top of the root render on both server and client with the same
- * serialized bundle, so SSR and hydration agree.
+ * Applies a bundle over the data modules. Safe to call repeatedly (server per
+ * request, client on hydration and navigation): the same bundle is a no-op.
  */
 export function applyCmsContent(bundle: CmsBundle | null) {
   if (!bundle) return;
 
   // Cheap idempotence: skip if this exact bundle was already applied.
-  const stamp = `${bundle.products.length}:${JSON.stringify(bundle.home)}:${JSON.stringify(bundle.site)}`;
+  const stamp = JSON.stringify(bundle);
   if (stamp === appliedStamp) return;
   appliedStamp = stamp;
 
-  // ---- products: merge editorial fields onto bundled products by slug ----
-  const bySlug = new Map(allProducts.map((p) => [p.slug, p]));
-  for (const doc of bundle.products) {
-    const slug = str(doc.slug);
-    const target = slug ? bySlug.get(slug) : undefined;
-    if (!target) continue; // CMS-only docs lack commercial data until Momence wiring
-    applyProduct(target, doc);
-    // page copy rides on the same doc since the restructure
-    const content = slug ? productContent[slug] : undefined;
-    if (content) applyContent(content, doc);
-  }
+  applyCatalogue(bundle);
 
   // ---- site settings ----
   if (bundle.site) {
     const s = bundle.site;
     const contact = s.contact as CmsDoc | undefined;
     if (contact) {
+      // Every "write to us" link needs an address, so the email never empties.
       CONTACT.email = str(contact.email) ?? CONTACT.email;
       const phone = str(contact.phone);
       if (phone) {
@@ -221,43 +336,50 @@ export function applyCmsContent(bundle: CmsBundle | null) {
     }
     const address = s.address as CmsDoc | undefined;
     if (address) {
-      ADDRESS.street = str(address.street) ?? ADDRESS.street;
-      ADDRESS.district = str(address.district) ?? ADDRESS.district;
-      ADDRESS.postalCode = str(address.postalCode) ?? ADDRESS.postalCode;
-      ADDRESS.city = str(address.city) ?? ADDRESS.city;
-      ADDRESS.short = str(address.short) ?? ADDRESS.short;
-      ADDRESS.full = str(address.full) ?? ADDRESS.full;
+      ADDRESS.street = own(address, "street", ADDRESS.street);
+      ADDRESS.district = own(address, "district", ADDRESS.district);
+      ADDRESS.postalCode = own(address, "postalCode", ADDRESS.postalCode);
+      ADDRESS.city = own(address, "city", ADDRESS.city);
+      ADDRESS.short = own(address, "short", ADDRESS.short);
+      ADDRESS.full = own(address, "full", ADDRESS.full);
+      // Every "Open in Maps" link needs somewhere to go: empty keeps the current one.
+      setMapLink(str(address.mapsUrl) ?? "");
     }
     const hours = s.hours as CmsDoc | undefined;
     if (hours) {
-      HOURS.weekdays.label = str(hours.weekdaysLabel) ?? HOURS.weekdays.label;
-      HOURS.weekdays.value = str(hours.weekdaysValue) ?? HOURS.weekdays.value;
-      HOURS.weekend.label = str(hours.weekendLabel) ?? HOURS.weekend.label;
-      HOURS.weekend.value = str(hours.weekendValue) ?? HOURS.weekend.value;
-      HOURS.short = str(hours.short) ?? HOURS.short;
-      HOURS.walkIns = str(hours.walkIns) ?? HOURS.walkIns;
+      HOURS.weekdays.label = own(hours, "weekdaysLabel", HOURS.weekdays.label);
+      HOURS.weekdays.value = own(hours, "weekdaysValue", HOURS.weekdays.value);
+      HOURS.weekend.label = own(hours, "weekendLabel", HOURS.weekend.label);
+      HOURS.weekend.value = own(hours, "weekendValue", HOURS.weekend.value);
+      HOURS.short = own(hours, "short", HOURS.short);
+      HOURS.walkIns = own(hours, "walkIns", HOURS.walkIns);
     }
     const company = s.company as CmsDoc | undefined;
     if (company) {
-      COMPANY.legalName = str(company.legalName) ?? COMPANY.legalName;
-      COMPANY.tradingName = str(company.tradingName) ?? COMPANY.tradingName;
-      COMPANY.taxId = str(company.taxId) ?? COMPANY.taxId;
-      COMPANY.registeredAddress = str(company.registeredAddress) ?? COMPANY.registeredAddress;
+      COMPANY.legalName = own(company, "legalName", COMPANY.legalName);
+      COMPANY.tradingName = own(company, "tradingName", COMPANY.tradingName);
+      COMPANY.taxId = str(company.taxId) ?? null;
+      COMPANY.registeredAddress = str(company.registeredAddress) ?? null;
     }
     const momence = s.momence as CmsDoc | undefined;
+    // Every Book CTA needs somewhere to go: an empty link keeps the bundled one.
     if (momence) setBookingHome(str(momence.bookingHome) ?? "");
   }
 
   // ---- home page copy ----
   if (bundle.home) {
     const h = bundle.home;
-    homePage.headline = str(h.headline) ?? homePage.headline;
-    homePage.intro = str(h.intro) ?? homePage.intro;
+    homePage.headline = own(h, "headline", homePage.headline);
+    homePage.intro = own(h, "intro", homePage.intro);
     for (const key of ["tests", "assessments", "medical", "train", "memberships"] as const) {
       const sec = h[key] as CmsDoc | undefined;
       if (sec) {
-        homePage.sections[key].title = str(sec.title) ?? homePage.sections[key].title;
-        homePage.sections[key].description = str(sec.description) ?? homePage.sections[key].description;
+        homePage.sections[key].title = own(sec, "title", homePage.sections[key].title);
+        homePage.sections[key].description = own(
+          sec,
+          "description",
+          homePage.sections[key].description,
+        );
       }
     }
   }
@@ -265,39 +387,35 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   // ---- product page labels (drive all 19 SKU pages) ----
   if (bundle.labels) {
     const l = bundle.labels;
-    productLabels.whatItIs = str(l.whatItIs) ?? productLabels.whatItIs;
-    productLabels.howItWorks = str(l.howItWorks) ?? productLabels.howItWorks;
-    productLabels.questions = str(l.questions) ?? productLabels.questions;
-    productLabels.prepPrefix = str(l.prepPrefix) ?? productLabels.prepPrefix;
-    productLabels.priceTbdNote = str(l.priceTbdNote) ?? productLabels.priceTbdNote;
+    productLabels.whatItIs = own(l, "whatItIs", productLabels.whatItIs);
+    productLabels.howItWorks = own(l, "howItWorks", productLabels.howItWorks);
+    productLabels.questions = own(l, "questions", productLabels.questions);
+    productLabels.prepPrefix = own(l, "prepPrefix", productLabels.prepPrefix);
+    productLabels.priceTbdNote = own(l, "priceTbdNote", productLabels.priceTbdNote);
     const m = l.modules as CmsDoc | undefined;
     if (m) {
       const mods = productLabels.modules;
-      mods.testIncludedIn = str(m.testIncludedIn) ?? mods.testIncludedIn;
-      mods.testNote = str(m.testNote) ?? mods.testNote;
-      mods.assessmentIncludes = str(m.assessmentIncludes) ?? mods.assessmentIncludes;
-      mods.trainingOtherOptions = str(m.trainingOtherOptions) ?? mods.trainingOtherOptions;
-      mods.trainingNote = str(m.trainingNote) ?? mods.trainingNote;
-      mods.membershipIncluded = str(m.membershipIncluded) ?? mods.membershipIncluded;
-      mods.membershipHowToJoin = str(m.membershipHowToJoin) ?? mods.membershipHowToJoin;
-      mods.medicalTitle = str(m.medicalTitle) ?? mods.medicalTitle;
-      mods.medicalIntro = str(m.medicalIntro) ?? mods.medicalIntro;
-      mods.medicalNote = str(m.medicalNote) ?? mods.medicalNote;
-      const msteps = Array.isArray(m.membershipSteps)
-        ? (m.membershipSteps as CmsDoc[]).map((x) => str(x.step)).filter((x): x is string => !!x)
-        : [];
-      if (msteps.length) (mods as { membershipSteps: string[] }).membershipSteps = msteps;
-      const dsteps = Array.isArray(m.medicalSteps)
-        ? (m.medicalSteps as CmsDoc[]).map((x) => str(x.step)).filter((x): x is string => !!x)
-        : [];
-      if (dsteps.length) (mods as { medicalSteps: string[] }).medicalSteps = dsteps;
+      mods.testIncludedIn = own(m, "testIncludedIn", mods.testIncludedIn);
+      mods.testNote = own(m, "testNote", mods.testNote);
+      mods.assessmentIncludes = own(m, "assessmentIncludes", mods.assessmentIncludes);
+      mods.trainingOtherOptions = own(m, "trainingOtherOptions", mods.trainingOtherOptions);
+      mods.trainingNote = own(m, "trainingNote", mods.trainingNote);
+      mods.membershipIncluded = own(m, "membershipIncluded", mods.membershipIncluded);
+      mods.membershipHowToJoin = own(m, "membershipHowToJoin", mods.membershipHowToJoin);
+      mods.medicalTitle = own(m, "medicalTitle", mods.medicalTitle);
+      mods.medicalIntro = own(m, "medicalIntro", mods.medicalIntro);
+      mods.medicalNote = own(m, "medicalNote", mods.medicalNote);
+      const msteps = rows(m.membershipSteps, "step");
+      if (msteps) (mods as { membershipSteps: string[] }).membershipSteps = msteps;
+      const dsteps = rows(m.medicalSteps, "step");
+      if (dsteps) (mods as { medicalSteps: string[] }).medicalSteps = dsteps;
     }
     const cta = l.finalCta as CmsDoc | undefined;
     if (cta) {
-      productLabels.finalCta.membership = str(cta.membership) ?? productLabels.finalCta.membership;
-      productLabels.finalCta.training = str(cta.training) ?? productLabels.finalCta.training;
-      productLabels.finalCta.medical = str(cta.medical) ?? productLabels.finalCta.medical;
-      productLabels.finalCta.default = str(cta.default) ?? productLabels.finalCta.default;
+      productLabels.finalCta.membership = own(cta, "membership", productLabels.finalCta.membership);
+      productLabels.finalCta.training = own(cta, "training", productLabels.finalCta.training);
+      productLabels.finalCta.medical = own(cta, "medical", productLabels.finalCta.medical);
+      productLabels.finalCta.default = own(cta, "default", productLabels.finalCta.default);
     }
   }
 
@@ -305,35 +423,32 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   if (bundle.about) {
     const a = bundle.about;
     if (Array.isArray(a.steps)) {
-      const steps = (a.steps as CmsDoc[])
+      (aboutPage as { steps: { title: string; body: string }[] }).steps = (a.steps as CmsDoc[])
         .map((x) => ({ title: str(x.title) ?? "", body: str(x.body) ?? "" }))
         .filter((x) => x.title);
-      if (steps.length) (aboutPage as { steps: typeof steps }).steps = steps;
     }
     if (Array.isArray(a.labAreas)) {
-      const areas = (a.labAreas as CmsDoc[])
+      (labPage as { areas: { title: string; body: string }[] }).areas = (a.labAreas as CmsDoc[])
         .map((x) => ({ title: str(x.title) ?? "", body: str(x.body) ?? "" }))
         .filter((x) => x.title);
-      if (areas.length) (labPage as { areas: typeof areas }).areas = areas;
     }
   }
 
   // ---- legal ----
   if (bundle.legal) {
     const l = bundle.legal;
-    legalPage.title = str(l.title) ?? legalPage.title;
-    legalPage.companyHeading = str(l.companyHeading) ?? legalPage.companyHeading;
-    legalPage.privacyHeading = str(l.privacyHeading) ?? legalPage.privacyHeading;
-    legalPage.backLink = str(l.backLink) ?? legalPage.backLink;
+    legalPage.title = own(l, "title", legalPage.title);
+    legalPage.companyHeading = own(l, "companyHeading", legalPage.companyHeading);
+    legalPage.privacyHeading = own(l, "privacyHeading", legalPage.privacyHeading);
+    legalPage.backLink = own(l, "backLink", legalPage.backLink);
     if (Array.isArray(l.privacy)) {
-      const paras = (l.privacy as CmsDoc[])
+      (legalPage as { privacy: { lead: string; body: string }[] }).privacy = (l.privacy as CmsDoc[])
         .map((x) => ({ lead: str(x.lead) ?? "", body: str(x.body) ?? "" }))
-        .filter((x) => x.lead && x.body);
-      if (paras.length) (legalPage as { privacy: typeof paras }).privacy = paras;
+        .filter((x) => x.lead || x.body);
     }
   }
 
-  // ---- page meta / SEO ----
+  // ---- page meta / SEO: never empty, a blank tab title helps nobody ----
   if (bundle.meta) {
     for (const key of Object.keys(pageMeta) as PageMetaKey[]) {
       const m = bundle.meta[key] as CmsDoc | undefined;
@@ -346,6 +461,11 @@ export function applyCmsContent(bundle: CmsBundle | null) {
     }
   }
 
-  // keep exports that no component reads but tooling may: nothing else derived
-  void memberships; void assessments; void tests; void medical; void training; void trainingPacks;
+  // ---- pages on / off ----
+  if (bundle.pages) {
+    for (const key of Object.keys(PAGES) as PageKey[]) {
+      const v = bundle.pages[key];
+      PAGES[key] = typeof v === "boolean" ? v : true;
+    }
+  }
 }

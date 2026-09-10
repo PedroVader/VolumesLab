@@ -3,9 +3,10 @@
 // the content exists this becomes a page again instead of a redirect — the
 // previous implementation is in git history.
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { PAGES } from "@/data/site";
 
 export const Route = createFileRoute("/about/team")({
   beforeLoad: () => {
-    throw redirect({ to: "/about", replace: true });
+    throw redirect({ to: PAGES.about ? "/about" : "/", replace: true });
   },
 });

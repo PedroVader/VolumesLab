@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { BOOKING_HOME } from "@/lib/momence";
-import { ADDRESS, COMPANY, CONTACT, HOURS, MAP_LINK } from "@/data/site";
+import { ADDRESS, COMPANY, CONTACT, HOURS, MAP_LINK, PAGES } from "@/data/site";
 
 // Footer structure: Services, About, Visit, Contact. The five legal pages were
 // collapsed into one /legal link in the bottom bar at the client's request.
@@ -24,23 +24,29 @@ export function SiteFooter() {
             </li>
           </FooterCol>
 
-          <FooterCol title="About">
-            <FooterLink to="/about">What We Do</FooterLink>
-            <FooterLink to="/about/lab">The Lab</FooterLink>
-            <FooterLink to="/about/location">Location</FooterLink>
-            <FooterLink to="/faq">FAQ</FooterLink>
-            <FooterLink to="/blog">Blog</FooterLink>
-          </FooterCol>
+          {(PAGES.about || PAGES.lab || PAGES.location || PAGES.faq || PAGES.blog) && (
+            <FooterCol title="About">
+              {PAGES.about && <FooterLink to="/about">What We Do</FooterLink>}
+              {PAGES.lab && <FooterLink to="/about/lab">The Lab</FooterLink>}
+              {PAGES.location && <FooterLink to="/about/location">Location</FooterLink>}
+              {PAGES.faq && <FooterLink to="/faq">FAQ</FooterLink>}
+              {PAGES.blog && <FooterLink to="/blog">Blog</FooterLink>}
+            </FooterCol>
+          )}
 
           <FooterCol title="Visit">
-            <li className="text-muted">{ADDRESS.short}</li>
-            <li className="text-muted">
-              Mon–Fri {HOURS.weekdays.value}
-            </li>
-            <li className="text-muted">
-              Sat–Sun {HOURS.weekend.value}
-            </li>
-            <li className="text-muted">{HOURS.walkIns}</li>
+            {ADDRESS.short && <li className="text-muted">{ADDRESS.short}</li>}
+            {HOURS.weekdays.value && (
+              <li className="text-muted">
+                Mon–Fri {HOURS.weekdays.value}
+              </li>
+            )}
+            {HOURS.weekend.value && (
+              <li className="text-muted">
+                Sat–Sun {HOURS.weekend.value}
+              </li>
+            )}
+            {HOURS.walkIns && <li className="text-muted">{HOURS.walkIns}</li>}
             <li>
               <a href={MAP_LINK} target="_blank" rel="noreferrer" className="hover:text-primary">
                 Open in Maps →
@@ -72,10 +78,15 @@ export function SiteFooter() {
           {/* The LSSI requires the company identity to be permanently and directly
               accessible, so this link sits in the footer of every page. */}
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-center md:text-center">
-            © {COMPANY.legalName} ·{" "}
-            <Link to="/legal" className="underline underline-offset-4 hover:text-primary">
-              Legal &amp; Privacy
-            </Link>
+            © {COMPANY.legalName || COMPANY.tradingName || "Volumes Lab"}
+            {PAGES.legal && (
+              <>
+                {" "}·{" "}
+                <Link to="/legal" className="underline underline-offset-4 hover:text-primary">
+                  Legal &amp; Privacy
+                </Link>
+              </>
+            )}
           </p>
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-end">
             {ADDRESS.short}

@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
-import { CONTACT, HOURS } from "@/data/site";
+import { CONTACT, HOURS, MAP_EMBED } from "@/data/site";
 import { Eyebrow } from "@/components/site/blocks";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
+  beforeLoad: pageGate("contact"),
   component: Contact,
   head: () => ({
     meta: metaTags("contact"),
@@ -46,7 +48,18 @@ function Contact() {
             />
             <InfoRow label="Email" value={<a className="hover:opacity-70" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>} />
 {/* Phone and WhatsApp removed site-wide (30/08) until a real number exists. */}
-            <InfoRow label="Hours" value={<>Mon–Fri · {HOURS.weekdays.value}<br />Sat–Sun · {HOURS.weekend.value}<br />{HOURS.walkIns}</>} />
+            {(HOURS.weekdays.value || HOURS.weekend.value || HOURS.walkIns) && (
+              <InfoRow
+                label="Hours"
+                value={
+                  <>
+                    {HOURS.weekdays.value && <>Mon–Fri · {HOURS.weekdays.value}<br /></>}
+                    {HOURS.weekend.value && <>Sat–Sun · {HOURS.weekend.value}<br /></>}
+                    {HOURS.walkIns}
+                  </>
+                }
+              />
+            )}
 
             <form
               onSubmit={(e) => {
@@ -74,7 +87,7 @@ function Contact() {
             <div className="min-h-[420px]">
               <iframe
                 title="Volumes Lab map"
-                src="https://www.google.com/maps?q=Calle+Churruca+5,+Madrid,+Spain&output=embed"
+                src={MAP_EMBED}
                 className="h-full min-h-[420px] w-full grayscale-[.2]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

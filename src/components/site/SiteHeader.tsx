@@ -9,22 +9,24 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { BOOKING_HOME } from "@/lib/momence";
 import { track } from "@/lib/analytics";
+import { PAGES } from "@/data/site";
 
 type NavItem = { label: string; hash?: string; to?: string };
-
-const navItems: NavItem[] = [
-  { label: "Tests", hash: "tests" },
-  { label: "Assessments", hash: "assessments" },
-  { label: "Medical", hash: "medical" },
-  { label: "Train", hash: "train" },
-  { label: "Memberships", hash: "memberships" },
-  // Team hidden temporarily (client request, 24/08) until people and photos exist.
-  { label: "The Lab", to: "/about/lab" },
-];
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeMobile = () => setMobileOpen(false);
+
+  // Built per render: the CMS can switch pages off between requests.
+  const navItems: NavItem[] = [
+    { label: "Tests", hash: "tests" },
+    { label: "Assessments", hash: "assessments" },
+    { label: "Medical", hash: "medical" },
+    { label: "Train", hash: "train" },
+    { label: "Memberships", hash: "memberships" },
+    // Team hidden temporarily (client request, 24/08) until people and photos exist.
+    ...(PAGES.lab ? [{ label: "The Lab", to: "/about/lab" }] : []),
+  ];
 
   return (
     <nav className="relative z-50 border-b border-border bg-background/95 backdrop-blur-md">

@@ -60,7 +60,7 @@ export function StickyBookBar({
   ctaLabel,
   onClick,
 }: {
-  price: number;
+  price?: number;
   duration?: string;
   href: string;
   ctaLabel: string;
@@ -69,7 +69,7 @@ export function StickyBookBar({
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md md:hidden">
       <div className="leading-tight">
-        <p className="font-display text-xl font-bold">€{price}</p>
+        <p className="font-display text-xl font-bold">{price === undefined ? "Price on booking" : `€${price}`}</p>
         {duration && <p className="font-mono text-[9px] uppercase tracking-widest text-muted">{duration}</p>}
       </div>
       <a

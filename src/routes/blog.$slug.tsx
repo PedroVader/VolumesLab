@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow } from "@/components/site/blocks";
@@ -27,6 +28,7 @@ const categoryProduct: Record<string, { slug: string; kind: string; name: string
 };
 
 export const Route = createFileRoute("/blog/$slug")({
+  beforeLoad: pageGate("blog"),
   loader: async ({ params }) => {
     const [post, all] = await Promise.all([cmsPost(params.slug), cmsPosts()]);
     if (!post) throw notFound();

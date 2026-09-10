@@ -178,8 +178,8 @@ function PriceLine({ p }: { p: Product }) {
   return (
     <div className="mt-5 flex items-baseline justify-between border-t border-border pt-4">
       <span className="font-display text-lg font-bold">
-        €{p.price}
-        {p.category === "membership" && <span className="ml-1 text-sm font-normal text-muted">/mo</span>}
+        {p.price === 0 && p.priceTbd ? "Price on booking" : `€${p.price}`}
+        {p.category === "membership" && p.price > 0 && <span className="ml-1 text-sm font-normal text-muted">/mo</span>}
       </span>
       {p.duration && (
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted">{p.duration}</span>

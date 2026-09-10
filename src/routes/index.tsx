@@ -19,6 +19,7 @@ import {
   memberships,
   testGroups,
   getTests,
+  tests,
   trainingPacks,
 } from "@/data/catalog";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
@@ -34,10 +35,9 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-// Tests are listed in the grouped order used across the site.
-const allTests = getTests(testGroups.flatMap((g) => g.testSlugs));
-
 function Home() {
+  const grouped = getTests(testGroups.flatMap((g) => g.testSlugs));
+  const allTests = [...grouped, ...tests.filter((t) => !grouped.some((g) => g.slug === t.slug))];
   return (
     <SiteChrome>
       <ContactBlock />
@@ -112,9 +112,11 @@ function ContactBlock() {
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-start">
         <div>
           <img src="/volumes-mark.png" alt="Volumes Lab" className="w-36 md:w-44" />
-          <h1 className="mt-8 font-display text-3xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-5xl">
-            {homePage.headline}
-          </h1>
+          {homePage.headline && (
+            <h1 className="mt-8 font-display text-3xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-5xl">
+              {homePage.headline}
+            </h1>
+          )}
 
           <address className="mt-6 space-y-1 text-base not-italic leading-relaxed text-foreground/85">
             <p>
@@ -135,18 +137,24 @@ function ContactBlock() {
           </address>
 
           <dl className="mt-6 space-y-1 font-mono text-[11px] uppercase tracking-widest text-muted">
-            <div className="flex flex-wrap gap-x-3">
-              <dt>Open {HOURS.weekdays.label}</dt>
-              <dd className="tabular-nums text-foreground">{HOURS.weekdays.value}</dd>
-            </div>
-            <div className="flex flex-wrap gap-x-3">
-              <dt>{HOURS.weekend.label}</dt>
-              <dd className="tabular-nums text-foreground">{HOURS.weekend.value}</dd>
-            </div>
+            {HOURS.weekdays.value && (
+              <div className="flex flex-wrap gap-x-3">
+                <dt>Open {HOURS.weekdays.label}</dt>
+                <dd className="tabular-nums text-foreground">{HOURS.weekdays.value}</dd>
+              </div>
+            )}
+            {HOURS.weekend.value && (
+              <div className="flex flex-wrap gap-x-3">
+                <dt>{HOURS.weekend.label}</dt>
+                <dd className="tabular-nums text-foreground">{HOURS.weekend.value}</dd>
+              </div>
+            )}
           </dl>
-          <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-            [ {HOURS.walkIns} ]
-          </p>
+          {HOURS.walkIns && (
+            <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
+              [ {HOURS.walkIns} ]
+            </p>
+          )}
         </div>
 
         <div className="border border-border bg-card">
@@ -166,6 +174,7 @@ function ContactBlock() {
 /* ---------------- Intro ---------------- */
 
 function Intro() {
+  if (!homePage.intro) return null;
   return (
     <section className="border-b border-border px-6 py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
@@ -194,7 +203,9 @@ function Section({
     <section id={id} className="scroll-mt-20 border-b border-border px-6 py-14 md:py-20">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-          <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight md:text-3xl">{title}</h2>
+          {title && (
+            <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight md:text-3xl">{title}</h2>
+          )}
           {description && (
             <p className="font-mono text-[11px] uppercase tracking-widest text-muted">{description}</p>
           )}

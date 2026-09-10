@@ -12,6 +12,7 @@
 // They render as [ pending ] rather than being invented.
 
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { canonical } from "@/lib/seo";
 import { metaTags } from "@/data/meta";
@@ -19,6 +20,7 @@ import { ADDRESS, COMPANY, CONTACT } from "@/data/site";
 import { legalPage as L } from "@/data/pages";
 
 export const Route = createFileRoute("/legal/")({
+  beforeLoad: pageGate("legal"),
   component: LegalPage,
   head: () => ({
     meta: metaTags("legal"),
@@ -31,46 +33,61 @@ function LegalPage() {
     <SiteChrome>
       <section className="px-6 py-16 md:py-24">
         <div className="mx-auto max-w-2xl">
-          <h1 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">
-            {L.title}
-          </h1>
+          {L.title && (
+            <h1 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">
+              {L.title}
+            </h1>
+          )}
 
           <div className="mt-12">
-            <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              {L.companyHeading}
-            </h2>
+            {L.companyHeading && (
+              <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
+                {L.companyHeading}
+              </h2>
+            )}
             <dl className="mt-5 divide-y divide-border border-y border-border text-sm">
               <Row label={L.labels.legalName}>{COMPANY.legalName}</Row>
               <Row label={L.labels.tradingName}>{COMPANY.tradingName}</Row>
               <Row label={L.labels.taxId}>{COMPANY.taxId ?? <Pending />}</Row>
-              <Row label={L.labels.registeredAddress}>{COMPANY.registeredAddress ?? <Pending />}</Row>
+              <Row label={L.labels.registeredAddress}>
+                {COMPANY.registeredAddress ?? <Pending />}
+              </Row>
               <Row label={L.labels.premises}>{ADDRESS.full}</Row>
               <Row label={L.labels.email}>
-                <a href={`mailto:${CONTACT.email}`} className="underline underline-offset-4 hover:text-primary">
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="underline underline-offset-4 hover:text-primary"
+                >
                   {CONTACT.email}
                 </a>
               </Row>
-{/* Phone row removed site-wide (30/08) until a real number exists. */}
+              {/* Phone row removed site-wide (30/08) until a real number exists. */}
             </dl>
           </div>
 
-          <div className="mt-14">
-            <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              {L.privacyHeading}
-            </h2>
-            <div className="mt-5 space-y-5 text-base leading-relaxed text-foreground/85">
-              {L.privacy.map((p) => (
-                <p key={p.lead}>
-                  <strong className="font-semibold">{p.lead}</strong>{" "}
-                  {p.body.replace("{company}", COMPANY.legalName).replace("{email}", CONTACT.email)}
-                </p>
-              ))}
+          {(L.privacyHeading || L.privacy.length > 0) && (
+            <div className="mt-14">
+              {L.privacyHeading && (
+                <h2 className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
+                  {L.privacyHeading}
+                </h2>
+              )}
+              <div className="mt-5 space-y-5 text-base leading-relaxed text-foreground/85">
+                {L.privacy.map((p) => (
+                  <p key={p.lead}>
+                    <strong className="font-semibold">{p.lead}</strong>{" "}
+                    {p.body
+                      .replace("{company}", COMPANY.legalName)
+                      .replace("{email}", CONTACT.email)}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <p className="mt-14 border-t border-border pt-6 font-mono text-[10px] uppercase tracking-widest text-muted">
             <Link to="/" className="hover:text-primary">
-              ← {L.backLink}
+              ← {L.backLink || "Home"}
             </Link>
           </p>
         </div>

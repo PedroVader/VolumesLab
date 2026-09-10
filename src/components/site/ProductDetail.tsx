@@ -71,8 +71,8 @@ export function ProductDetail({ product }: { product: Product }) {
 
               <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2">
                 <span className="font-display text-3xl font-bold">
-                  €{product.price}
-                  {isMembership && <span className="ml-1 text-base font-normal text-muted">/mo</span>}
+                  {product.price === 0 && product.priceTbd ? "Price on booking" : `€${product.price}`}
+                  {isMembership && product.price > 0 && <span className="ml-1 text-base font-normal text-muted">/mo</span>}
                 </span>
                 {product.duration && (
                   <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
@@ -89,7 +89,7 @@ export function ProductDetail({ product }: { product: Product }) {
               <div className="mt-8">
                 <BookCta product={product} sourcePage={path} className="px-8 py-4 text-xs" />
               </div>
-              {product.priceTbd && (
+              {product.priceTbd && L.priceTbdNote && (
                 <p className="mt-4 max-w-md text-xs leading-relaxed text-muted">
                   {L.priceTbdNote}
                 </p>
@@ -103,7 +103,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.outcomes.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <SectionTitle>{L.whatItIs}</SectionTitle>
+            {L.whatItIs && <SectionTitle>{L.whatItIs}</SectionTitle>}
             <ul className="mt-8 max-w-3xl space-y-4">
               {content.outcomes.map((o) => (
                 <li key={o} className="flex gap-4 text-base leading-relaxed text-foreground/85">
@@ -122,7 +122,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.experience.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <SectionTitle>{L.howItWorks}</SectionTitle>
+            {L.howItWorks && <SectionTitle>{L.howItWorks}</SectionTitle>}
             <ol className="mt-10 grid gap-8 md:grid-cols-3">
               {content.experience.map((step, i) => (
                 <li key={step.title} className="border-t-2 border-primary pt-5">
@@ -132,15 +132,17 @@ export function ProductDetail({ product }: { product: Product }) {
                   <h3 className="mt-3 font-display text-xl font-extrabold uppercase tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>
+                  {step.body && <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>}
                 </li>
               ))}
             </ol>
             {content.prep.length > 0 && (
               <p className="mt-10 max-w-2xl border-t border-border pt-6 text-sm leading-relaxed text-muted">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
-                  {L.prepPrefix}{" "}
-                </span>
+                {L.prepPrefix && (
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
+                    {L.prepPrefix}{" "}
+                  </span>
+                )}
                 {content.prep.join(" ")}
               </p>
             )}
@@ -155,7 +157,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {content && content.faqs.length > 0 && (
         <section className="border-b border-border px-6 py-14 md:py-20">
           <div className="mx-auto max-w-4xl">
-            <SectionTitle>{L.questions}</SectionTitle>
+            {L.questions && <SectionTitle>{L.questions}</SectionTitle>}
             <div className="mt-8">
               <FaqList items={content.faqs} />
             </div>
@@ -174,7 +176,7 @@ export function ProductDetail({ product }: { product: Product }) {
       </section>
 
       <StickyBookBar
-        price={product.price}
+        price={product.price === 0 && product.priceTbd ? undefined : product.price}
         duration={product.duration}
         href={bookingHref(product)}
         onClick={() => trackBooking(product, path)}
@@ -224,8 +226,8 @@ function ModuleSection({ title, children }: { title: string; children: React.Rea
   return (
     <section className="border-b border-border px-6 py-14 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <SectionTitle>{title}</SectionTitle>
-        <div className="mt-8">{children}</div>
+        {title && <SectionTitle>{title}</SectionTitle>}
+        <div className={title ? "mt-8" : ""}>{children}</div>
       </div>
     </section>
   );
@@ -272,9 +274,7 @@ function TestModule({ product }: { product: Product }) {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-muted">
-        {L.modules.testNote}
-      </p>
+      {L.modules.testNote && <p className="mt-6 text-sm text-muted">{L.modules.testNote}</p>}
     </ModuleSection>
   );
 }
@@ -321,12 +321,12 @@ function TrainingModule({ product }: { product: Product }) {
           <li key={p.slug}>
             <Tile to="/training/$slug" params={{ slug: p.slug }} current={p.slug === product.slug}>
               {p.training?.sessionCount === 1 ? "1 session" : `${p.training?.sessionCount} sessions`}
-              {p.slug !== product.slug && <span className="sr-only"> at €{p.price}</span>}
+              {p.slug !== product.slug && p.price > 0 && <span className="sr-only"> at €{p.price}</span>}
             </Tile>
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-muted">{L.modules.trainingNote}</p>
+      {L.modules.trainingNote && <p className="mt-6 text-sm text-muted">{L.modules.trainingNote}</p>}
     </ModuleSection>
   );
 }
@@ -347,8 +347,10 @@ function MembershipModule({ product }: { product: Product }) {
       </ul>
 
       <div className="mt-12">
-        <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">{L.modules.membershipHowToJoin}</h3>
-        <Flow steps={[...L.modules.membershipSteps]} />
+        {L.modules.membershipHowToJoin && (
+          <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">{L.modules.membershipHowToJoin}</h3>
+        )}
+        {L.modules.membershipSteps.length > 0 && <Flow steps={[...L.modules.membershipSteps]} />}
         {product.membership?.bloodworkNote && (
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
             {product.membership.bloodworkNote}
@@ -368,13 +370,17 @@ function MembershipModule({ product }: { product: Product }) {
 function MedicalModule() {
   return (
     <ModuleSection title={L.modules.medicalTitle}>
-      <p className="max-w-2xl text-lg leading-relaxed text-foreground/85">
-        {L.modules.medicalIntro}
-      </p>
-      <Flow steps={[...L.modules.medicalSteps]} />
-      <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
-        {L.modules.medicalNote}
-      </p>
+      {L.modules.medicalIntro && (
+        <p className="max-w-2xl text-lg leading-relaxed text-foreground/85">
+          {L.modules.medicalIntro}
+        </p>
+      )}
+      {L.modules.medicalSteps.length > 0 && <Flow steps={[...L.modules.medicalSteps]} />}
+      {L.modules.medicalNote && (
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
+          {L.modules.medicalNote}
+        </p>
+      )}
     </ModuleSection>
   );
 }
