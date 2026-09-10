@@ -18,6 +18,15 @@ The website and `cms/` are separate Git repositories. Release both.
    ```
 
    Two migrations are pending: `20260910_120000_service_live` (adds `live`, existing rows stay live, new rows default to hidden) and `20260910_143741_optional_fields_and_page_visibility` (drops the NOT NULL constraints, creates the `page_visibility` table and adds the Google Maps link to Contact, Address & Hours).
+   If `payload migrate` asks *"It looks like you've run Payload in dev mode … data loss will occur. Would you like to proceed?"*, answer **N**. It means a `dev` row is sitting in `payload_migrations` (left by a dev-mode push) and Payload is offering to drop the whole schema. Clear that one row and run migrate again:
+
+   ```
+   node scripts/migrations-state.mjs            # read-only: shows the table and row counts
+   node scripts/migrations-state.mjs clear-dev  # deletes only the "dev" row
+   ```
+
+   Note that `cms/.env.local` (pulled by the Vercel CLI) sets `DATABASE_URL=""` and wins over `.env`, so export the value first: `export $(grep ^DATABASE_URL= .env | sed "s/'//g")`.
+
 3. Deploy the CMS update after the migrations have completed.
 4. Check in the CMS: create a test with only a name, save, confirm the slug filled itself and the test is absent from the website. Tick Live, save, reload the homepage and open the detail URL. Untick Live and confirm the card disappears and the URL returns not found. Open Pages on / off, untick Legal & Privacy, confirm the footer link is gone and `/legal` returns not found, then tick it again.
 
