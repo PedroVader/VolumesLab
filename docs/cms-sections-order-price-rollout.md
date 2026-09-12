@@ -49,3 +49,10 @@ cms/node_modules/.bin/tsx --tsconfig tsconfig.json --test tests/cms-content.test
 ```
 
 From `cms/`: `npx tsc --noEmit --incremental false`. To regenerate a migration locally: `createdb volumes_cms_local`, then `DATABASE_URL=postgres://localhost/volumes_cms_local PAYLOAD_SECRET=x pnpm payload migrate` and `... migrate:create <name> --force-accept-warning`.
+
+## Same evening, website only (no CMS change)
+
+- Line breaks typed in any CMS textarea show on the site (`whitespace-pre-line`).
+- No CTA links to Momence's generic landing: "Book Services" in the header and footer, the band on FAQ and blog posts, and the Book button on About / Lab / Location / Blog anchor to the first section of the homepage catalogue (`catalogueAnchor()` in `src/lib/sections.ts`). Only a SKU's own Book leaves the site, to the URL in its Momence URL field; a SKU with that field empty still falls back to the generic page rather than a dead button.
+- No bracketed text: the eyebrow over SKU titles, the badge lines on SKU pages, the walk-ins line and the 404 markers lost their `[ ]`. Badges are chips in a wrapping row on cards and SKU pages.
+- `ANALYTICS_ENABLED = false` in `src/data/site.ts`: no consent notice, no Cookie settings button, Google Analytics never loads. Flip to true to bring the notice and GA4 back.

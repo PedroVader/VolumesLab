@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Architecture decision (client, 07/08/2026):
 //
-//   "Every Book / Purchase / Enquire CTA goes into Momence.
+//   "Every Book CTA goes into Momence.
 //    Every More info CTA stays inside the Volumes CMS.
 //    No hay transaccional en el CMS."
 //
@@ -63,7 +63,7 @@ export const BOOKING_HOME_VERIFIED = true;
  * Empty string = not wired yet = falls back to BOOKING_HOME.
  */
 export const LINKS: Record<string, string> = {
-  // ── Memberships (Enquire) ──────────────────────────────────────────────────
+  // ── Memberships ──────────────────────────────────────────────────
   "health-performance": "",
   "glp-1": "",
 
@@ -85,7 +85,7 @@ export const LINKS: Record<string, string> = {
   // ── Medical appointment (Book) ─────────────────────────────────────────────
   "doctor-meeting": "",
 
-  // ── Training sessions and packs (Purchase) ─────────────────────────────────
+  // ── Training sessions and packs ─────────────────────────────────
   "training-session": "",
   "pt-pack-3": "",
   "pt-pack-5": "",
@@ -93,7 +93,7 @@ export const LINKS: Record<string, string> = {
   "cardio-pack-4": "",
 };
 
-/** Resolve the Momence URL a product's Book / Purchase / Enquire CTA opens. */
+/** Resolve the Momence URL a product's Book CTA opens. */
 export function momenceUrl(product: Pick<Product, "slug">): string {
   return LINKS[product.slug] || BOOKING_HOME;
 }

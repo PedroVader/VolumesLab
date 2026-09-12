@@ -10,7 +10,7 @@
 // Since 12/09/2026 the section order, names and on/off are the CMS's
 // (Home page → Sections); the diagram is only the bundled default.
 //
-// Every card carries the same CTA pair: Book/Purchase/Enquire (→ Momence) and
+// Every card carries the same CTA pair: Book (→ the SKU in Momence) and
 // More info (→ this CMS).
 
 import { createFileRoute } from "@tanstack/react-router";

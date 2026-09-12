@@ -144,7 +144,7 @@ export const blogPage = {
   cta: {
     eyebrow: "Your turn",
     headline: "Reading about numbers is nice. Knowing yours is better.",
-    button: "Book a test",
+    button: "Book",
   },
 };
 

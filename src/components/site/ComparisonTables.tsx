@@ -278,7 +278,7 @@ export function MembershipComparison({ currentSlug }: { currentSlug?: string }) 
             </tr>
           ))}
           <tr>
-            <RowLabel>Enquire</RowLabel>
+            <RowLabel>Book</RowLabel>
             {memberships.map((m) => (
               <td key={m.slug} className={`px-4 py-6 ${m.slug === currentSlug ? "bg-card" : ""}`}>
                 <BookCta product={m} sourcePage={sourcePage} className="px-4 py-2" />
