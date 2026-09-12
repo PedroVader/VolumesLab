@@ -160,9 +160,9 @@ export function MoreInfoLink({
 }
 
 /**
- * Small "included in X" tag. Rendered as a bordered chip rather than literal
- * [ bracket ] text: the labels are long enough to wrap, and bracket characters
- * in the text flow leave the closing bracket stranded on its own line.
+ * Small tag on a card ("Included in X", or the items of a pack). A bordered
+ * chip; several sit side by side in a wrapping row so a card with many tags
+ * does not grow taller than its neighbours (client, 12/09/2026).
  */
 export function IncludedBadge({ children }: { children: React.ReactNode }) {
   return (
@@ -195,11 +195,13 @@ export function ProductCard({ p, sourcePage = "/" }: { p: Product; sourcePage?: 
     <article className="flex flex-col border border-border bg-card p-6">
       <h3 className="font-display text-lg font-bold uppercase leading-tight">{p.name}</h3>
       <p className="mt-3 flex-1 whitespace-pre-line text-sm leading-relaxed text-muted">{p.shortDescription ?? p.tagline}</p>
-      {p.badges?.map((b) => (
-        <div key={b} className="mt-4">
-          <IncludedBadge>{b}</IncludedBadge>
+      {p.badges && p.badges.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {p.badges.map((b) => (
+            <IncludedBadge key={b}>{b}</IncludedBadge>
+          ))}
         </div>
-      ))}
+      )}
       <PriceLine p={p} />
       <div className="mt-4 grid grid-cols-2 gap-2">
         <BookCta product={p} sourcePage={sourcePage} />
@@ -246,11 +248,13 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
 
       <div className="flex-1" aria-hidden />
 
-      {a.badges?.map((b) => (
-        <div key={b} className="mt-5">
-          <IncludedBadge>{b}</IncludedBadge>
+      {a.badges && a.badges.length > 0 && (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {a.badges.map((b) => (
+            <IncludedBadge key={b}>{b}</IncludedBadge>
+          ))}
         </div>
-      ))}
+      )}
 
       <PriceLine p={a} />
       <div className="mt-4 grid grid-cols-2 gap-2">

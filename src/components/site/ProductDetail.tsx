@@ -15,7 +15,7 @@ import { productLabels as L } from "@/data/pages";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
 import { productReachable, sectionLabel, sectionOfCategory } from "@/lib/sections";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
-import { BookCta } from "./cards";
+import { BookCta, IncludedBadge } from "./cards";
 import { Eyebrow, SectionTitle, FaqList, StickyBookBar } from "./blocks";
 
 /** The section crumb: the CMS's name for the section, linking to its anchor. */
@@ -52,11 +52,13 @@ export function ProductDetail({ product }: { product: Product }) {
                 {product.shortDescription ?? product.tagline}
               </p>
 
-              {product.badges?.map((b) => (
-                <p key={b} className="mt-5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
-                  [ {b} ]
-                </p>
-              ))}
+              {product.badges && product.badges.length > 0 && (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {product.badges.map((b) => (
+                    <IncludedBadge key={b}>{b}</IncludedBadge>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2">
                 <span className="font-display text-3xl font-bold">

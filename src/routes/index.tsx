@@ -125,7 +125,7 @@ function ContactBlock() {
           </dl>
           {HOURS.walkIns && (
             <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              [ {HOURS.walkIns} ]
+              {HOURS.walkIns}
             </p>
           )}
         </div>

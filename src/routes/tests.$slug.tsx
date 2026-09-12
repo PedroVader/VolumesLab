@@ -26,7 +26,7 @@ export const Route = createFileRoute("/tests/$slug")({
   notFoundComponent: () => (
     <SiteChrome>
       <div className="mx-auto max-w-7xl px-6 py-32 text-center">
-        <p className="font-mono text-xs uppercase text-primary">[ 404 ]</p>
+        <p className="font-mono text-xs uppercase text-primary">404</p>
         <h1 className="mt-4 font-display text-4xl font-bold">Test not found</h1>
       </div>
     </SiteChrome>

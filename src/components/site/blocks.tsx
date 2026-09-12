@@ -8,7 +8,7 @@ import { track } from "@/lib/analytics";
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-      [ {children} ]
+      {children}
     </p>
   );
 }
