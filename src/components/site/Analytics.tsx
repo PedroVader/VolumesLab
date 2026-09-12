@@ -2,6 +2,7 @@ import { useLocation } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
 import { ANALYTICS_CONSENT_KEY } from "@/lib/analytics";
+import { ANALYTICS_ENABLED } from "@/data/site";
 
 // GA4 measurement IDs are public identifiers. This value is filled when the
 // Volumes Lab property is created in Google Analytics.
@@ -37,7 +38,7 @@ export function Analytics() {
   }, []);
 
   useEffect(() => {
-    if (consent !== "granted" || !GA_MEASUREMENT_ID) return;
+    if (!ANALYTICS_ENABLED || consent !== "granted" || !GA_MEASUREMENT_ID) return;
 
     window.dataLayer ||= [];
     window.gtag ||= (...args: unknown[]) => {
@@ -57,7 +58,7 @@ export function Analytics() {
   }, [consent]);
 
   useEffect(() => {
-    if (consent !== "granted" || !GA_MEASUREMENT_ID || !window.gtag) return;
+    if (!ANALYTICS_ENABLED || consent !== "granted" || !GA_MEASUREMENT_ID || !window.gtag) return;
     const pagePath = `${location.pathname}${location.searchStr}`;
     if (lastPage.current === pagePath) return;
     lastPage.current = pagePath;
@@ -76,6 +77,9 @@ export function Analytics() {
       removeAnalyticsCookies();
     }
   }
+
+  // Switched off: no notice, no "Cookie settings" button, nothing loads.
+  if (!ANALYTICS_ENABLED) return null;
 
   const preferencesOpen = consent === null || showPreferences;
 

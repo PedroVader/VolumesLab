@@ -4,6 +4,11 @@
 // the client's request. Flip to false to relaunch.
 export const COMING_SOON = true;
 
+// Analytics switch. False = no consent notice and Google Analytics never
+// loads (without consent it cannot). The client wants to open without the
+// notice (12/09/2026) and switch it on "when the moment comes": flip to true.
+export const ANALYTICS_ENABLED = false;
+
 // Pages the client can switch off from the CMS ("Pages on / off"). A page
 // that is off leaves the menus and the footer and its URL returns 404. The
 // homepage and the service pages are not here: services have their own Live
