@@ -2,10 +2,13 @@
 //
 // Built directly from the client's homepage architecture (07/08/2026): the CMS
 // holds no transactional step, it exists to explain the offer and hand the
-// visitor to Momence. Section order matches the diagram exactly:
+// visitor to Momence. The diagram's order was:
 //
 //   contact + map → intro → TESTS → ASSESSMENTS → MEDICAL APPOINTMENT
 //   → TRAIN → MEMBERSHIPS → FAQ / Legal / Blog
+//
+// Since 12/09/2026 the section order, names and on/off are the CMS's
+// (Home page → Sections); the diagram is only the bundled default.
 //
 // Every card carries the same CTA pair: Book/Purchase/Enquire (→ Momence) and
 // More info (→ this CMS).
@@ -13,17 +16,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { AssessmentCard, MembershipCard, ProductCard } from "@/components/site/cards";
-import {
-  assessments,
-  medical,
-  memberships,
-  testGroups,
-  getTests,
-  tests,
-  trainingPacks,
-} from "@/data/catalog";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
-import { homePage } from "@/data/pages";
+import { homePage, type SectionKey } from "@/data/pages";
+import { productsInSection, visibleSections } from "@/lib/sections";
 import { canonical } from "@/lib/seo";
 import { metaTags } from "@/data/meta";
 
@@ -36,72 +31,50 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const grouped = getTests(testGroups.flatMap((g) => g.testSlugs));
-  const allTests = [...grouped, ...tests.filter((t) => !grouped.some((g) => g.slug === t.slug))];
   return (
     <SiteChrome>
       <ContactBlock />
       <Intro />
 
-      <Section
-        id="tests"
-        title={homePage.sections.tests.title}
-        description={homePage.sections.tests.description}
-      >
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {allTests.map((t) => (
-            <ProductCard key={t.slug} p={t} />
-          ))}
-        </div>
-      </Section>
+      {/* Order, names and on/off come from the CMS (Home page → Sections). */}
+      {visibleSections().map((s) => (
+        <Section key={s.key} id={s.key} title={s.title} description={s.description}>
+          <SectionGrid section={s.key} />
+        </Section>
+      ))}
+    </SiteChrome>
+  );
+}
 
-      <Section
-        id="assessments"
-        title={homePage.sections.assessments.title}
-        description={homePage.sections.assessments.description}
-      >
+/** The cards of one section: each section keeps the card type it always had. */
+function SectionGrid({ section }: { section: SectionKey }) {
+  const items = productsInSection(section);
+  switch (section) {
+    case "assessments":
+      return (
         <div className="grid gap-6 md:grid-cols-3">
-          {assessments.map((a) => (
+          {items.map((a) => (
             <AssessmentCard key={a.slug} a={a} />
           ))}
         </div>
-      </Section>
-
-      <Section
-        id="medical"
-        title={homePage.sections.medical.title}
-        description={homePage.sections.medical.description}
-      >
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {medical.map((m) => (
-            <ProductCard key={m.slug} p={m} />
-          ))}
-        </div>
-      </Section>
-
-      <Section
-        id="train"
-        title={homePage.sections.train.title}
-        description={homePage.sections.train.description}
-      >
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {trainingPacks.map((t) => (
-            <ProductCard key={t.slug} p={t} />
-          ))}
-        </div>
-      </Section>
-
-      <Section id="memberships"
-        title={homePage.sections.memberships.title}
-        description={homePage.sections.memberships.description}>
+      );
+    case "memberships":
+      return (
         <div className="grid gap-6 md:grid-cols-2">
-          {memberships.map((m) => (
+          {items.map((m) => (
             <MembershipCard key={m.slug} m={m} />
           ))}
         </div>
-      </Section>
-    </SiteChrome>
-  );
+      );
+    default:
+      return (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((p) => (
+            <ProductCard key={p.slug} p={p} />
+          ))}
+        </div>
+      );
+  }
 }
 
 /* ---------------- Contact block + map ---------------- */

@@ -200,7 +200,6 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
                 <BookCta
                   product={a}
                   sourcePage={currentSlug ? `/assessments/${currentSlug}` : "/assessments"}
-                  label="Book"
                   className="px-4 py-2"
                 />
               </td>
@@ -282,7 +281,7 @@ export function MembershipComparison({ currentSlug }: { currentSlug?: string }) 
             <RowLabel>Enquire</RowLabel>
             {memberships.map((m) => (
               <td key={m.slug} className={`px-4 py-6 ${m.slug === currentSlug ? "bg-card" : ""}`}>
-                <BookCta product={m} sourcePage={sourcePage} label="Enquire" className="px-4 py-2" />
+                <BookCta product={m} sourcePage={sourcePage} className="px-4 py-2" />
               </td>
             ))}
           </tr>

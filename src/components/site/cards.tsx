@@ -1,7 +1,7 @@
 // Reusable card + CTA components for the Volumes Lab site.
 //
 // The rule, from the client's homepage architecture (07/08/2026):
-//   · Book / Purchase / Enquire  → leaves the site, goes into Momence
+//   · Book                       → leaves the site, goes into Momence
 //   · More info                  → stays inside the Volumes CMS
 // Every card below is built from that pair, so the funnel behaves identically
 // on the homepage and on the SKU landing pages.
@@ -10,6 +10,7 @@ import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
 import { getTests, productPath } from "@/data/catalog";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
+import { productReachable } from "@/lib/sections";
 import { BOOKING_HOME } from "@/lib/momence";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -226,13 +227,20 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
       <ul className="mt-6 grid grid-cols-2 gap-2">
         {included.map((t) => (
           <li key={t.slug}>
-            <Link
-              to="/tests/$slug"
-              params={{ slug: t.slug }}
-              className="flex min-h-[46px] items-center border border-border px-3 py-2 font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-widest text-muted transition-colors hover:border-foreground hover:bg-background hover:text-foreground"
-            >
-              {t.name}
-            </Link>
+            {/* Plain tile when the Tests section is off: nothing to link to. */}
+            {productReachable(t) ? (
+              <Link
+                to="/tests/$slug"
+                params={{ slug: t.slug }}
+                className="flex min-h-[46px] items-center border border-border px-3 py-2 font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-widest text-muted transition-colors hover:border-foreground hover:bg-background hover:text-foreground"
+              >
+                {t.name}
+              </Link>
+            ) : (
+              <span className="flex min-h-[46px] items-center border border-border px-3 py-2 font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-widest text-muted">
+                {t.name}
+              </span>
+            )}
           </li>
         ))}
       </ul>
@@ -247,14 +255,14 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
 
       <PriceLine p={a} />
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <BookCta product={a} sourcePage={sourcePage} label="Book" />
+        <BookCta product={a} sourcePage={sourcePage} />
         <MoreInfoLink product={a} />
       </div>
     </article>
   );
 }
 
-/* ---------------- Membership card (Enquire, never Book) ---------------- */
+/* ---------------- Membership card ---------------- */
 
 export function MembershipCard({ m, sourcePage = "/" }: { m: Product; sourcePage?: string }) {
   return (
@@ -274,7 +282,7 @@ export function MembershipCard({ m, sourcePage = "/" }: { m: Product; sourcePage
         <p className="mt-6 font-mono text-[10px] uppercase tracking-widest text-muted">{m.membership.commitment}</p>
       )}
       <div className="mt-6 flex flex-wrap gap-2">
-        <BookCta product={m} sourcePage={sourcePage} label="Enquire" className="px-6 py-3" />
+        <BookCta product={m} sourcePage={sourcePage} className="px-6 py-3" />
         <MoreInfoLink product={m} className="px-6 py-3" />
       </div>
     </article>

@@ -8,8 +8,9 @@
 //   · The CMS owns editorial content and, since 10/09/2026, which services and
 //     pages exist: a service is on the site only while its Live checkbox is
 //     ticked, and a page only while it is ticked in "Pages on / off".
-//   · Prices and durations stay Momence's. The CMS has no such fields, and a
-//     service the CMS knows but the bundle does not shows "Price on booking".
+//   · Since 12/09/2026 the CMS also owns each service's price, duration,
+//     section and order, and which homepage sections exist, in what order and
+//     under what name. An empty price shows "Price on booking".
 //   · No CMS field is mandatory. A field the editor clears is cleared on the
 //     site too, except for the handful that must never be empty for the site
 //     to work (contact email, the Momence home link, SEO titles), which fall
@@ -24,14 +25,25 @@ import {
   tests,
   medical,
   training,
-  trainingPacks,
   allProducts,
-  TRAINING_PACK_SLUGS,
   type Product,
   type ProductCategory,
 } from "@/data/catalog";
 import { productContent, type ProductContent } from "@/data/productContent";
-import { homePage, productLabels, aboutPage, labPage, legalPage, faqPage, blogPage, contactPage } from "@/data/pages";
+import {
+  homePage,
+  productLabels,
+  aboutPage,
+  labPage,
+  legalPage,
+  faqPage,
+  blogPage,
+  contactPage,
+  SECTION_KEYS,
+  type HomeSection,
+  type SectionKey,
+} from "@/data/pages";
+import { categoryOfSection } from "@/lib/sections";
 import { pageMeta, type PageMeta, type PageMetaKey } from "@/data/meta";
 import { ADDRESS, CONTACT, HOURS, COMPANY, PAGES, setMapLink, type PageKey } from "@/data/site";
 import { LINKS, setBookingHome } from "@/lib/momence";
@@ -178,6 +190,23 @@ function applyProduct(target: Product, doc: CmsDoc) {
   const included = texts(doc.included);
   if (included) target.measures = included;
 
+  // Price and duration are typed in the CMS (12/09/2026). The site never read
+  // them from Momence; an empty price reads "Price on booking".
+  if ("price" in doc) {
+    const n = typeof doc.price === "number" ? doc.price : Number(doc.price);
+    if (Number.isFinite(n) && n > 0) {
+      target.price = n;
+      target.priceTbd = false;
+    } else {
+      target.price = 0;
+      target.priceTbd = true;
+    }
+  }
+  if ("duration" in doc) {
+    target.duration = str(doc.duration);
+    target.durationTbd = !target.duration;
+  }
+
   // Empty = the general booking page (bookingHref falls back to it).
   if ("momenceUrl" in doc) {
     const momenceUrl = str(doc.momenceUrl) ?? "";
@@ -226,6 +255,7 @@ function applyContent(target: ProductContent, doc: CmsDoc) {
 const baselineProducts = structuredClone(allProducts);
 const baselineContent = structuredClone(productContent);
 const baselineLinks = { ...LINKS };
+const baselineSections = structuredClone(homePage.sections);
 const collections: Partial<Record<ProductCategory, Product[]>> = {
   membership: memberships,
   assessment: assessments,
@@ -268,12 +298,24 @@ function applyCatalogue(bundle: CmsBundle) {
     if (!keptSlugs.has(slug)) LINKS[slug] = url;
 
   const next: Product[] = [...kept];
+  const rank = new Map<Product, SortKey>();
   for (const doc of bundle.products) {
     const slug = str(doc.slug);
-    const category = doc.category as ProductCategory;
+    // "Section on the website" moves a SKU to another section without
+    // re-creating it: the doc stays in its collection, the product changes
+    // category, list and URL.
+    const category = sectionCategory(doc.section) ?? (doc.category as ProductCategory);
     if (!slug || !collections[category] || doc.live === false) continue;
-    const baseline = baselineProducts.find((p) => p.slug === slug && p.category === category);
-    const product = baseline ? structuredClone(baseline) : newProduct(slug, category, doc);
+    const baselineIndex = baselineProducts.findIndex((p) => p.slug === slug);
+    const baseline = baselineProducts[baselineIndex];
+    const product = baseline
+      ? { ...structuredClone(baseline), category }
+      : newProduct(slug, category, doc);
+    rank.set(product, {
+      order: typeof doc.order === "number" ? doc.order : Number.POSITIVE_INFINITY,
+      baseline: baselineIndex === -1 ? Number.POSITIVE_INFINITY : baselineIndex,
+      created: str(doc.createdAt) ?? "",
+    });
     applyProduct(product, doc);
     // The CMS short description is the only description the editor can see,
     // so it is also what the page's meta description reads.
@@ -293,19 +335,29 @@ function applyCatalogue(bundle: CmsBundle) {
     productContent[slug] = content;
   }
 
+  // Within a section: the Order field first (1 before 2, empty last), then the
+  // bundled order, then oldest first, so a fresh SKU lands at the end instead
+  // of the top.
+  const byRank = (a: Product, b: Product) => {
+    const ra = rank.get(a) ?? keptRank;
+    const rb = rank.get(b) ?? keptRank;
+    return cmpNum(ra.order, rb.order) || cmpNum(ra.baseline, rb.baseline) || ra.created.localeCompare(rb.created);
+  };
   for (const [category, target] of Object.entries(collections)) {
     if (fetched.has(category))
-      target.splice(0, target.length, ...next.filter((p) => p.category === category));
+      target.splice(0, target.length, ...next.filter((p) => p.category === category).sort(byRank));
   }
   allProducts.splice(0, allProducts.length, ...Object.values(collections).flatMap((c) => c ?? []));
-  trainingPacks.splice(
-    0,
-    trainingPacks.length,
-    ...TRAINING_PACK_SLUGS.map((s) => training.find((t) => t.slug === s)).filter(
-      (t): t is Product => !!t,
-    ),
-  );
 }
+
+type SortKey = { order: number; baseline: number; created: string };
+const keptRank: SortKey = { order: Number.POSITIVE_INFINITY, baseline: Number.POSITIVE_INFINITY, created: "" };
+const cmpNum = (a: number, b: number) => (a === b ? 0 : a < b ? -1 : 1);
+
+const sectionCategory = (v: unknown): ProductCategory | undefined =>
+  typeof v === "string" && (SECTION_KEYS as string[]).includes(v)
+    ? categoryOfSection[v as SectionKey]
+    : undefined;
 
 /** Array of {key: text} rows → strings; undefined when the CMS has no such field. */
 const rows = (v: unknown, key: string): string[] | undefined =>
@@ -379,15 +431,34 @@ export function applyCmsContent(bundle: CmsBundle | null) {
     const h = bundle.home;
     homePage.headline = own(h, "headline", homePage.headline);
     homePage.intro = own(h, "intro", homePage.intro);
-    for (const key of ["tests", "assessments", "medical", "train", "memberships"] as const) {
-      const sec = h[key] as CmsDoc | undefined;
-      if (sec) {
-        homePage.sections[key].title = own(sec, "title", homePage.sections[key].title);
-        homePage.sections[key].description = own(
-          sec,
-          "description",
-          homePage.sections[key].description,
-        );
+    if (Array.isArray(h.sections)) {
+      // The list is the order. A section missing from the list is off, like an
+      // unticked one. An empty list (global never saved, or every row deleted)
+      // keeps the current sections: a homepage with nothing on it is never
+      // what anyone meant.
+      const seen = new Set<SectionKey>();
+      const next: HomeSection[] = [];
+      for (const row of h.sections as CmsDoc[]) {
+        const key = row.section as SectionKey;
+        if (!SECTION_KEYS.includes(key) || seen.has(key)) continue;
+        seen.add(key);
+        const current =
+          homePage.sections.find((s) => s.key === key) ?? baselineSections.find((s) => s.key === key)!;
+        next.push({
+          key,
+          enabled: row.enabled !== false,
+          title: own(row, "title", current.title),
+          description: own(row, "description", current.description),
+        });
+      }
+      if (next.length) homePage.sections = next;
+    } else {
+      // A CMS deploy from before 12/09/2026 still sends one group per section.
+      for (const s of homePage.sections) {
+        const sec = h[s.key] as CmsDoc | undefined;
+        if (!sec) continue;
+        s.title = own(sec, "title", s.title);
+        s.description = own(sec, "description", s.description);
       }
     }
   }
@@ -446,7 +517,6 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   if (bundle.legal) {
     const l = bundle.legal;
     legalPage.title = own(l, "title", legalPage.title);
-    legalPage.companyHeading = own(l, "companyHeading", legalPage.companyHeading);
     legalPage.privacyHeading = own(l, "privacyHeading", legalPage.privacyHeading);
     legalPage.backLink = own(l, "backLink", legalPage.backLink);
     if (Array.isArray(l.privacy)) {

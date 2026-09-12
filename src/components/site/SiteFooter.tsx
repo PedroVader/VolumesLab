@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { BOOKING_HOME } from "@/lib/momence";
 import { ADDRESS, COMPANY, CONTACT, HOURS, MAP_LINK, PAGES } from "@/data/site";
+import { sectionLabel, visibleSections } from "@/lib/sections";
 
 // Footer structure: Services, About, Visit, Contact. The five legal pages were
 // collapsed into one /legal link in the bottom bar at the client's request.
@@ -12,11 +13,9 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <FooterCol title="Services">
-            <FooterLink to="/" hash="tests">Tests</FooterLink>
-            <FooterLink to="/" hash="assessments">Assessments</FooterLink>
-            <FooterLink to="/" hash="medical">Medical Appointment</FooterLink>
-            <FooterLink to="/" hash="train">Train</FooterLink>
-            <FooterLink to="/" hash="memberships">Memberships</FooterLink>
+            {visibleSections().map((s) => (
+              <FooterLink key={s.key} to="/" hash={s.key}>{sectionLabel(s.key)}</FooterLink>
+            ))}
             <li>
               <a href={BOOKING_HOME} target="_blank" rel="noreferrer" className="hover:text-primary">
                 Book Services →
@@ -76,9 +75,11 @@ export function SiteFooter() {
         <div className="mt-12 grid items-center gap-6 border-t border-border pt-8 md:grid-cols-3">
           <img src="/volumes-mark.png" alt="Volumes Lab" className="w-28 opacity-90 justify-self-start" />
           {/* The LSSI requires the company identity to be permanently and directly
-              accessible, so this link sits in the footer of every page. */}
+              accessible, so the registered name, the tax ID and the one Legal
+              link sit here on every page (client, 12/09/2026: only here, not
+              in the link columns). */}
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted md:justify-self-center md:text-center">
-            © {COMPANY.legalName || COMPANY.tradingName || "Volumes Lab"}
+            {companyIdentity()}
             {PAGES.legal && (
               <>
                 {" "}·{" "}
@@ -95,6 +96,13 @@ export function SiteFooter() {
       </div>
     </footer>
   );
+}
+
+/** "Volumes Vision S.L. B26934380". The ID is not repeated if it was typed into the name. */
+function companyIdentity(): string {
+  const name = COMPANY.legalName || COMPANY.tradingName || "Volumes Lab";
+  const id = COMPANY.taxId?.trim();
+  return id && !name.includes(id) ? `${name} ${id}` : name;
 }
 
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {

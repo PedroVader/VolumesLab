@@ -9,29 +9,20 @@
 
 import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
-import { assessments, findProduct, getTests, productPath, trainingPacks } from "@/data/catalog";
+import { assessments, findProduct, getTests, productPath, training } from "@/data/catalog";
 import { getProductContent } from "@/data/productContent";
 import { productLabels as L } from "@/data/pages";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
+import { productReachable, sectionLabel, sectionOfCategory } from "@/lib/sections";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { BookCta } from "./cards";
 import { Eyebrow, SectionTitle, FaqList, StickyBookBar } from "./blocks";
 
-const categoryCrumb: Record<string, Crumb> = {
-  membership: { name: "Memberships", to: "/" },
-  assessment: { name: "Assessments", to: "/" },
-  test: { name: "Individual Tests", to: "/" },
-  medical: { name: "Medical Appointment", to: "/" },
-  training: { name: "Train", to: "/" },
-};
-
-const categoryAnchor: Record<string, string> = {
-  membership: "memberships",
-  assessment: "assessments",
-  test: "tests",
-  medical: "medical",
-  training: "train",
-};
+/** The section crumb: the CMS's name for the section, linking to its anchor. */
+function sectionCrumb(product: Product): Crumb {
+  const key = sectionOfCategory(product.category);
+  return { name: sectionLabel(key), to: "/", hash: key };
+}
 
 export function ProductDetail({ product }: { product: Product }) {
   const content = getProductContent(product.slug);
@@ -46,9 +37,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <Breadcrumbs
             items={[
               { name: "Home", to: "/" },
-              categoryCrumb[product.category]
-                ? { ...categoryCrumb[product.category], hash: categoryAnchor[product.category] }
-                : { name: product.categoryLabel },
+              sectionCrumb(product),
               { name: product.name },
             ]}
           />
@@ -233,24 +222,30 @@ function ModuleSection({ title, children }: { title: string; children: React.Rea
   );
 }
 
-/** A linked tile. Used for every module so the boxes read as one system. */
+/**
+ * A linked tile. Used for every module so the boxes read as one system.
+ * `current` marks this page; `plain` is for a target whose section the CMS
+ * switched off, so there is nowhere to link.
+ */
 function Tile({
   to,
   params,
   children,
   current = false,
+  plain = false,
 }: {
   to: string;
   params?: Record<string, string>;
   children: React.ReactNode;
   current?: boolean;
+  plain?: boolean;
 }) {
   const className = `flex h-full items-center justify-between gap-3 border px-4 py-4 font-mono text-[10px] font-bold uppercase leading-snug tracking-widest transition-colors ${
     current
       ? "border-primary bg-card text-primary"
       : "border-border text-muted hover:border-foreground hover:text-foreground"
   }`;
-  if (current) return <span className={className}>{children}</span>;
+  if (current || plain) return <span className={className}>{children}</span>;
   return (
     <Link to={to} params={params} className={className}>
       {children}
@@ -268,7 +263,7 @@ function TestModule({ product }: { product: Product }) {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {inside.map((a) => (
           <li key={a.slug}>
-            <Tile to="/assessments/$slug" params={{ slug: a.slug }}>
+            <Tile to="/assessments/$slug" params={{ slug: a.slug }} plain={!productReachable(a)}>
               {a.name} Assessment
             </Tile>
           </li>
@@ -289,13 +284,13 @@ function AssessmentModule({ product }: { product: Product }) {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tests.map((t) => (
           <li key={t.slug}>
-            <Tile to="/tests/$slug" params={{ slug: t.slug }}>
+            <Tile to="/tests/$slug" params={{ slug: t.slug }} plain={!productReachable(t)}>
               {t.name}
             </Tile>
           </li>
         ))}
       </ul>
-      {membership && (
+      {membership && productReachable(membership) && (
         <p className="mt-6 text-sm text-muted">
           Included in the{" "}
           <Link
@@ -312,15 +307,20 @@ function AssessmentModule({ product }: { product: Product }) {
   );
 }
 
-/** Training: the other pack sizes, with this one marked. */
+/** Training: every other live training option, with this one marked. */
 function TrainingModule({ product }: { product: Product }) {
+  if (training.length < 2) return null;
   return (
     <ModuleSection title={L.modules.trainingOtherOptions}>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {trainingPacks.map((p) => (
+        {training.map((p) => (
           <li key={p.slug}>
             <Tile to="/training/$slug" params={{ slug: p.slug }} current={p.slug === product.slug}>
-              {p.training?.sessionCount === 1 ? "1 session" : `${p.training?.sessionCount} sessions`}
+              {p.training?.sessionCount === 1
+                ? "1 session"
+                : p.training?.sessionCount
+                  ? `${p.training.sessionCount} sessions`
+                  : p.name}
               {p.slug !== product.slug && p.price > 0 && <span className="sr-only"> at €{p.price}</span>}
             </Tile>
           </li>

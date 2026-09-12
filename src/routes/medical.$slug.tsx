@@ -1,5 +1,6 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { medical } from "@/data/catalog";
+import { requireProduct } from "@/lib/sections";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ProductDetail } from "@/components/site/ProductDetail";
 import { canonical } from "@/lib/seo";
@@ -7,8 +8,7 @@ import { canonical } from "@/lib/seo";
 export const Route = createFileRoute("/medical/$slug")({
   component: Page,
   loader: ({ params }) => {
-    const product = medical.find((p) => p.slug === params.slug);
-    if (!product) throw notFound();
+    const product = requireProduct(medical, params.slug);
     return { product };
   },
   head: ({ loaderData }) =>

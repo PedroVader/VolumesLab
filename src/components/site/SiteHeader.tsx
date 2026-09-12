@@ -10,6 +10,7 @@ import { useState } from "react";
 import { BOOKING_HOME } from "@/lib/momence";
 import { track } from "@/lib/analytics";
 import { PAGES } from "@/data/site";
+import { sectionLabel, visibleSections } from "@/lib/sections";
 
 type NavItem = { label: string; hash?: string; to?: string };
 
@@ -17,13 +18,10 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeMobile = () => setMobileOpen(false);
 
-  // Built per render: the CMS can switch pages off between requests.
+  // Built per render: the CMS can switch pages and sections off, rename and
+  // reorder the sections between requests.
   const navItems: NavItem[] = [
-    { label: "Tests", hash: "tests" },
-    { label: "Assessments", hash: "assessments" },
-    { label: "Medical", hash: "medical" },
-    { label: "Train", hash: "train" },
-    { label: "Memberships", hash: "memberships" },
+    ...visibleSections().map((s) => ({ label: sectionLabel(s.key), hash: s.key })),
     // Team hidden temporarily (client request, 24/08) until people and photos exist.
     ...(PAGES.lab ? [{ label: "The Lab", to: "/about/lab" }] : []),
   ];

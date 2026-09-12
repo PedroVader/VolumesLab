@@ -1,6 +1,6 @@
-// Booking seam. Every transactional intent — Book, Purchase, Enquire — leaves
-// the CMS and lands in Momence. The site itself is not transactional, so there
-// is no cart branch here any more; see src/lib/momence.ts for the link table.
+// Booking seam. Every transactional intent leaves the CMS and lands in
+// Momence. The site itself is not transactional, so there is no cart branch
+// here any more; see src/lib/momence.ts for the link table.
 
 import type { Product } from "@/data/catalog";
 import { momenceUrl } from "@/lib/momence";
@@ -11,10 +11,12 @@ export function bookingHref(product: Product): string {
   return momenceUrl(product);
 }
 
-/** Verb shown on the primary CTA. Memberships enquire; everything else books. */
-export function bookingLabel(product: Product): string {
-  if (product.ctaLabel) return product.ctaLabel;
-  return product.category === "membership" ? "Enquire" : "Book";
+/**
+ * Verb shown on the primary CTA. "Book" on every service, memberships and
+ * packs included (client, 12/09/2026: "CTA Book en todos, nunca Book Test").
+ */
+export function bookingLabel(_product: Product): string {
+  return "Book";
 }
 
 /**

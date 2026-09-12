@@ -10,38 +10,51 @@
 //   blogPage        -> global "Blog page"
 //   contactPage     -> global "Contact page"
 //
-// Commercial values (price, duration, availability) are deliberately absent.
-// Momence owns those; putting them here too would create a second source of
-// truth and they would drift.
+// Prices and durations live on each service (src/data/catalog.ts, CMS-owned
+// since 12/09/2026), not here.
 
-export type SectionCopy = { title: string; description: string };
+export type SectionKey = "tests" | "assessments" | "medical" | "train" | "memberships";
+export const SECTION_KEYS: SectionKey[] = ["tests", "assessments", "medical", "train", "memberships"];
 
-export const homePage = {
+/**
+ * One homepage section. The array order is the order on the page and in the
+ * menus; `enabled` false takes the section off the site (CMS: Home page →
+ * Sections, since 12/09/2026, so the client can hide e.g. Train until its
+ * licence exists). The title doubles as the menu, footer and breadcrumb label.
+ */
+export type HomeSection = { key: SectionKey; enabled: boolean; title: string; description: string };
+
+export const homePage: { intro: string; headline: string; sections: HomeSection[] } = {
   intro:
     "Volumes Lab combines advanced testing, a medical team, personal training, and peptide therapies in one space. Membership options available.",
   headline: "Madrid Health & Performance Lab",
-  sections: {
-    tests: {
-      title: "Tests",
-      description: "Measure one specific area on its own.",
-    },
-    assessments: {
+  sections: [
+    { key: "tests", enabled: true, title: "Tests", description: "Measure one specific area on its own." },
+    {
+      key: "assessments",
+      enabled: true,
       title: "Assessments",
       description: "Combinations of tests, run in a single visit.",
     },
-    medical: {
+    {
+      key: "medical",
+      enabled: true,
       title: "Medical Appointment",
       description: "Talk to a doctor about peptides and GLP-1.",
     },
-    train: {
+    {
+      key: "train",
+      enabled: true,
       title: "Train",
       description: "Personal training sessions with a strength and conditioning coach.",
     },
-    memberships: {
+    {
+      key: "memberships",
+      enabled: true,
       title: "Memberships",
       description: "Ongoing testing, training and medical support.",
     },
-  } as Record<"tests" | "assessments" | "medical" | "train" | "memberships", SectionCopy>,
+  ],
 };
 
 // The SKU template is one component rendering 19 pages, so a single edit here
@@ -151,26 +164,17 @@ export const contactPage = {
   },
 };
 
-// The legal page body. Kept as labelled paragraphs rather than one blob so the
-// CMS can present them as separate fields and nobody has to edit HTML.
+// The legal page body: a title and labelled paragraphs, so the CMS can
+// present them as separate fields and nobody has to edit HTML. The structured
+// "Company information" rows were dropped at the client's request (12/09/2026);
+// the registered name and tax ID now sit in the footer next to the link.
 export const legalPage = {
   title: "Legal & Privacy",
-  companyHeading: "Company information",
-  labels: {
-    legalName: "Registered name",
-    tradingName: "Trading as",
-    taxId: "Tax ID (NIF/CIF)",
-    registeredAddress: "Registered address",
-    premises: "Premises",
-    email: "Email",
-    phone: "Phone",
-    pending: "pending",
-  },
   privacyHeading: "Privacy notice",
   privacy: [
     {
       lead: "Who is responsible.",
-      body: "{company}, at the contact details above, is the data controller for the personal data collected through this website.",
+      body: "{company}, reachable at {email}, is the data controller for the personal data collected through this website.",
     },
     {
       lead: "What this website collects.",

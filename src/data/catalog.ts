@@ -1,11 +1,9 @@
-// Canonical service catalogue — single source of truth for names, prices,
-// durations, relationships and booking links across cards, comparison tables,
-// detail pages and Book Now (see "website review & brief.docx", section 11.5/11.6).
-//
-// Values marked with `tbd: true` (price/duration) are placeholders pending the
-// client's final commercial decisions (brief section 13). Legacy fields
-// (measures/protocol/goodFor/categoryLabel/tagline) are retained so existing
-// components keep working while pages are rebuilt phase by phase.
+// Bundled service catalogue: the snapshot the site serves when the CMS is
+// unreachable, and the baseline each CMS document is poured over
+// (src/lib/cms-content.ts). Since 12/09/2026 the CMS owns name, copy, price,
+// duration, section and order; these values are only what a cold instance
+// shows during an outage. Legacy fields (measures/protocol/goodFor/tagline)
+// are retained so existing components keep working.
 
 export type ProductCategory =
   | "membership"
@@ -14,8 +12,6 @@ export type ProductCategory =
   | "medical"
   | "training"
   | "package";
-
-export type TestGroup = "body-bone" | "metabolism-cardio" | "strength-movement";
 
 export type MembershipDetail = {
   goal: string;
@@ -46,7 +42,6 @@ export type Product = {
   durationTbd?: boolean;
   category: ProductCategory;
   categoryLabel: string;
-  ctaLabel?: string; // e.g. "Join Membership", "Book Initial Consultation", "Book"
   bookingUrl?: string; // Momence deep-link (added when the account is wired)
   status?: "available" | "coming-soon" | "hidden";
   badges?: string[]; // e.g. "Included in the GLP-1 Medical Membership"
@@ -59,9 +54,6 @@ export type Product = {
   includedTests?: string[]; // test slugs (relational inclusion)
   includedInMembership?: string; // membership slug
   comparisonOrder?: number;
-
-  // test-specific
-  testGroup?: TestGroup;
 
   // membership-specific
   membership?: MembershipDetail;
@@ -82,7 +74,6 @@ export const memberships: Product[] = [
     duration: "per month",
     category: "membership",
     categoryLabel: "Membership",
-    ctaLabel: "Join Membership",
     status: "available",
     measures: [
       "Initial Performance Assessment",
@@ -121,7 +112,6 @@ export const memberships: Product[] = [
     duration: "per month",
     category: "membership",
     categoryLabel: "Membership",
-    ctaLabel: "Book Initial Consultation",
     status: "available",
     measures: [
       "Initial doctor consultation",
@@ -170,7 +160,6 @@ export const assessments: Product[] = [
     durationTbd: true,
     category: "assessment",
     categoryLabel: "Complete Assessment",
-    ctaLabel: "Book Foundational Assessment",
     status: "available",
     comparisonOrder: 1,
     includedTests: ["3d-body-composition", "bone-mineral-density", "grip-strength", "metabolic-assessment"],
@@ -198,7 +187,6 @@ export const assessments: Product[] = [
     durationTbd: true,
     category: "assessment",
     categoryLabel: "Complete Assessment",
-    ctaLabel: "Book Longevity Assessment",
     status: "available",
     comparisonOrder: 2,
     includedTests: [
@@ -229,7 +217,6 @@ export const assessments: Product[] = [
     durationTbd: true,
     category: "assessment",
     categoryLabel: "Complete Assessment",
-    ctaLabel: "Book Performance Assessment",
     status: "available",
     comparisonOrder: 3,
     includedTests: [
@@ -255,29 +242,10 @@ export const assessments: Product[] = [
   },
 ];
 
+// Order = the order on the homepage until the CMS says otherwise (each SKU
+// has an Order field since 12/09/2026): body & bone, metabolism & cardio,
+// strength & movement.
 export const tests: Product[] = [
-  {
-    slug: "vo2max",
-    name: "VO2Max Test",
-    tagline: "Measure cardiorespiratory fitness and aerobic capacity.",
-    shortDescription: "Measure cardiorespiratory fitness and aerobic capacity.",
-    price: 260,
-    priceTbd: true,
-    duration: "60 minutes",
-    category: "test",
-    categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
-    status: "available",
-    testGroup: "metabolism-cardio",
-    measures: ["VO2max", "Ventilatory thresholds", "Heart-rate training zones"],
-    protocol: [
-      "Warm-up and calibration.",
-      "Graded exercise test on treadmill or bike until volitional exhaustion.",
-      "Personalised training zones and debrief.",
-    ],
-    goodFor: ["Runners, cyclists, triathletes", "Anyone building a science-based training plan"],
-    giftable: true,
-  },
   {
     slug: "3d-body-composition",
     name: "3D Body Composition",
@@ -288,9 +256,7 @@ export const tests: Product[] = [
     duration: "20 minutes",
     category: "test",
     categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
     status: "available",
-    testGroup: "body-bone",
     measures: ["Segmental body fat & lean mass", "Circumferences", "Posture symmetry"],
     protocol: ["Change into scan attire.", "30-second full-body 3-D scan.", "Results walkthrough with your coach."],
     goodFor: ["Anyone tracking body-composition changes objectively"],
@@ -306,48 +272,10 @@ export const tests: Product[] = [
     duration: "30 minutes",
     category: "test",
     categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
     status: "available",
-    testGroup: "body-bone",
     measures: ["Bone mineral density", "T-score & Z-score", "Fracture-risk context"],
     protocol: ["Screening questionnaire.", "Bone density scan of hip and lumbar spine.", "Physician-led results review."],
     goodFor: ["Adults 40+", "Post-menopausal women", "People with high training loads"],
-    giftable: true,
-  },
-  {
-    slug: "gait-analysis",
-    name: "Gait Analysis",
-    tagline: "Understand how you walk or run and identify relevant movement patterns.",
-    shortDescription: "Understand how you walk or run and identify relevant movement patterns.",
-    price: 220,
-    priceTbd: true,
-    duration: "60 minutes",
-    category: "test",
-    categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
-    status: "available",
-    testGroup: "strength-movement",
-    measures: ["Kinematics", "Ground contact & cadence", "Asymmetries"],
-    protocol: ["Movement screen.", "Instrumented treadmill capture.", "Coach debrief with cues and drills."],
-    goodFor: ["Runners", "People returning from injury"],
-    giftable: true,
-  },
-  {
-    slug: "grip-strength",
-    name: "Grip Strength",
-    tagline: "Measure handgrip strength as a simple indicator of physical capacity.",
-    shortDescription: "Measure handgrip strength as a simple indicator of physical capacity.",
-    price: 40,
-    priceTbd: true,
-    duration: "15 minutes",
-    category: "test",
-    categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
-    status: "available",
-    testGroup: "strength-movement",
-    measures: ["Peak grip force", "Left-right asymmetry", "Age-normed percentile"],
-    protocol: ["Warm-up.", "Standardised handgrip trials.", "Instant percentile scoring."],
-    goodFor: ["Everyone, grip strength is one of the strongest predictors of longevity"],
     giftable: true,
   },
   {
@@ -360,30 +288,46 @@ export const tests: Product[] = [
     duration: "45 minutes",
     category: "test",
     categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
     status: "available",
-    testGroup: "metabolism-cardio",
     measures: ["Resting metabolic rate", "Substrate utilisation", "Caloric requirements"],
     protocol: ["Fasted arrival.", "Indirect calorimetry.", "Nutrition-focused debrief."],
     goodFor: ["Anyone dialling in body composition or nutrition"],
     giftable: true,
   },
   {
-    slug: "mobility-assessment",
-    name: "Mobility Assessment",
-    tagline: "Assess range of motion and identify movement restrictions.",
-    shortDescription: "Assess range of motion and identify movement restrictions.",
-    price: 130,
+    slug: "vo2max",
+    name: "VO2Max Test",
+    tagline: "Measure cardiorespiratory fitness and aerobic capacity.",
+    shortDescription: "Measure cardiorespiratory fitness and aerobic capacity.",
+    price: 260,
     priceTbd: true,
-    duration: "45 minutes",
+    duration: "60 minutes",
     category: "test",
     categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
     status: "available",
-    testGroup: "strength-movement",
-    measures: ["Joint ROM", "Movement patterns", "Asymmetry index"],
-    protocol: ["Movement interview.", "Full-body mobility screen.", "Corrective exercise plan."],
-    goodFor: ["Desk workers", "People wanting durability"],
+    measures: ["VO2max", "Ventilatory thresholds", "Heart-rate training zones"],
+    protocol: [
+      "Warm-up and calibration.",
+      "Graded exercise test on treadmill or bike until volitional exhaustion.",
+      "Personalised training zones and debrief.",
+    ],
+    goodFor: ["Runners, cyclists, triathletes", "Anyone building a science-based training plan"],
+    giftable: true,
+  },
+  {
+    slug: "grip-strength",
+    name: "Grip Strength",
+    tagline: "Measure handgrip strength as a simple indicator of physical capacity.",
+    shortDescription: "Measure handgrip strength as a simple indicator of physical capacity.",
+    price: 40,
+    priceTbd: true,
+    duration: "15 minutes",
+    category: "test",
+    categoryLabel: "Individual Test",
+    status: "available",
+    measures: ["Peak grip force", "Left-right asymmetry", "Age-normed percentile"],
+    protocol: ["Warm-up.", "Standardised handgrip trials.", "Instant percentile scoring."],
+    goodFor: ["Everyone, grip strength is one of the strongest predictors of longevity"],
     giftable: true,
   },
   {
@@ -396,12 +340,42 @@ export const tests: Product[] = [
     duration: "60 minutes",
     category: "test",
     categoryLabel: "Individual Test",
-    ctaLabel: "Book Test",
     status: "available",
-    testGroup: "strength-movement",
     measures: ["Isometric force", "Left-right asymmetry", "Force-velocity profile"],
     protocol: ["Warm-up.", "Force-plate strength tests.", "Coach-led debrief."],
     goodFor: ["Strength athletes", "Anyone benchmarking force production"],
+    giftable: true,
+  },
+  {
+    slug: "mobility-assessment",
+    name: "Mobility Assessment",
+    tagline: "Assess range of motion and identify movement restrictions.",
+    shortDescription: "Assess range of motion and identify movement restrictions.",
+    price: 130,
+    priceTbd: true,
+    duration: "45 minutes",
+    category: "test",
+    categoryLabel: "Individual Test",
+    status: "available",
+    measures: ["Joint ROM", "Movement patterns", "Asymmetry index"],
+    protocol: ["Movement interview.", "Full-body mobility screen.", "Corrective exercise plan."],
+    goodFor: ["Desk workers", "People wanting durability"],
+    giftable: true,
+  },
+  {
+    slug: "gait-analysis",
+    name: "Gait Analysis",
+    tagline: "Understand how you walk or run and identify relevant movement patterns.",
+    shortDescription: "Understand how you walk or run and identify relevant movement patterns.",
+    price: 220,
+    priceTbd: true,
+    duration: "60 minutes",
+    category: "test",
+    categoryLabel: "Individual Test",
+    status: "available",
+    measures: ["Kinematics", "Ground contact & cadence", "Asymmetries"],
+    protocol: ["Movement screen.", "Instrumented treadmill capture.", "Coach debrief with cues and drills."],
+    goodFor: ["Runners", "People returning from injury"],
     giftable: true,
   },
 ];
@@ -421,7 +395,6 @@ export const medical: Product[] = [
     durationTbd: true,
     category: "medical",
     categoryLabel: "Medical Appointment",
-    ctaLabel: "Book",
     status: "available",
     measures: [
       "One-to-one consultation with a doctor",
@@ -455,7 +428,6 @@ export const training: Product[] = [
     durationTbd: true,
     category: "training",
     categoryLabel: "Training Session",
-    ctaLabel: "Book a Session",
     status: "available",
     measures: ["Private 1:1 session", "Adapted to your ability and goals"],
     protocol: ["Book a slot with the performance team.", "Train around your goals, not a fixed format."],
@@ -472,7 +444,6 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Purchase",
     status: "available",
     measures: ["3 x 1h sessions", "Adapted to your ability and goals"],
     protocol: ["Use within 2 months."],
@@ -489,7 +460,6 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Purchase",
     status: "available",
     measures: ["5 x 1h sessions", "Programme design", "Progress notes"],
     protocol: ["Use within 3 months."],
@@ -506,7 +476,6 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Purchase",
     status: "available",
     measures: ["10 x 1h sessions", "Programme design", "Retest at end"],
     protocol: ["Use within 4 months."],
@@ -523,35 +492,12 @@ export const training: Product[] = [
     priceTbd: true,
     category: "training",
     categoryLabel: "Training Package",
-    ctaLabel: "Purchase",
     status: "available",
     measures: ["4 x 1h sessions", "Heart-rate zone coaching", "Progress notes"],
     protocol: ["Book at your own pace within 3 months."],
     goodFor: ["Anyone starting structured cardio"],
     giftable: true,
     training: { sessionCount: 4, validity: "3 months" },
-  },
-];
-
-// The four session options shown in the homepage TRAIN section, in the order
-// the client's architecture specifies: 1, 3, 5 and 10 sessions.
-export const TRAINING_PACK_SLUGS = ["training-session", "pt-pack-3", "pt-pack-5", "pt-pack-10"];
-export const trainingPacks: Product[] = TRAINING_PACK_SLUGS
-  .map((slug) => training.find((t) => t.slug === slug))
-  .filter((t): t is Product => Boolean(t));
-
-// Test grouping for the Individual Tests landing page (brief section 7.1).
-export const testGroups: { key: TestGroup; label: string; testSlugs: string[] }[] = [
-  { key: "body-bone", label: "Body and Bone", testSlugs: ["3d-body-composition", "bone-mineral-density"] },
-  {
-    key: "metabolism-cardio",
-    label: "Metabolism and Cardiovascular Fitness",
-    testSlugs: ["metabolic-assessment", "vo2max"],
-  },
-  {
-    key: "strength-movement",
-    label: "Strength and Movement",
-    testSlugs: ["grip-strength", "strength-assessment", "mobility-assessment", "gait-analysis"],
   },
 ];
 
