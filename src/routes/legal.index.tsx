@@ -43,7 +43,7 @@ function LegalPage() {
                   {L.privacyHeading}
                 </h2>
               )}
-              <div className="mt-5 space-y-5 text-base leading-relaxed text-foreground/85">
+              <div className="mt-5 space-y-5 whitespace-pre-line text-base leading-relaxed text-foreground/85">
                 {L.privacy.map((p) => (
                   <p key={p.lead}>
                     <strong className="font-semibold">{p.lead}</strong>{" "}

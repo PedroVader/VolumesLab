@@ -29,7 +29,7 @@ function Contact() {
                 {C.headline}
               </h1>
             )}
-            {C.intro && <p className="mt-6 max-w-2xl text-lg text-muted">{C.intro}</p>}
+            {C.intro && <p className="mt-6 max-w-2xl whitespace-pre-line text-lg text-muted">{C.intro}</p>}
           </div>
         </section>
       )}

@@ -88,6 +88,15 @@ const fallbackLabel: Record<SectionKey, string> = {
   memberships: "Memberships",
 };
 
+/**
+ * Where a generic "Book" CTA sends people: the top of the catalogue on the
+ * homepage, not Momence's generic landing (client, 12/09/2026: the SKU is
+ * chosen on volumeslab.com; only a SKU's own Book leaves for Momence).
+ */
+export function catalogueAnchor(): string {
+  return visibleSections()[0]?.key ?? "tests";
+}
+
 /** Whether a service's pages and links are reachable: its section is on. */
 export function productReachable(p: Pick<Product, "category">): boolean {
   return sectionEnabled(sectionOfCategory(p.category));

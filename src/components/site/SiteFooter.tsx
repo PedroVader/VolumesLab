@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { BOOKING_HOME } from "@/lib/momence";
 import { ADDRESS, COMPANY, CONTACT, HOURS, MAP_LINK, PAGES } from "@/data/site";
-import { sectionLabel, visibleSections } from "@/lib/sections";
+import { catalogueAnchor, sectionLabel, visibleSections } from "@/lib/sections";
 
 // Footer structure: Services, About, Visit, Contact. The five legal pages were
 // collapsed into one /legal link in the bottom bar at the client's request.
-// Service links are homepage anchors; the only outbound link is Book Services.
+// Service links and Book Services are homepage anchors; nothing here links to
+// Momence's generic landing (client, 12/09/2026).
 
 export function SiteFooter() {
   return (
@@ -16,11 +16,7 @@ export function SiteFooter() {
             {visibleSections().map((s) => (
               <FooterLink key={s.key} to="/" hash={s.key}>{sectionLabel(s.key)}</FooterLink>
             ))}
-            <li>
-              <a href={BOOKING_HOME} target="_blank" rel="noreferrer" className="hover:text-primary">
-                Book Services →
-              </a>
-            </li>
+            <FooterLink to="/" hash={catalogueAnchor()}>Book Services →</FooterLink>
           </FooterCol>
 
           {(PAGES.about || PAGES.lab || PAGES.location || PAGES.faq || PAGES.blog) && (

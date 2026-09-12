@@ -151,7 +151,7 @@ function Intro() {
   return (
     <section className="border-b border-border px-6 py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
-        <p className="max-w-4xl text-lg leading-relaxed text-foreground/85 md:text-xl">
+        <p className="max-w-4xl whitespace-pre-line text-lg leading-relaxed text-foreground/85 md:text-xl">
           {homePage.intro}
         </p>
       </div>

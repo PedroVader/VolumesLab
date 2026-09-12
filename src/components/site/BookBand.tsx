@@ -1,14 +1,15 @@
-import { BOOKING_HOME } from "@/lib/momence";
+import { Link } from "@tanstack/react-router";
 import { track } from "@/lib/analytics";
+import { catalogueAnchor } from "@/lib/sections";
 
-// Full-width conversion band. Transactional, so it leaves for Momence.
+// Full-width conversion band. Sends people to the catalogue on the homepage,
+// where they pick a SKU; only a SKU's own Book leaves for Momence.
 export function BookBand({ text = "Book Services" }: { text?: string }) {
   return (
-    <a
-      href={BOOKING_HOME}
-      target="_blank"
-      rel="noreferrer"
-      onClick={() => track("book_cta_click", { product: "all", destination: "momence", source_page: "book_band" })}
+    <Link
+      to="/"
+      hash={catalogueAnchor()}
+      onClick={() => track("book_cta_click", { product: "all", destination: "catalogue", source_page: "book_band" })}
       className="group relative block overflow-hidden bg-primary px-6 py-14 text-primary-foreground transition-colors hover:bg-primary-strong"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-end gap-6">
@@ -16,6 +17,6 @@ export function BookBand({ text = "Book Services" }: { text?: string }) {
           {text} <span aria-hidden>→</span>
         </span>
       </div>
-    </a>
+    </Link>
   );
 }

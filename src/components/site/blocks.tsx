@@ -46,7 +46,7 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
               <span className="shrink-0 font-mono text-xs uppercase text-muted group-open:hidden">Open +</span>
               <span className="hidden shrink-0 font-mono text-xs uppercase text-foreground group-open:inline">Close −</span>
             </summary>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">{f.a}</p>
+            <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-relaxed text-muted">{f.a}</p>
           </details>
         </li>
       ))}

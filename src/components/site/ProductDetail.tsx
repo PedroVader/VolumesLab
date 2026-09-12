@@ -48,7 +48,7 @@ export function ProductDetail({ product }: { product: Product }) {
               <h1 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-6xl">
                 {product.name}
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty">
+              <p className="mt-6 max-w-xl whitespace-pre-line text-lg leading-relaxed text-muted text-pretty">
                 {product.shortDescription ?? product.tagline}
               </p>
 
@@ -95,7 +95,7 @@ export function ProductDetail({ product }: { product: Product }) {
             {L.whatItIs && <SectionTitle>{L.whatItIs}</SectionTitle>}
             <ul className="mt-8 max-w-3xl space-y-4">
               {content.outcomes.map((o) => (
-                <li key={o} className="flex gap-4 text-base leading-relaxed text-foreground/85">
+                <li key={o} className="flex gap-4 whitespace-pre-line text-base leading-relaxed text-foreground/85">
                   <span aria-hidden className="mt-1 font-mono text-[11px] text-primary">
                     ·
                   </span>
@@ -121,7 +121,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   <h3 className="mt-3 font-display text-xl font-extrabold uppercase tracking-tight">
                     {step.title}
                   </h3>
-                  {step.body && <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>}
+                  {step.body && <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted">{step.body}</p>}
                 </li>
               ))}
             </ol>
@@ -371,13 +371,13 @@ function MedicalModule() {
   return (
     <ModuleSection title={L.modules.medicalTitle}>
       {L.modules.medicalIntro && (
-        <p className="max-w-2xl text-lg leading-relaxed text-foreground/85">
+        <p className="max-w-2xl text-lg leading-relaxed text-foreground/85 whitespace-pre-line">
           {L.modules.medicalIntro}
         </p>
       )}
       {L.modules.medicalSteps.length > 0 && <Flow steps={[...L.modules.medicalSteps]} />}
       {L.modules.medicalNote && (
-        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted whitespace-pre-line">
           {L.modules.medicalNote}
         </p>
       )}

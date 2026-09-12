@@ -10,8 +10,7 @@ import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
 import { getTests, productPath } from "@/data/catalog";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
-import { productReachable } from "@/lib/sections";
-import { BOOKING_HOME } from "@/lib/momence";
+import { catalogueAnchor, productReachable } from "@/lib/sections";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -110,8 +109,9 @@ export function BookCta({
 }
 
 /**
- * Generic outbound CTA into the Momence booking page, for places that promote
- * booking in general rather than one specific SKU.
+ * Generic "Book" CTA for places that promote booking in general rather than
+ * one specific SKU. Goes to the catalogue on the homepage, never to Momence's
+ * generic landing (client, 12/09/2026).
  */
 export function BookServicesLink({
   sourcePage,
@@ -123,18 +123,17 @@ export function BookServicesLink({
   className?: string;
 }) {
   return (
-    <a
-      href={BOOKING_HOME}
-      target="_blank"
-      rel="noreferrer"
-      onClick={() => track("book_cta_click", { product: "all", destination: "momence", source_page: sourcePage })}
+    <Link
+      to="/"
+      hash={catalogueAnchor()}
+      onClick={() => track("book_cta_click", { product: "all", destination: "catalogue", source_page: sourcePage })}
       className={cn(
         "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong",
         className,
       )}
     >
       {children}
-    </a>
+    </Link>
   );
 }
 
@@ -195,7 +194,7 @@ export function ProductCard({ p, sourcePage = "/" }: { p: Product; sourcePage?: 
   return (
     <article className="flex flex-col border border-border bg-card p-6">
       <h3 className="font-display text-lg font-bold uppercase leading-tight">{p.name}</h3>
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{p.shortDescription ?? p.tagline}</p>
+      <p className="mt-3 flex-1 whitespace-pre-line text-sm leading-relaxed text-muted">{p.shortDescription ?? p.tagline}</p>
       {p.badges?.map((b) => (
         <div key={b} className="mt-4">
           <IncludedBadge>{b}</IncludedBadge>
@@ -217,7 +216,7 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
   return (
     <article className="flex flex-col border border-border bg-card p-6">
       <h3 className="font-display text-xl font-extrabold uppercase leading-tight">{a.name}</h3>
-      <p className="mt-3 text-sm leading-relaxed text-muted">{a.shortDescription ?? a.tagline}</p>
+      <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted">{a.shortDescription ?? a.tagline}</p>
 
       {/* The tests inside this assessment, as the architecture diagram shows.
           Tiles are a fixed height rather than stretching to fill the card:
@@ -269,7 +268,7 @@ export function MembershipCard({ m, sourcePage = "/" }: { m: Product; sourcePage
     <article className="flex flex-col border border-border bg-card p-8">
       <p className="font-mono text-[10px] uppercase tracking-widest text-primary">{m.membership?.goal}</p>
       <h3 className="mt-4 font-display text-2xl font-extrabold uppercase tracking-tight">{m.name}</h3>
-      <p className="mt-3 text-base leading-relaxed text-muted">{m.shortDescription ?? m.tagline}</p>
+      <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-muted">{m.shortDescription ?? m.tagline}</p>
       <ul className="mt-6 flex-1 space-y-2 text-sm text-foreground/85">
         {m.measures.slice(0, 6).map((item) => (
           <li key={item} className="flex gap-3">

@@ -1,16 +1,15 @@
 // Header per the client's homepage architecture (07/08/2026).
 //
 // The homepage is the whole funnel, so the section links are anchors into it
-// rather than separate index pages. The only outbound link is "Book Services",
-// which goes straight to the Momence landing page — there is nothing
-// transactional left on this site.
+// rather than separate index pages. "Book Services" is an anchor too (client,
+// 12/09/2026): nothing on this site links to Momence's generic landing; only a
+// SKU's own Book button leaves the site.
 
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BOOKING_HOME } from "@/lib/momence";
 import { track } from "@/lib/analytics";
 import { PAGES } from "@/data/site";
-import { sectionLabel, visibleSections } from "@/lib/sections";
+import { catalogueAnchor, sectionLabel, visibleSections } from "@/lib/sections";
 
 type NavItem = { label: string; hash?: string; to?: string };
 
@@ -98,7 +97,8 @@ function NavLink({
 }
 
 /**
- * The site's single global conversion CTA. Opens the Momence booking page.
+ * The site's global CTA. Goes to the catalogue on the homepage, where the
+ * visitor picks a SKU; only a SKU's own Book leaves for Momence.
  */
 function BookServicesButton({
   onNavigate,
@@ -108,12 +108,11 @@ function BookServicesButton({
   className?: string;
 }) {
   return (
-    <a
-      href={BOOKING_HOME}
-      target="_blank"
-      rel="noreferrer"
+    <Link
+      to="/"
+      hash={catalogueAnchor()}
       onClick={() => {
-        track("book_cta_click", { product: "all", destination: "momence", source_page: "header" });
+        track("book_cta_click", { product: "all", destination: "catalogue", source_page: "header" });
         onNavigate?.();
       }}
       className={`group inline-flex items-center gap-2 bg-primary px-5 py-2.5 font-mono text-[12px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong ${className}`}
@@ -122,6 +121,6 @@ function BookServicesButton({
       <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
         →
       </span>
-    </a>
+    </Link>
   );
 }
