@@ -1,3 +1,6 @@
+/** One block of an article body: a paragraph, or a subheading between paragraphs. */
+export type PostBlock = { type: "paragraph" | "heading"; text: string };
+
 export type Post = {
   slug: string;
   title: string;
@@ -6,10 +9,14 @@ export type Post = {
   readingTime: string;
   category: string;
   author: string;
-  body: string[];
+  body: PostBlock[];
 };
 
-export const posts: Post[] = [
+// The bundled snapshot is written as plain paragraphs; `posts` below turns
+// them into blocks so the template renders one shape whatever the source.
+type BundledPost = Omit<Post, "body"> & { body: string[] };
+
+const bundled: BundledPost[] = [
   {
     slug: "why-vo2max-matters",
     title: "Why VO2max is the single best predictor of longevity",
@@ -72,6 +79,11 @@ export const posts: Post[] = [
     ],
   },
 ];
+
+export const posts: Post[] = bundled.map((p) => ({
+  ...p,
+  body: p.body.map((text) => ({ type: "paragraph", text })),
+}));
 
 export function getPost(slug: string) {
   return posts.find((p) => p.slug === slug);

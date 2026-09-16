@@ -4,9 +4,19 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow } from "@/components/site/blocks";
 import { cmsPost, cmsPosts } from "@/lib/cms";
+import { findProduct } from "@/data/catalog";
+import { productReachable } from "@/lib/sections";
 
-// Map article categories to the product that measures what the article teaches.
+// Map article categories to the product that measures what the article
+// teaches. The CTA shows only while that SKU is live and its section is on;
+// the button reads "Book the <name>" and goes to the SKU page.
 const categoryProduct: Record<string, { slug: string; kind: string; name: string; pitch: string }> = {
+  Medical: {
+    slug: "glp-1-medical-consultation",
+    kind: "medical",
+    name: "GLP-1 Medical Consultation",
+    pitch: "Thirty minutes with a doctor, in person at Churruca 5, to assess whether GLP-1 treatment is appropriate for you.",
+  },
   Performance: {
     slug: "vo2max",
     kind: "test",
@@ -63,7 +73,9 @@ export const Route = createFileRoute("/blog/$slug")({
 function PostPage() {
   const { post, others } = Route.useLoaderData();
 
-  const product = categoryProduct[post.category];
+  const mapped = categoryProduct[post.category];
+  const sku = mapped ? findProduct(mapped.slug) : undefined;
+  const product = mapped && sku && productReachable(sku) ? mapped : undefined;
 
   return (
     <SiteChrome>
@@ -89,11 +101,20 @@ function PostPage() {
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-3xl space-y-8">
-          {post.body.map((para: string, i: number) => (
-            <p key={i} className="text-lg leading-relaxed text-foreground/85">
-              {para}
-            </p>
-          ))}
+          {post.body.map((block, i) =>
+            block.type === "heading" ? (
+              <h2
+                key={i}
+                className="pt-4 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl"
+              >
+                {block.text}
+              </h2>
+            ) : (
+              <p key={i} className="whitespace-pre-line text-lg leading-relaxed text-foreground/85">
+                {block.text}
+              </p>
+            ),
+          )}
         </div>
 
         {/* Contextual product CTA */}

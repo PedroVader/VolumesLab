@@ -47,7 +47,7 @@ async function fetchCms<T>(path: string): Promise<T | null> {
 
 /* ─────────────────────────── Posts ─────────────────────────── */
 
-import { posts as bundledPosts, type Post } from "@/data/blog";
+import { posts as bundledPosts, type Post, type PostBlock } from "@/data/blog";
 
 type CmsPost = {
   slug: string;
@@ -68,19 +68,24 @@ type LexicalNode = {
 };
 
 /**
- * The site's post template renders `body: string[]` paragraphs. Until the
- * template grows rich-text rendering, Lexical trees flatten to plain
- * paragraphs: headings and list items become their text content. Nothing is
- * lost for today's posts, which were flat paragraphs to begin with.
+ * The site's post template renders paragraphs and subheadings. A Lexical
+ * heading becomes a heading block, everything else (paragraphs, quotes, list
+ * items) becomes a paragraph with its text content, so an article keeps its
+ * structure without the template having to know Lexical.
  */
-function lexicalToParagraphs(root: { children: LexicalNode[] }): string[] {
-  const out: string[] = [];
+function lexicalToBlocks(root: { children: LexicalNode[] }): PostBlock[] {
+  const out: PostBlock[] = [];
   const textOf = (n: LexicalNode): string =>
     n.text ?? (n.children ?? []).map(textOf).join("");
-  for (const node of root.children ?? []) {
+  const push = (node: LexicalNode) => {
+    if (node.type === "list") {
+      for (const item of node.children ?? []) push(item);
+      return;
+    }
     const text = textOf(node).trim();
-    if (text) out.push(text);
-  }
+    if (text) out.push({ type: node.type === "heading" ? "heading" : "paragraph", text });
+  };
+  for (const node of root.children ?? []) push(node);
   return out;
 }
 
@@ -93,7 +98,7 @@ function adaptPost(p: CmsPost): Post {
     category: p.category,
     author: p.author,
     readingTime: p.readingTime ?? "",
-    body: lexicalToParagraphs(p.body?.root ?? { children: [] }),
+    body: lexicalToBlocks(p.body?.root ?? { children: [] }),
   };
 }
 
