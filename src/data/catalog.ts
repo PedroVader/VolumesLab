@@ -514,19 +514,12 @@ export function getTests(slugs: string[]): Product[] {
   return slugs.map((s) => tests.find((t) => t.slug === s)).filter((t): t is Product => Boolean(t));
 }
 
-// Canonical path for a product's detail page.
-export function productPath(p: Pick<Product, "category" | "slug">): string {
-  switch (p.category) {
-    case "membership":
-      return `/memberships/${p.slug}`;
-    case "assessment":
-      return `/assessments/${p.slug}`;
-    case "test":
-      return `/tests/${p.slug}`;
-    case "medical":
-      return `/medical/${p.slug}`;
-    case "training":
-    case "package":
-      return `/training/${p.slug}`;
-  }
+// Canonical path for a product's detail page: flat, straight off the root
+// (client, 14/09/2026: "volumeslab.com/private-training-session"). The old
+// /tests/…, /assessments/…, /medical/…, /training/… and /memberships/…
+// addresses redirect here permanently, so a slug has to be unique across the
+// five collections: two SKUs with the same slug would share one address and
+// the first in catalogue order wins.
+export function productPath(p: Pick<Product, "slug">): string {
+  return `/${p.slug}`;
 }

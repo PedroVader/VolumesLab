@@ -39,13 +39,24 @@ import {
   faqPage,
   blogPage,
   contactPage,
+  HEADLINE_SIZES,
   SECTION_KEYS,
+  type HeadlineSize,
   type HomeSection,
   type SectionKey,
 } from "@/data/pages";
 import { categoryOfSection } from "@/lib/sections";
 import { pageMeta, type PageMeta, type PageMetaKey } from "@/data/meta";
-import { ADDRESS, CONTACT, HOURS, COMPANY, PAGES, setMapLink, type PageKey } from "@/data/site";
+import {
+  ADDRESS,
+  CONTACT,
+  HOURS,
+  COMPANY,
+  DEFAULT_PAGES,
+  PAGES,
+  setMapLink,
+  type PageKey,
+} from "@/data/site";
 import { LINKS, setBookingHome } from "@/lib/momence";
 
 const CMS_URL = "https://volumes-cms.vercel.app";
@@ -148,12 +159,6 @@ export async function cmsSiteContent(): Promise<CmsBundle | null> {
     !categories.length && !site && !home && !labels && !about && !legal && !meta && !pages && !faq && !blog && !contact
   )
     return null;
-
-  // The phone was removed from every page (30/08); strip it from the bundle
-  // too so the number does not ship inside the serialized payload either.
-  if (site && typeof site.contact === "object" && site.contact) {
-    delete (site.contact as CmsDoc).phone;
-  }
 
   return { products, categories, site, home, labels, about, legal, meta, pages, faq, blog, contact };
 }
@@ -388,11 +393,12 @@ export function applyCmsContent(bundle: CmsBundle | null) {
     if (contact) {
       // Every "write to us" link needs an address, so the email never empties.
       CONTACT.email = str(contact.email) ?? CONTACT.email;
-      const phone = str(contact.phone);
-      if (phone) {
-        CONTACT.phone = phone;
-        CONTACT.phoneHref = `tel:${phone.replace(/[^+0-9]/g, "")}`;
-      }
+      // Phone and Instagram sit in the footer line (client, 14/09/2026);
+      // cleared in the CMS = gone from the line.
+      const phone = str(contact.phone) ?? "";
+      CONTACT.phone = phone;
+      CONTACT.phoneHref = phone ? `tel:${phone.replace(/[^+0-9]/g, "")}` : "";
+      CONTACT.instagram = own(contact, "instagram", CONTACT.instagram);
     }
     const address = s.address as CmsDoc | undefined;
     if (address) {
@@ -420,6 +426,7 @@ export function applyCmsContent(bundle: CmsBundle | null) {
       COMPANY.tradingName = own(company, "tradingName", COMPANY.tradingName);
       COMPANY.taxId = str(company.taxId) ?? null;
       COMPANY.registeredAddress = str(company.registeredAddress) ?? null;
+      COMPANY.registrationNumber = str(company.registrationNumber) ?? null;
     }
     const momence = s.momence as CmsDoc | undefined;
     // Every Book CTA needs somewhere to go: an empty link keeps the bundled one.
@@ -430,6 +437,8 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   if (bundle.home) {
     const h = bundle.home;
     homePage.headline = own(h, "headline", homePage.headline);
+    const size = str(h.headlineSize);
+    if (size && (HEADLINE_SIZES as string[]).includes(size)) homePage.headlineSize = size as HeadlineSize;
     homePage.intro = own(h, "intro", homePage.intro);
     if (Array.isArray(h.sections)) {
       // The list is the order. A section missing from the list is off, like an
@@ -580,7 +589,9 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   if (bundle.pages) {
     for (const key of Object.keys(PAGES) as PageKey[]) {
       const v = bundle.pages[key];
-      PAGES[key] = typeof v === "boolean" ? v : true;
+      // A toggle the CMS does not have yet keeps its bundled default (Team
+      // is off until the client switches it on).
+      PAGES[key] = typeof v === "boolean" ? v : DEFAULT_PAGES[key];
     }
   }
 }

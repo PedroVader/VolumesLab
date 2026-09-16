@@ -5,10 +5,10 @@ import { tests, assessments, training, allProducts, findProduct, productPath } f
 import { productContent } from '../src/data/productContent';
 import { homePage, productLabels, faqPage, blogPage, contactPage, SECTION_KEYS } from '../src/data/pages';
 import {
-  productReachable, requireProduct, sectionByKey, sectionEnabled, sectionLabel, visibleSections,
+  productReachable, requireProduct, requireProductBySlug, sectionByKey, sectionEnabled, sectionLabel, visibleSections,
 } from '../src/lib/sections';
 import { pageMeta } from '../src/data/meta';
-import { CONTACT, ADDRESS, PAGES } from '../src/data/site';
+import { CONTACT, ADDRESS, COMPANY, PAGES, instagramHandle, instagramUrl } from '../src/data/site';
 import { LINKS } from '../src/lib/momence';
 
 const bundle = (
@@ -202,7 +202,7 @@ test('Order, price, duration and section come from the CMS', () => {
   const moved = findProduct('strength-assessment')!;
   assert.deepEqual(assessments.map((a) => a.slug), ['strength-assessment'], 'moved into the Assessments section');
   assert.equal(moved.category, 'assessment');
-  assert.equal(productPath(moved), '/assessments/strength-assessment');
+  assert.equal(productPath(moved), '/strength-assessment');
   assert.equal(moved.price, 0, 'an empty price reads "Price on booking"');
   assert.equal(moved.priceTbd, true);
   assert.equal(moved.duration, undefined);
@@ -243,4 +243,60 @@ test('homepage sections: order, names, on/off, and 404 for SKUs of a section tha
   assert.equal(sectionByKey('medical')?.title, 'Medical Appointment', 'a re-added section gets its bundled title back');
   assert.equal(sectionByKey('assessments')?.title, 'Legacy', 'a listed section keeps its current title when the row has none');
   assert.equal(productReachable(findProduct('vo2max')!), true);
+});
+
+test('footer line (14/09): phone and Instagram from the CMS, registration number, Team toggle', () => {
+  applyCmsContent(bundle([], [], {
+    site: {
+      contact: { email: 'hello@volumeslab.com', phone: '+34 600 123 123', instagram: 'https://www.instagram.com/volumes.lab/' },
+      company: { legalName: 'Volumes Vision S.L.', taxId: 'B26934380', registrationNumber: 'CS000000' },
+    },
+    pages: { about: true, team: true },
+  }));
+  assert.equal(CONTACT.phone, '+34 600 123 123');
+  assert.equal(CONTACT.phoneHref, 'tel:+34600123123');
+  assert.equal(instagramHandle(), '@volumes.lab');
+  assert.equal(instagramUrl(), 'https://www.instagram.com/volumes.lab/');
+  assert.equal(COMPANY.registrationNumber, 'CS000000');
+  assert.equal(PAGES.team, true, 'Team switched on from the CMS');
+
+  assert.equal(instagramHandle('@volumes.lab'), '@volumes.lab', 'a bare handle works too');
+  assert.equal(instagramUrl('volumes.lab'), 'https://www.instagram.com/volumes.lab/');
+  assert.equal(instagramHandle(''), '');
+
+  applyCmsContent(bundle([], [], {
+    site: { contact: { email: 'hello@volumeslab.com', phone: '', instagram: '' }, company: { registrationNumber: '' } },
+    pages: { about: true },
+  }));
+  assert.equal(CONTACT.phone, '', 'cleared phone = no phone in the line');
+  assert.equal(CONTACT.phoneHref, '');
+  assert.equal(instagramHandle(), '', 'cleared Instagram = no Instagram in the line');
+  assert.equal(COMPANY.registrationNumber, null);
+  assert.equal(PAGES.team, false, 'a CMS without the Team toggle keeps Team off');
+  assert.equal(PAGES.faq, true, 'other pages default to on');
+});
+
+test('homepage headline size comes from the CMS and ignores unknown values', () => {
+  assert.equal(homePage.headlineSize, 'medium');
+  applyCmsContent(bundle([], [], { home: { headlineSize: 'small' } }));
+  assert.equal(homePage.headlineSize, 'small');
+  applyCmsContent(bundle([], [], { home: { headlineSize: 'huge' } }));
+  assert.equal(homePage.headlineSize, 'small', 'an unknown size keeps the current one');
+  applyCmsContent(bundle([], [], { home: { headlineSize: 'large' } }));
+  assert.equal(homePage.headlineSize, 'large');
+});
+
+test('flat service addresses: /<slug> finds a SKU in any section, 404 when its section is off', () => {
+  applyCmsContent(bundle(
+    [{ slug: 'vo2max', category: 'test', live: true }, { slug: 'foundational', category: 'assessment', live: true }],
+    ['test', 'assessment'],
+    { home: { sections: [
+      { section: 'tests', enabled: true, title: 'Tests' },
+      { section: 'assessments', enabled: false, title: 'Assessments' },
+    ] } },
+  ));
+  assert.equal(productPath(findProduct('vo2max')!), '/vo2max');
+  assert.equal(requireProductBySlug('vo2max').slug, 'vo2max');
+  assert.throws(() => requireProductBySlug('foundational'), 'section off');
+  assert.throws(() => requireProductBySlug('no-such-service'));
 });

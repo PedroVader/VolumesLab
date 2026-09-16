@@ -6,6 +6,7 @@
 
 import { notFound } from "@tanstack/react-router";
 import {
+  allProducts,
   assessments,
   medical,
   memberships,
@@ -110,4 +111,12 @@ export function requireProduct(list: Product[], slug: string): Product {
   const product = list.find((p) => p.slug === slug);
   if (!product || !productReachable(product)) throw notFound();
   return product;
+}
+
+/**
+ * For the flat /$slug route: the service with that slug in any section, or
+ * 404 when there is none or its section is switched off in the CMS.
+ */
+export function requireProductBySlug(slug: string): Product {
+  return requireProduct(allProducts, slug);
 }

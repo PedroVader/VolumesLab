@@ -133,3 +133,45 @@ export async function cmsFaqGroups(): Promise<typeof bundledFaqGroups> {
       .map(({ q, a }) => ({ q, a })),
   }));
 }
+
+/* ─────────────────────────── Team ─────────────────────────── */
+
+type CmsPerson = {
+  id: number | string;
+  name?: string | null;
+  role?: string | null;
+  credentials?: string | null;
+  bio?: string | null;
+  photo?: { url?: string | null } | number | null;
+  order?: number | null;
+};
+
+export type Person = {
+  id: string;
+  name: string;
+  role: string;
+  credentials: string;
+  bio: string;
+  /** Absolute URL of the photo, or empty. */
+  photo: string;
+};
+
+/**
+ * The people of /about/team, in their CMS order. There is no bundled
+ * fallback: with the CMS unreachable the page shows its placeholder text.
+ */
+export async function cmsTeam(): Promise<Person[]> {
+  const res = await fetchCms<{ docs: CmsPerson[] }>("/api/team?limit=100&sort=order&depth=1");
+  if (!res?.docs?.length) return [];
+  return res.docs.map((p) => {
+    const url = typeof p.photo === "object" && p.photo?.url ? p.photo.url : "";
+    return {
+      id: String(p.id),
+      name: p.name ?? "",
+      role: p.role ?? "",
+      credentials: p.credentials ?? "",
+      bio: p.bio ?? "",
+      photo: url.startsWith("/") ? `${CMS_URL}${url}` : url,
+    };
+  });
+}

@@ -24,10 +24,23 @@ export const SECTION_KEYS: SectionKey[] = ["tests", "assessments", "medical", "t
  */
 export type HomeSection = { key: SectionKey; enabled: boolean; title: string; description: string };
 
-export const homePage: { intro: string; headline: string; sections: HomeSection[] } = {
+/**
+ * Size of the homepage heading, chosen in the CMS (client, 14/09/2026: the
+ * title should fit on one line and they wanted the size in their hands).
+ */
+export type HeadlineSize = "small" | "medium" | "large";
+export const HEADLINE_SIZES: HeadlineSize[] = ["small", "medium", "large"];
+
+export const homePage: {
+  intro: string;
+  headline: string;
+  headlineSize: HeadlineSize;
+  sections: HomeSection[];
+} = {
   intro:
     "Volumes Lab combines advanced testing, a medical team, personal training, and peptide therapies in one space. Membership options available.",
   headline: "Madrid Health & Performance Lab",
+  headlineSize: "medium",
   sections: [
     { key: "tests", enabled: true, title: "Tests", description: "Measure one specific area on its own." },
     {

@@ -265,7 +265,7 @@ function TestModule({ product }: { product: Product }) {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {inside.map((a) => (
           <li key={a.slug}>
-            <Tile to="/assessments/$slug" params={{ slug: a.slug }} plain={!productReachable(a)}>
+            <Tile to="/$slug" params={{ slug: a.slug }} plain={!productReachable(a)}>
               {a.name} Assessment
             </Tile>
           </li>
@@ -286,7 +286,7 @@ function AssessmentModule({ product }: { product: Product }) {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tests.map((t) => (
           <li key={t.slug}>
-            <Tile to="/tests/$slug" params={{ slug: t.slug }} plain={!productReachable(t)}>
+            <Tile to="/$slug" params={{ slug: t.slug }} plain={!productReachable(t)}>
               {t.name}
             </Tile>
           </li>
@@ -296,7 +296,7 @@ function AssessmentModule({ product }: { product: Product }) {
         <p className="mt-6 text-sm text-muted">
           Included in the{" "}
           <Link
-            to="/memberships/$slug"
+            to="/$slug"
             params={{ slug: membership.slug }}
             className="underline decoration-primary underline-offset-4 hover:text-primary"
           >
@@ -317,7 +317,7 @@ function TrainingModule({ product }: { product: Product }) {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {training.map((p) => (
           <li key={p.slug}>
-            <Tile to="/training/$slug" params={{ slug: p.slug }} current={p.slug === product.slug}>
+            <Tile to="/$slug" params={{ slug: p.slug }} current={p.slug === product.slug}>
               {p.training?.sessionCount === 1
                 ? "1 session"
                 : p.training?.sessionCount

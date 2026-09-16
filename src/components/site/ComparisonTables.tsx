@@ -126,7 +126,7 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
       kind="assessments"
       title="What each assessment includes"
       intro="Every assessment is a coordinated group of tests run in a single visit. Each step up adds to the one before it."
-      sourcePage={currentSlug ? `/assessments/${currentSlug}` : "/assessments"}
+      sourcePage={currentSlug ? `/${currentSlug}` : "/assessments"}
     >
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
@@ -135,7 +135,7 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
               Test
             </th>
             {orderedAssessments.map((a) => (
-              <ColumnHead key={a.slug} p={a} to="/assessments/$slug" isCurrent={a.slug === currentSlug} />
+              <ColumnHead key={a.slug} p={a} to="/$slug" isCurrent={a.slug === currentSlug} />
             ))}
           </tr>
         </thead>
@@ -143,7 +143,7 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
           {tests.map((t) => (
             <tr key={t.slug} className="border-b border-border">
               <RowLabel tight>
-                <Link to="/tests/$slug" params={{ slug: t.slug }} className="hover:text-primary">
+                <Link to="/$slug" params={{ slug: t.slug }} className="hover:text-primary">
                   {t.name}
                 </Link>
               </RowLabel>
@@ -199,7 +199,7 @@ export function AssessmentComparison({ currentSlug }: { currentSlug?: string }) 
               >
                 <BookCta
                   product={a}
-                  sourcePage={currentSlug ? `/assessments/${currentSlug}` : "/assessments"}
+                  sourcePage={currentSlug ? `/${currentSlug}` : "/assessments"}
                   className="px-4 py-2"
                 />
               </td>
@@ -225,7 +225,7 @@ const membershipRows: { label: string; value: (m: Product) => React.ReactNode }[
       const a = assessments.find((x) => x.slug === slug);
       if (!a) return null;
       return (
-        <Link to="/assessments/$slug" params={{ slug: a.slug }} className="hover:text-primary">
+        <Link to="/$slug" params={{ slug: a.slug }} className="hover:text-primary">
           {a.name}
         </Link>
       );
@@ -241,7 +241,7 @@ const membershipRows: { label: string; value: (m: Product) => React.ReactNode }[
 ];
 
 export function MembershipComparison({ currentSlug }: { currentSlug?: string }) {
-  const sourcePage = currentSlug ? `/memberships/${currentSlug}` : "/memberships";
+  const sourcePage = currentSlug ? `/${currentSlug}` : "/memberships";
   // Skip rows where neither membership has anything to say.
   const rows = membershipRows.filter((row) => memberships.some((m) => row.value(m)));
 
@@ -259,7 +259,7 @@ export function MembershipComparison({ currentSlug }: { currentSlug?: string }) 
               &nbsp;
             </th>
             {memberships.map((m) => (
-              <ColumnHead key={m.slug} p={m} to="/memberships/$slug" isCurrent={m.slug === currentSlug} />
+              <ColumnHead key={m.slug} p={m} to="/$slug" isCurrent={m.slug === currentSlug} />
             ))}
           </tr>
         </thead>

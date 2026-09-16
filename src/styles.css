@@ -36,6 +36,18 @@
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "Martian Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
   --font-accent: "Microsoft Himalaya", "Papyrus", "Palatino Linotype", serif;
+  /* The content column stays 1280px wide while everything inside it scales
+     with the root font size below, so the cards keep their width and only
+     get shorter. */
+  --container-7xl: 1280px;
+}
+
+/* The whole site at 87.5% (14px base instead of 16px). The client asked for
+   everything "algo más pequeño" so more fits on one screen (14/09/2026): type,
+   paddings and gaps are rem-based, so this one rule scales them together. The
+   mono labels are fixed px sizes and stay as they are. */
+html {
+  font-size: 87.5%;
 }
 
 :root {

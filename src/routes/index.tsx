@@ -17,7 +17,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { AssessmentCard, MembershipCard, ProductCard } from "@/components/site/cards";
 import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
-import { homePage, type SectionKey } from "@/data/pages";
+import { homePage, type HeadlineSize, type SectionKey } from "@/data/pages";
 import { productsInSection, visibleSections } from "@/lib/sections";
 import { canonical } from "@/lib/seo";
 import { metaTags } from "@/data/meta";
@@ -79,14 +79,31 @@ function SectionGrid({ section }: { section: SectionKey }) {
 
 /* ---------------- Contact block + map ---------------- */
 
+// Heading size, chosen in the CMS (Home page → Headline size). "large" is the
+// original; the client asked for the title on one line (14/09/2026).
+const headlineClass: Record<HeadlineSize, string> = {
+  small: "text-2xl md:text-3xl",
+  medium: "text-3xl md:text-4xl",
+  large: "text-3xl md:text-5xl",
+};
+
+// Layout (client, 14/09/2026): the map runs from the centre of the page to
+// the right margin line and from the header to the bottom of the block, with
+// no padding around it. The text column keeps the usual padding and its
+// content aligns with the 1280px column the rest of the page uses: on wide
+// screens the inner block is half that column, pushed to the right edge of
+// the text column, which is the centre of the page.
 function ContactBlock() {
   return (
-    <section className="border-b border-border px-6 py-12 md:py-16">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-start">
-        <div>
+    <section className="border-b border-border">
+      <div className="grid lg:grid-cols-2">
+        <div className="px-6 py-12 md:py-16 lg:pr-10">
+          <div className="lg:ml-auto lg:max-w-[calc(var(--container-7xl)/2)]">
           <img src="/volumes-mark.png" alt="Volumes Lab" className="w-36 md:w-44" />
           {homePage.headline && (
-            <h1 className="mt-8 font-display text-3xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-5xl">
+            <h1
+              className={`mt-8 font-display font-extrabold uppercase leading-[1.05] tracking-tight ${headlineClass[homePage.headlineSize]}`}
+            >
               {homePage.headline}
             </h1>
           )}
@@ -128,15 +145,19 @@ function ContactBlock() {
               {HOURS.walkIns}
             </p>
           )}
+          </div>
         </div>
 
-        <div className="border border-border bg-card">
+        {/* Right half: the map, edge to edge. Absolute on large screens so it
+            takes the height of the text column instead of dictating it. On
+            small screens it stacks under the text at a fixed height. */}
+        <div className="relative min-h-[300px] border-t border-border bg-card md:min-h-[360px] lg:min-h-0 lg:border-l lg:border-t-0">
           <iframe
             title={`Volumes Lab, ${ADDRESS.full}`}
             src={MAP_EMBED}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="block h-[300px] w-full md:h-[420px]"
+            className="absolute inset-0 block h-full w-full"
           />
         </div>
       </div>
@@ -173,7 +194,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-20 border-b border-border px-6 py-14 md:py-20">
+    <section id={id} className="scroll-mt-20 border-b border-border px-6 py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
           {title && (
@@ -183,7 +204,7 @@ function Section({
             <p className="font-mono text-[11px] uppercase tracking-widest text-muted">{description}</p>
           )}
         </div>
-        <div className="mt-10">{children}</div>
+        <div className="mt-8">{children}</div>
       </div>
     </section>
   );

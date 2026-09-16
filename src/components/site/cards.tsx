@@ -231,7 +231,7 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
             {/* Plain tile when the Tests section is off: nothing to link to. */}
             {productReachable(t) ? (
               <Link
-                to="/tests/$slug"
+                to="/$slug"
                 params={{ slug: t.slug }}
                 className="flex min-h-[46px] items-center border border-border px-3 py-2 font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-widest text-muted transition-colors hover:border-foreground hover:bg-background hover:text-foreground"
               >

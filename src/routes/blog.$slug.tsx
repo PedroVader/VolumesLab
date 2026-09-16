@@ -104,7 +104,7 @@ function PostPage() {
               {product.pitch}
             </p>
             <Link
-              to={product.kind === "test" ? "/tests/$slug" : "/assessments/$slug"}
+              to="/$slug"
               params={{ slug: product.slug }}
               className="mt-6 inline-block bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-widest text-primary-foreground hover:opacity-80"
             >

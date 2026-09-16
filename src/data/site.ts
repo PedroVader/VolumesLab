@@ -13,7 +13,11 @@ export const ANALYTICS_ENABLED = false;
 // that is off leaves the menus and the footer and its URL returns 404. The
 // homepage and the service pages are not here: services have their own Live
 // checkbox, one by one.
-export const PAGES = {
+//
+// Team is off by default: the client is still writing it (14/09/2026) and
+// switches it on from the CMS when it is ready. While on, it sits in the top
+// menu and the footer next to FAQ and Blog.
+export const DEFAULT_PAGES = {
   about: true,
   lab: true,
   location: true,
@@ -21,7 +25,9 @@ export const PAGES = {
   faq: true,
   blog: true,
   legal: true,
+  team: false,
 };
+export const PAGES = { ...DEFAULT_PAGES };
 export type PageKey = keyof typeof PAGES;
 
 // Contact and opening hours — single source of truth.
@@ -43,28 +49,55 @@ export const ADDRESS = {
   full: "Calle Churruca 5, 28004 Madrid, Spain",
 };
 
-// Legal identity, shown on /legal to satisfy the LSSI (Ley 34/2002, art. 10).
-// taxId and registeredAddress are legally required and still missing; the page
-// renders them as [ pending ] rather than inventing values.
+// Legal identity, shown in the footer line of every page to satisfy the LSSI
+// (Ley 34/2002, art. 10). The values come from the CMS (Contact, Address &
+// Hours → Company); null here means "not shown until the client types it".
+// registrationNumber is the health-centre registration the client is
+// applying for (14/09/2026), shown as "Nº Registro …" once it exists.
 export const COMPANY: {
   legalName: string;
   tradingName: string;
   taxId: string | null;
   registeredAddress: string | null;
+  registrationNumber: string | null;
 } = {
   legalName: "Volumes Vision S.L.",
   tradingName: "Volumes Lab",
   taxId: null,
   registeredAddress: null,
+  registrationNumber: null,
 };
 
 export const CONTACT = {
   email: "hello@volumeslab.com",
-  /** Display form. */
-  phone: "+34 600 000 123",
+  /**
+   * Display form. Empty until the client has the dedicated line (14/09/2026):
+   * the footer shows a phone only when the CMS has one.
+   */
+  phone: "",
   /** tel: href form. */
-  phoneHref: "tel:+34600000123",
+  phoneHref: "",
+  /** Full profile URL; the footer shows the handle taken from it. */
+  instagram: "https://www.instagram.com/volumes.lab/",
 };
+
+/**
+ * "@volumes.lab" for the footer, whether the CMS holds the profile URL or just
+ * the handle. Empty = no Instagram in the footer.
+ */
+export function instagramHandle(value = CONTACT.instagram): string {
+  const v = value.trim();
+  if (!v) return "";
+  const m = v.match(/instagram\.com\/([^/?#]+)/i);
+  const handle = (m ? m[1] : v).replace(/^@/, "");
+  return handle ? `@${handle}` : "";
+}
+
+/** The profile URL to open, built from the handle when only that was typed. */
+export function instagramUrl(value = CONTACT.instagram): string {
+  const handle = instagramHandle(value).slice(1);
+  return handle ? `https://www.instagram.com/${handle}/` : "";
+}
 
 export const HOURS = {
   weekdays: { label: "Monday to Friday", value: "9h00 to 20h00" },
