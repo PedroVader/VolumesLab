@@ -8,7 +8,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { track } from "@/lib/analytics";
-import { PAGES } from "@/data/site";
+import { BRANDING, PAGES } from "@/data/site";
 import { catalogueAnchor, sectionLabel, visibleSections } from "@/lib/sections";
 
 type NavItem = { label: string; hash?: string; to?: string };
@@ -34,7 +34,7 @@ export function SiteHeader() {
     <nav className="relative z-50 border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6">
         <Link to="/" onClick={closeMobile} className="flex items-center gap-2.5 leading-none">
-          <img src="/volumes-icon.png" alt="" className="h-8 w-8" />
+          <img src={BRANDING.logo} alt="" className="h-8 w-8 object-contain" />
           <span className="font-brand text-[15px] font-semibold uppercase tracking-normal">Volumes Lab</span>
         </Link>
 

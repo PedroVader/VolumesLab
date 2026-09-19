@@ -42,12 +42,15 @@
   --container-7xl: 1280px;
 }
 
-/* The whole site at 87.5% (14px base instead of 16px). The client asked for
-   everything "algo más pequeño" so more fits on one screen (14/09/2026): type,
-   paddings and gaps are rem-based, so this one rule scales them together. The
-   mono labels are fixed px sizes and stay as they are. */
+/* The root font size is the "size of everything" lever: type, paddings and
+   gaps are rem-based, so this one value scales them together, while the mono
+   labels are fixed px sizes and stay as they are. The client asked for
+   everything "algo más pequeño" (14/09/2026, 87.5% = 14px), then for a
+   middle point (17/09/2026): the value is now chosen in the CMS (Contact,
+   Address & Hours → Text size) and written by the root route into a <style>
+   in <head>. This is the default for the medium option (15px). */
 html {
-  font-size: 87.5%;
+  font-size: 93.75%;
 }
 
 :root {

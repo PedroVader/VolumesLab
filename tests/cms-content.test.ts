@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { applyCmsContent, cmsSiteContent, type CmsBundle } from '../src/lib/cms-content';
+import { applyCmsContent, cmsSiteContent, cmsTextSize, type CmsBundle } from '../src/lib/cms-content';
 import { tests, assessments, training, allProducts, findProduct, productPath } from '../src/data/catalog';
 import { productContent } from '../src/data/productContent';
 import { homePage, productLabels, faqPage, blogPage, contactPage, SECTION_KEYS } from '../src/data/pages';
@@ -8,7 +8,7 @@ import {
   productReachable, requireProduct, requireProductBySlug, sectionByKey, sectionEnabled, sectionLabel, visibleSections,
 } from '../src/lib/sections';
 import { pageMeta } from '../src/data/meta';
-import { CONTACT, ADDRESS, COMPANY, PAGES, instagramHandle, instagramUrl } from '../src/data/site';
+import { BRANDING, CONTACT, ADDRESS, COMPANY, PAGES, TEXT, instagramHandle, instagramUrl } from '../src/data/site';
 import { LINKS } from '../src/lib/momence';
 
 const bundle = (
@@ -284,6 +284,26 @@ test('homepage headline size comes from the CMS and ignores unknown values', () 
   assert.equal(homePage.headlineSize, 'small', 'an unknown size keeps the current one');
   applyCmsContent(bundle([], [], { home: { headlineSize: 'large' } }));
   assert.equal(homePage.headlineSize, 'large');
+});
+
+test('text size and logos (17/09): from the CMS, defaults when cleared or unknown', () => {
+  assert.equal(TEXT.size, 'medium');
+  assert.equal(cmsTextSize(null), 'medium', 'no CMS = medium');
+  applyCmsContent(bundle([], [], {
+    site: {
+      textSize: 'large',
+      branding: { logo: { id: 1, url: '/api/media/file/icon.png' }, mark: { id: 2, url: 'https://blob.vercel-storage.com/mark.png' } },
+    },
+  }));
+  assert.equal(TEXT.size, 'large');
+  assert.equal(BRANDING.logo, 'https://volumes-cms.vercel.app/api/media/file/icon.png', 'a CMS-served file gets the CMS origin');
+  assert.equal(BRANDING.mark, 'https://blob.vercel-storage.com/mark.png', 'a Blob file is used as is');
+  applyCmsContent(bundle([], [], { site: { textSize: 'huge', branding: { logo: null, mark: 3 } } }));
+  assert.equal(TEXT.size, 'medium', 'an unknown size is medium');
+  assert.equal(BRANDING.logo, '/volumes-icon.png', 'a cleared upload is the bundled logo');
+  assert.equal(BRANDING.mark, '/volumes-mark.png', 'an unpopulated id (depth 0) is the bundled logo too');
+  applyCmsContent(bundle([], [], { site: { textSize: 'small' } }));
+  assert.equal(TEXT.size, 'small');
 });
 
 test('flat service addresses: /<slug> finds a SKU in any section, 404 when its section is off', () => {

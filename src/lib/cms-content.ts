@@ -49,13 +49,18 @@ import { categoryOfSection } from "@/lib/sections";
 import { pageMeta, type PageMeta, type PageMetaKey } from "@/data/meta";
 import {
   ADDRESS,
+  BRANDING,
   CONTACT,
+  DEFAULT_BRANDING,
   HOURS,
   COMPANY,
   DEFAULT_PAGES,
   PAGES,
+  TEXT,
+  TEXT_SIZES,
   setMapLink,
   type PageKey,
+  type TextSize,
 } from "@/data/site";
 import { LINKS, setBookingHome } from "@/lib/momence";
 
@@ -370,6 +375,28 @@ const rows = (v: unknown, key: string): string[] | undefined =>
     ? (v as CmsDoc[]).map((x) => str(x[key])).filter((x): x is string => !!x)
     : undefined;
 
+/**
+ * Absolute URL of an upload field the CMS populated (depth ≥ 1), or empty.
+ * Files on Vercel Blob come with an absolute URL; files served by the CMS
+ * itself come as `/api/media/file/…` and get the CMS origin.
+ */
+function uploadUrl(v: unknown): string {
+  if (!v || typeof v !== "object") return "";
+  const url = str((v as CmsDoc).url);
+  if (!url) return "";
+  return url.startsWith("/") ? `${CMS_URL}${url}` : url;
+}
+
+/**
+ * The text size the bundle asks for, medium when the CMS has no (valid)
+ * value. Exposed so the root route can write the matching <style> from the
+ * loader data on both server and client without depending on apply order.
+ */
+export function cmsTextSize(bundle: CmsBundle | null): TextSize {
+  const size = str(bundle?.site?.textSize);
+  return size && (TEXT_SIZES as string[]).includes(size) ? (size as TextSize) : "medium";
+}
+
 let appliedStamp = "";
 
 /**
@@ -389,6 +416,13 @@ export function applyCmsContent(bundle: CmsBundle | null) {
   // ---- site settings ----
   if (bundle.site) {
     const s = bundle.site;
+    TEXT.size = cmsTextSize(bundle);
+    const branding = s.branding as CmsDoc | undefined;
+    if (branding) {
+      // A cleared upload is the default file, never a broken image.
+      BRANDING.logo = uploadUrl(branding.logo) || DEFAULT_BRANDING.logo;
+      BRANDING.mark = uploadUrl(branding.mark) || DEFAULT_BRANDING.mark;
+    }
     const contact = s.contact as CmsDoc | undefined;
     if (contact) {
       // Every "write to us" link needs an address, so the email never empties.

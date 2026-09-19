@@ -16,7 +16,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { AssessmentCard, MembershipCard, ProductCard } from "@/components/site/cards";
-import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
+import { ADDRESS, BRANDING, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
 import { homePage, type HeadlineSize, type SectionKey } from "@/data/pages";
 import { productsInSection, visibleSections } from "@/lib/sections";
 import { canonical } from "@/lib/seo";
@@ -93,13 +93,19 @@ const headlineClass: Record<HeadlineSize, string> = {
 // content aligns with the 1280px column the rest of the page uses: on wide
 // screens the inner block is half that column, pushed to the right edge of
 // the text column, which is the centre of the page.
+//
+// "The right margin line" is the vertical rule SiteChrome fixes 24px from the
+// viewport edge (16px on phones). The first version ran the map past it to
+// the edge of the window; the client asked for it to stop at the line
+// (17/09/2026), so the map's right side now sits at that same offset. On
+// phones the map stacks under the text inside the content padding.
 function ContactBlock() {
   return (
     <section className="border-b border-border">
       <div className="grid lg:grid-cols-2">
         <div className="px-6 py-12 md:py-16 lg:pr-10">
           <div className="lg:ml-auto lg:max-w-[calc(var(--container-7xl)/2)]">
-          <img src="/volumes-mark.png" alt="Volumes Lab" className="w-36 md:w-44" />
+          <img src={BRANDING.mark} alt="Volumes Lab" className="w-36 md:w-44" />
           {homePage.headline && (
             <h1
               className={`mt-8 font-display font-extrabold uppercase leading-[1.05] tracking-tight ${headlineClass[homePage.headlineSize]}`}
@@ -148,10 +154,11 @@ function ContactBlock() {
           </div>
         </div>
 
-        {/* Right half: the map, edge to edge. Absolute on large screens so it
-            takes the height of the text column instead of dictating it. On
-            small screens it stacks under the text at a fixed height. */}
-        <div className="relative min-h-[300px] border-t border-border bg-card md:min-h-[360px] lg:min-h-0 lg:border-l lg:border-t-0">
+        {/* Right half: the map, from the centre to the margin line. Absolute
+            on large screens so it takes the height of the text column instead
+            of dictating it. On small screens it stacks under the text at a
+            fixed height, inside the content padding. */}
+        <div className="relative mx-6 mb-12 min-h-[300px] border border-border bg-card md:mb-16 md:min-h-[360px] lg:mx-0 lg:mb-0 lg:mr-6 lg:min-h-0 lg:border-y-0 lg:border-r-0">
           <iframe
             title={`Volumes Lab, ${ADDRESS.full}`}
             src={MAP_EMBED}

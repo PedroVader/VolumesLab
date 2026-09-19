@@ -1,6 +1,6 @@
 // The homepage sections as the CMS defines them (Home page → Sections): their
 // order, whether each is on, and what each is called. Every surface that lists
-// the sections (homepage, top menu, footer, breadcrumbs) reads from here so a
+// the sections (homepage, top menu, footer) reads from here so a
 // section switched off in the CMS disappears from all of them at once, and its
 // SKU pages answer 404 like a page switched off in "Pages on / off".
 
@@ -76,7 +76,7 @@ export function visibleSections(): HomeSection[] {
   return homePage.sections.filter((s) => s.enabled && productsInSection(s.key).length > 0);
 }
 
-/** Menu, footer and breadcrumb label of a section; the key when the title was cleared. */
+/** Menu and footer label of a section; the key when the title was cleared. */
 export function sectionLabel(key: SectionKey): string {
   return sectionByKey(key)?.title || fallbackLabel[key];
 }

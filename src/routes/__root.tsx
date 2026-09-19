@@ -11,10 +11,10 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
-import { COMING_SOON } from "@/data/site";
+import { COMING_SOON, TEXT_SIZE_CSS } from "@/data/site";
 import { ComingSoon } from "@/components/site/ComingSoon";
 import { Analytics } from "@/components/site/Analytics";
-import { cmsSiteContent, applyCmsContent } from "@/lib/cms-content";
+import { cmsSiteContent, applyCmsContent, cmsTextSize } from "@/lib/cms-content";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -86,7 +86,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   loader: ({ context }) => ({
     cms: JSON.parse(context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>>,
   }),
-  head: () => ({
+  head: ({ loaderData }) => ({
+    // Size of everything (client, 17/09/2026): the CMS picks small / medium /
+    // large and the root font size follows. Written from the loader data so
+    // server and client agree, and inline so there is no flash at the default.
+    styles: [{ children: `html{font-size:${TEXT_SIZE_CSS[cmsTextSize(loaderData?.cms ?? null)]}}` }],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

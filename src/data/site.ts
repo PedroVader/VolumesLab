@@ -30,6 +30,32 @@ export const DEFAULT_PAGES = {
 export const PAGES = { ...DEFAULT_PAGES };
 export type PageKey = keyof typeof PAGES;
 
+// Size of everything (client, 17/09/2026). The 14/09 request made the whole
+// site 14px-based; the client then found it "muy pequeño" and asked for a
+// middle point, so the root font size is now a CMS choice: small is the 14px
+// version, large the original 16px, medium the 15px in between (default).
+// Type, paddings and gaps are rem-based, so this one value scales them all;
+// the 1280px content column and the mono labels stay fixed.
+export type TextSize = "small" | "medium" | "large";
+export const TEXT_SIZES: TextSize[] = ["small", "medium", "large"];
+export const TEXT_SIZE_CSS: Record<TextSize, string> = {
+  small: "87.5%",
+  medium: "93.75%",
+  large: "100%",
+};
+export const TEXT = { size: "medium" as TextSize };
+
+// The logos, editable from the CMS since 17/09/2026 (Contact, Address & Hours
+// → Logo). `logo` is the small mark next to the name in the top menu; `mark`
+// is the logo with the wordmark on the homepage and in the footer. The
+// bundled files are the fallback: a cleared upload means "the default logo",
+// never a broken image.
+export const DEFAULT_BRANDING = {
+  logo: "/volumes-icon.png",
+  mark: "/volumes-mark.png",
+};
+export const BRANDING = { ...DEFAULT_BRANDING };
+
 // Contact and opening hours — single source of truth.
 //
 // These values were drifting across the footer, the location page, the contact

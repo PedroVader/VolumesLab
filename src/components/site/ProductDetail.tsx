@@ -13,16 +13,9 @@ import { assessments, findProduct, getTests, productPath, training } from "@/dat
 import { getProductContent } from "@/data/productContent";
 import { productLabels as L } from "@/data/pages";
 import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
-import { productReachable, sectionLabel, sectionOfCategory } from "@/lib/sections";
-import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { productReachable } from "@/lib/sections";
 import { BookCta, IncludedBadge } from "./cards";
 import { Eyebrow, SectionTitle, FaqList, StickyBookBar } from "./blocks";
-
-/** The section crumb: the CMS's name for the section, linking to its anchor. */
-function sectionCrumb(product: Product): Crumb {
-  const key = sectionOfCategory(product.category);
-  return { name: sectionLabel(key), to: "/", hash: key };
-}
 
 export function ProductDetail({ product }: { product: Product }) {
   const content = getProductContent(product.slug);
@@ -33,16 +26,10 @@ export function ProductDetail({ product }: { product: Product }) {
     <div className="bg-background pb-20 md:pb-0">
       {/* ─────────────── 1 · HERO ─────────────── */}
       <section className="border-b border-border px-6 py-14 md:py-20">
+        {/* No breadcrumb trail above the title: the client asked for the
+            "HOME / SECTION" path gone (17/09/2026). The menu is the way back. */}
         <div className="mx-auto max-w-7xl">
-          <Breadcrumbs
-            items={[
-              { name: "Home", to: "/" },
-              sectionCrumb(product),
-              { name: product.name },
-            ]}
-          />
-
-          <div className="mt-10">
+          <div>
             <div className="max-w-3xl">
               <Eyebrow>{product.categoryLabel}</Eyebrow>
               <h1 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-6xl">
