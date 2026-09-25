@@ -21,7 +21,7 @@ function Contact() {
   return (
     <SiteChrome>
       {(C.eyebrow || C.headline || C.intro) && (
-        <section className="border-b border-border px-6 py-24">
+        <section className="border-b border-border px-page py-24">
           <div className="mx-auto max-w-7xl">
             {C.eyebrow && <Eyebrow>{C.eyebrow}</Eyebrow>}
             {C.headline && (
@@ -34,7 +34,7 @@ function Contact() {
         </section>
       )}
 
-      <section className="px-6 py-24">
+      <section className="px-page py-24">
         <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2">
           <div className="space-y-10">
             {ADDRESS.full && <InfoRow label="Address" value={<Lines text={addressLines(ADDRESS.full)} />} />}

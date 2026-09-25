@@ -26,7 +26,7 @@ function FaqPage() {
   return (
     <SiteChrome>
       {hasHeader && (
-        <section className="border-b border-border px-6 py-24">
+        <section className="border-b border-border px-page py-24">
           <div className="mx-auto max-w-4xl">
             {faqPage.eyebrow && <Eyebrow>{faqPage.eyebrow}</Eyebrow>}
             {faqPage.headline && (
@@ -44,7 +44,7 @@ function FaqPage() {
       )}
 
       {faqGroups.map((group) => (
-        <section key={group.title} className="border-b border-border px-6 py-16">
+        <section key={group.title} className="border-b border-border px-page py-16">
           <div className="mx-auto max-w-4xl">
             <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight md:text-3xl">
               {group.title}

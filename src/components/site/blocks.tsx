@@ -4,6 +4,7 @@
 
 import { Link } from "@tanstack/react-router";
 import { track } from "@/lib/analytics";
+import { bookingOpensTab } from "@/lib/booking";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -66,6 +67,7 @@ export function StickyBookBar({
   ctaLabel: string;
   onClick?: () => void;
 }) {
+  const newTab = bookingOpensTab();
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md md:hidden">
       <div className="leading-tight">
@@ -74,7 +76,7 @@ export function StickyBookBar({
       </div>
       <a
         href={href}
-        target="_blank"
+        target={newTab ? "_blank" : undefined}
         rel="noreferrer"
         onClick={onClick}
         className="flex-1 bg-primary py-3 text-center font-mono text-[11px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong"

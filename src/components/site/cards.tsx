@@ -9,8 +9,8 @@
 import { Link } from "@tanstack/react-router";
 import type { Product } from "@/data/catalog";
 import { getTests, productPath } from "@/data/catalog";
-import { bookingHref, bookingLabel, trackBooking } from "@/lib/booking";
-import { catalogueAnchor, productReachable } from "@/lib/sections";
+import { bookingHref, bookingLabel, bookingOpensTab, bookServicesHref, trackBooking } from "@/lib/booking";
+import { productReachable } from "@/lib/sections";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -78,8 +78,9 @@ export function SecondaryLink({
 /* ---------------- Transactional CTA (leaves for Momence) ---------------- */
 
 /**
- * The one component that sends a visitor into Momence. A real anchor, so
- * middle-click and "open in new tab" behave normally; analytics fire alongside.
+ * The one component that sends a visitor to book: an email to the lab for now
+ * (client, 23/09/2026), Momence otherwise. A real anchor, so middle-click and
+ * "open in new tab" behave normally; analytics fire alongside.
  */
 export function BookCta({
   product,
@@ -95,7 +96,7 @@ export function BookCta({
   return (
     <a
       href={bookingHref(product)}
-      target="_blank"
+      target={bookingOpensTab() ? "_blank" : undefined}
       rel="noreferrer"
       onClick={() => trackBooking(product, sourcePage)}
       className={cn(
@@ -110,8 +111,8 @@ export function BookCta({
 
 /**
  * Generic "Book" CTA for places that promote booking in general rather than
- * one specific SKU. Goes to the catalogue on the homepage, never to Momence's
- * generic landing (client, 12/09/2026).
+ * one specific SKU. See bookServicesHref(): an email for now, otherwise the
+ * catalogue on the homepage.
  */
 export function BookServicesLink({
   sourcePage,
@@ -123,17 +124,16 @@ export function BookServicesLink({
   className?: string;
 }) {
   return (
-    <Link
-      to="/"
-      hash={catalogueAnchor()}
-      onClick={() => track("book_cta_click", { product: "all", destination: "catalogue", source_page: sourcePage })}
+    <a
+      href={bookServicesHref()}
+      onClick={() => track("book_cta_click", { product: "all", destination: "email", source_page: sourcePage })}
       className={cn(
         "inline-flex w-fit items-center bg-primary px-6 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-primary-strong",
         className,
       )}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
@@ -188,6 +188,19 @@ function PriceLine({ p }: { p: Product }) {
   );
 }
 
+/**
+ * Book on the left, More info on the right edge of the card, right under the
+ * duration (client, 23/09/2026).
+ */
+function CtaRow({ p, sourcePage }: { p: Product; sourcePage: string }) {
+  return (
+    <div className="mt-4 flex items-center justify-between gap-2">
+      <BookCta product={p} sourcePage={sourcePage} />
+      <MoreInfoLink product={p} />
+    </div>
+  );
+}
+
 /* ---------------- Product card (tests / medical / training) ---------------- */
 
 export function ProductCard({ p, sourcePage = "/" }: { p: Product; sourcePage?: string }) {
@@ -203,10 +216,7 @@ export function ProductCard({ p, sourcePage = "/" }: { p: Product; sourcePage?: 
         </div>
       )}
       <PriceLine p={p} />
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <BookCta product={p} sourcePage={sourcePage} />
-        <MoreInfoLink product={p} />
-      </div>
+      <CtaRow p={p} sourcePage={sourcePage} />
     </article>
   );
 }
@@ -257,10 +267,7 @@ export function AssessmentCard({ a, sourcePage = "/" }: { a: Product; sourcePage
       )}
 
       <PriceLine p={a} />
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <BookCta product={a} sourcePage={sourcePage} />
-        <MoreInfoLink product={a} />
-      </div>
+      <CtaRow p={a} sourcePage={sourcePage} />
     </article>
   );
 }

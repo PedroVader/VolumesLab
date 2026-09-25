@@ -24,7 +24,7 @@ function BlogIndex() {
   return (
     <SiteChrome>
       {(blogPage.eyebrow || blogPage.headline || blogPage.intro) && (
-        <section className="border-b border-border px-6 py-24">
+        <section className="border-b border-border px-page py-24">
           <div className="mx-auto max-w-6xl">
             {blogPage.eyebrow && <Eyebrow>{blogPage.eyebrow}</Eyebrow>}
             {blogPage.headline && (
@@ -39,7 +39,7 @@ function BlogIndex() {
         </section>
       )}
 
-      <section className="px-6 py-24">
+      <section className="px-page py-24">
         <div className="mx-auto max-w-6xl">
           <ul className="divide-y divide-border border-y border-border">
             {posts.map((p) => (
@@ -75,7 +75,7 @@ function BlogIndex() {
 
       {/* Closing CTA. Editable in the CMS (Blog page); cleared = gone. */}
       {(blogPage.cta.eyebrow || blogPage.cta.headline || blogPage.cta.button) && (
-        <section className="border-t border-border px-6 py-24">
+        <section className="border-t border-border px-page py-24">
           <div className="mx-auto max-w-4xl text-center">
             {blogPage.cta.eyebrow && <Eyebrow>{blogPage.cta.eyebrow}</Eyebrow>}
             {blogPage.cta.headline && (

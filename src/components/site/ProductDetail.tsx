@@ -1,9 +1,9 @@
 // SKU page template, to the structure the client set (10/08/2026):
 //
-//   HERO → WHAT IT IS → HOW IT WORKS → [CATEGORY MODULE] → FAQ → CTA
+//   HERO → WHAT IT IS → HOW IT WORKS → [CATEGORY MODULE] → FAQ
 //
-// Six blocks, identical on every page except the category module. The brief
-// was "lo más más más sencillo posible", so the sample report, the metric
+// Five blocks, identical on every page except the category module; the
+// closing CTA block went on 23/09/2026 (Book appeared twice). The brief was "lo más más más sencillo posible", so the sample report, the metric
 // glossary and the "not for you if" list are gone; preparation notes were kept
 // but folded into How it works, since people need them before they buy.
 
@@ -25,7 +25,7 @@ export function ProductDetail({ product }: { product: Product }) {
   return (
     <div className="bg-background pb-20 md:pb-0">
       {/* ─────────────── 1 · HERO ─────────────── */}
-      <section className="border-b border-border px-6 py-14 md:py-20">
+      <section className="border-b border-border px-page py-14 md:py-20">
         {/* No breadcrumb trail above the title: the client asked for the
             "HOME / SECTION" path gone (17/09/2026). The menu is the way back. */}
         <div className="mx-auto max-w-7xl">
@@ -79,7 +79,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
       {/* ─────────────── 2 · WHAT IT IS ─────────────── */}
       {content && content.outcomes.length > 0 && (
-        <section className="border-b border-border px-6 py-14 md:py-20">
+        <section className="border-b border-border px-page py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
             {L.whatItIs && <SectionTitle>{L.whatItIs}</SectionTitle>}
             <ul className="mt-8 max-w-3xl space-y-4">
@@ -98,7 +98,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
       {/* ─────────────── 3 · HOW IT WORKS ─────────────── */}
       {content && content.experience.length > 0 && (
-        <section className="border-b border-border px-6 py-14 md:py-20">
+        <section className="border-b border-border px-page py-14 md:py-20">
           <div className="mx-auto max-w-7xl">
             {L.howItWorks && <SectionTitle>{L.howItWorks}</SectionTitle>}
             <ol className="mt-10 grid gap-8 md:grid-cols-3">
@@ -133,7 +133,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
       {/* ─────────────── 5 · FAQ ─────────────── */}
       {content && content.faqs.length > 0 && (
-        <section className="border-b border-border px-6 py-14 md:py-20">
+        <section className="border-b border-border px-page py-14 md:py-20">
           <div className="mx-auto max-w-4xl">
             {L.questions && <SectionTitle>{L.questions}</SectionTitle>}
             <div className="mt-8">
@@ -143,15 +143,9 @@ export function ProductDetail({ product }: { product: Product }) {
         </section>
       )}
 
-      {/* ─────────────── 6 · FINAL CTA ─────────────── */}
-      <section className="px-6 py-16 md:py-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionTitle className="max-w-2xl">{finalCtaTitle(product)}</SectionTitle>
-          <div className="mt-8">
-            <BookCta product={product} sourcePage={path} className="px-8 py-4 text-xs" />
-          </div>
-        </div>
-      </section>
+      {/* No closing CTA block: Book sat twice on the page, the client asked
+          for the lower one gone (23/09/2026). Book is in the hero, and in the
+          sticky bar on phones. */}
 
       <StickyBookBar
         price={product.price === 0 && product.priceTbd ? undefined : product.price}
@@ -162,21 +156,6 @@ export function ProductDetail({ product }: { product: Product }) {
       />
     </div>
   );
-}
-
-// Short and category-appropriate. Interpolating the product name produced
-// things like "Ready to book your Personal Training, 5 sessions?".
-function finalCtaTitle(product: Product): string {
-  switch (product.category) {
-    case "membership":
-      return L.finalCta.membership;
-    case "training":
-      return L.finalCta.training;
-    case "medical":
-      return L.finalCta.medical;
-    default:
-      return L.finalCta.default;
-  }
 }
 
 /* ───────────────────────── Category modules ─────────────────────────
@@ -202,7 +181,7 @@ function CategoryModule({ product }: { product: Product }) {
 
 function ModuleSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="border-b border-border px-6 py-14 md:py-20">
+    <section className="border-b border-border px-page py-14 md:py-20">
       <div className="mx-auto max-w-7xl">
         {title && <SectionTitle>{title}</SectionTitle>}
         <div className={title ? "mt-8" : ""}>{children}</div>

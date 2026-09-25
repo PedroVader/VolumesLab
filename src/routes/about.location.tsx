@@ -34,7 +34,7 @@ function LocationPage() {
   const info = infoRows();
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-20 md:py-24">
+      <section className="border-b border-border px-page py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>Location</Eyebrow>
           <SectionTitle as="h1" className="mt-6 max-w-3xl">
@@ -42,7 +42,7 @@ function LocationPage() {
           </SectionTitle>
         </div>
       </section>
-      <section className="px-6 py-16">
+      <section className="px-page py-16">
         <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
           <div className="border border-border bg-card">
             <iframe

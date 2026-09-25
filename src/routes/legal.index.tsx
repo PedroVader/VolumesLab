@@ -28,7 +28,7 @@ export const Route = createFileRoute("/legal/")({
 function LegalPage() {
   return (
     <SiteChrome>
-      <section className="px-6 py-16 md:py-24">
+      <section className="px-page py-16 md:py-24">
         <div className="mx-auto max-w-2xl">
           {L.title && (
             <h1 className="font-display text-3xl font-extrabold uppercase tracking-tight md:text-4xl">

@@ -27,7 +27,7 @@ function TeamPage() {
   const { people } = Route.useLoaderData();
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-14 md:py-20">
+      <section className="border-b border-border px-page py-14 md:py-20">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>The team</Eyebrow>
           <SectionTitle as="h1" className="mt-6 max-w-3xl">
@@ -35,7 +35,7 @@ function TeamPage() {
           </SectionTitle>
         </div>
       </section>
-      <section className="px-6 py-12 md:py-16">
+      <section className="px-page py-12 md:py-16">
         <div className="mx-auto max-w-7xl">
           {people.length > 0 ? (
             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -40,7 +40,7 @@ function ComparisonSection({
   }, [kind, sourcePage]);
 
   return (
-    <section id="compare" className="scroll-mt-20 border-b border-border px-6 py-16 md:py-20">
+    <section id="compare" className="scroll-mt-20 border-b border-border px-page py-16 md:py-20">
       <div className="mx-auto max-w-7xl">
         <Eyebrow>Compare</Eyebrow>
         <SectionTitle className="mt-6 max-w-3xl">{title}</SectionTitle>

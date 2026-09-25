@@ -25,7 +25,7 @@ function AboutLanding() {
   ];
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-20 md:py-24">
+      <section className="border-b border-border px-page py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>About Volumes Lab</Eyebrow>
           <SectionTitle as="h1" className="mt-6 max-w-3xl">
@@ -40,7 +40,7 @@ function AboutLanding() {
 
       {/* Test, Understand, Treat or Train, Retest */}
       {aboutPage.steps.length > 0 && (
-        <section className="px-6 py-16">
+        <section className="px-page py-16">
           <div className="mx-auto max-w-7xl">
             <Eyebrow>How Volumes Lab works</Eyebrow>
             <div className="mt-10 grid gap-8 md:grid-cols-4">
@@ -62,7 +62,7 @@ function AboutLanding() {
 
       {/* Section links */}
       {links.length > 0 && (
-        <section className="border-t border-border px-6 py-16">
+        <section className="border-t border-border px-page py-16">
           <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {links.map((l) => (
               <Link

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/about/lab")({
 function LabPage() {
   return (
     <SiteChrome>
-      <section className="border-b border-border px-6 py-20 md:py-24">
+      <section className="border-b border-border px-page py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <Eyebrow>The lab</Eyebrow>
           <SectionTitle as="h1" className="mt-6 max-w-3xl">
@@ -31,7 +31,7 @@ function LabPage() {
         </div>
       </section>
       {labPage.areas.length > 0 && (
-        <section className="px-6 py-16">
+        <section className="px-page py-16">
           <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2">
             {labPage.areas.map((a) => (
               <div key={a.title} className="border border-border bg-card p-8">
@@ -44,7 +44,7 @@ function LabPage() {
           </div>
         </section>
       )}
-      <section className="border-t border-border px-6 py-12">
+      <section className="border-t border-border px-page py-12">
         <div className="mx-auto flex max-w-7xl flex-wrap gap-4">
           {PAGES.location && (
             <Link

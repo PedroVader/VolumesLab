@@ -17,6 +17,12 @@ const categoryProduct: Record<string, { slug: string; kind: string; name: string
     name: "GLP-1 Medical Consultation",
     pitch: "Thirty minutes with a doctor, in person at Churruca 5, to assess whether GLP-1 treatment is appropriate for you.",
   },
+  Hyperbaric: {
+    slug: "hyperbaric-oxygen-chamber",
+    kind: "test",
+    name: "Hyperbaric Oxygen Chamber",
+    pitch: "Sixty minutes at 2.0 ATA breathing 95% oxygen, at Churruca 5 in Madrid.",
+  },
   Performance: {
     slug: "vo2max",
     kind: "test",
@@ -79,7 +85,7 @@ function PostPage() {
 
   return (
     <SiteChrome>
-      <article className="border-b border-border px-6 py-24">
+      <article className="border-b border-border px-page py-24">
         <div className="mx-auto max-w-3xl">
           <Link
             to="/blog"
@@ -99,7 +105,7 @@ function PostPage() {
         </div>
       </article>
 
-      <section className="px-6 py-24">
+      <section className="px-page py-24">
         <div className="mx-auto max-w-3xl space-y-8">
           {post.body.map((block, i) =>
             block.type === "heading" ? (
@@ -148,7 +154,7 @@ function PostPage() {
       <BookBand />
 
       {others.length > 0 && (
-        <section className="border-t border-border px-6 py-24">
+        <section className="border-t border-border px-page py-24">
           <div className="mx-auto max-w-6xl">
             <Eyebrow>Keep reading</Eyebrow>
             <ul className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">

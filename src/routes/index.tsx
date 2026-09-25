@@ -8,7 +8,9 @@
 //   → TRAIN → MEMBERSHIPS → FAQ / Legal / Blog
 //
 // Since 12/09/2026 the section order, names and on/off are the CMS's
-// (Home page → Sections); the diagram is only the bundled default.
+// (Home page → Sections); the diagram is only the bundled default. Since
+// 23/09/2026 the map is its own "Location" section at the bottom, right
+// above the footer, and the hero is text only.
 //
 // Every card carries the same CTA pair: Book (→ the SKU in Momence) and
 // More info (→ this CMS).
@@ -16,7 +18,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { AssessmentCard, MembershipCard, ProductCard } from "@/components/site/cards";
-import { ADDRESS, BRANDING, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
+import { ADDRESS, CONTACT, HOURS, MAP_EMBED, MAP_LINK } from "@/data/site";
 import { homePage, type HeadlineSize, type SectionKey } from "@/data/pages";
 import { productsInSection, visibleSections } from "@/lib/sections";
 import { canonical } from "@/lib/seo";
@@ -42,6 +44,8 @@ function Home() {
           <SectionGrid section={s.key} />
         </Section>
       ))}
+
+      <Location />
     </SiteChrome>
   );
 }
@@ -50,9 +54,10 @@ function Home() {
 function SectionGrid({ section }: { section: SectionKey }) {
   const items = productsInSection(section);
   switch (section) {
+    // Packs: four to a row on desktop (client, 23/09/2026).
     case "assessments":
       return (
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((a) => (
             <AssessmentCard key={a.slug} a={a} />
           ))}
@@ -77,7 +82,7 @@ function SectionGrid({ section }: { section: SectionKey }) {
   }
 }
 
-/* ---------------- Contact block + map ---------------- */
+/* ---------------- Contact block ---------------- */
 
 // Heading size, chosen in the CMS (Home page → Headline size). "large" is the
 // original; the client asked for the title on one line (14/09/2026).
@@ -87,86 +92,96 @@ const headlineClass: Record<HeadlineSize, string> = {
   large: "text-3xl md:text-5xl",
 };
 
-// Layout (client, 14/09/2026): the map runs from the centre of the page to
-// the right margin line and from the header to the bottom of the block, with
-// no padding around it. The text column keeps the usual padding and its
-// content aligns with the 1280px column the rest of the page uses: on wide
-// screens the inner block is half that column, pushed to the right edge of
-// the text column, which is the centre of the page.
-//
-// "The right margin line" is the vertical rule SiteChrome fixes 24px from the
-// viewport edge (16px on phones). The first version ran the map past it to
-// the edge of the window; the client asked for it to stop at the line
-// (17/09/2026), so the map's right side now sits at that same offset. On
-// phones the map stacks under the text inside the content padding.
+// The hero: headline, address, email and hours, on the same left edge as the
+// header logo and every section below (client, 23/09/2026: "align left"). No
+// logo here, the header carries it; the map moved to the Location section at
+// the bottom of the page.
 function ContactBlock() {
   return (
-    <section className="border-b border-border">
-      <div className="grid lg:grid-cols-2">
-        <div className="px-6 py-12 md:py-16 lg:pr-10">
-          <div className="lg:ml-auto lg:max-w-[calc(var(--container-7xl)/2)]">
-          <img src={BRANDING.mark} alt="Volumes Lab" className="w-36 md:w-44" />
-          {homePage.headline && (
-            <h1
-              className={`mt-8 font-display font-extrabold uppercase leading-[1.05] tracking-tight ${headlineClass[homePage.headlineSize]}`}
+    <section className="border-b border-border px-page py-12 md:py-16">
+      <div className="mx-auto max-w-7xl">
+        {homePage.headline && (
+          <h1
+            className={`font-display font-extrabold uppercase leading-[1.05] tracking-tight text-balance break-words ${headlineClass[homePage.headlineSize]}`}
+          >
+            {homePage.headline}
+          </h1>
+        )}
+
+        <address className="mt-6 space-y-1 text-base not-italic leading-relaxed text-foreground/85">
+          <p>
+            <a
+              href={MAP_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-foreground/30 underline-offset-4 hover:text-foreground hover:decoration-foreground"
             >
-              {homePage.headline}
-            </h1>
+              {ADDRESS.short}
+            </a>
+          </p>
+          <p>
+            <a href={`mailto:${CONTACT.email}`} className="hover:text-primary">
+              {CONTACT.email}
+            </a>
+          </p>
+        </address>
+
+        <dl className="mt-6 space-y-1 font-mono text-[11px] uppercase tracking-widest text-muted">
+          {HOURS.weekdays.value && (
+            <div className="flex flex-wrap gap-x-3">
+              <dt>Open {HOURS.weekdays.label}</dt>
+              <dd className="tabular-nums text-foreground">{HOURS.weekdays.value}</dd>
+            </div>
           )}
-
-          <address className="mt-6 space-y-1 text-base not-italic leading-relaxed text-foreground/85">
-            <p>
-              <a
-                href={MAP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-foreground/30 underline-offset-4 hover:text-foreground hover:decoration-foreground"
-              >
-                {ADDRESS.short}
-              </a>
-            </p>
-            <p>
-              <a href={`mailto:${CONTACT.email}`} className="hover:text-primary">
-                {CONTACT.email}
-              </a>
-            </p>
-          </address>
-
-          <dl className="mt-6 space-y-1 font-mono text-[11px] uppercase tracking-widest text-muted">
-            {HOURS.weekdays.value && (
-              <div className="flex flex-wrap gap-x-3">
-                <dt>Open {HOURS.weekdays.label}</dt>
-                <dd className="tabular-nums text-foreground">{HOURS.weekdays.value}</dd>
-              </div>
-            )}
-            {HOURS.weekend.value && (
-              <div className="flex flex-wrap gap-x-3">
-                <dt>{HOURS.weekend.label}</dt>
-                <dd className="tabular-nums text-foreground">{HOURS.weekend.value}</dd>
-              </div>
-            )}
-          </dl>
-          {HOURS.walkIns && (
-            <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
-              {HOURS.walkIns}
-            </p>
+          {HOURS.weekend.value && (
+            <div className="flex flex-wrap gap-x-3">
+              <dt>{HOURS.weekend.label}</dt>
+              <dd className="tabular-nums text-foreground">{HOURS.weekend.value}</dd>
+            </div>
           )}
-          </div>
-        </div>
+        </dl>
+        {HOURS.walkIns && (
+          <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-widest text-primary">
+            {HOURS.walkIns}
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
 
-        {/* Right half: the map, from the centre to the margin line. Absolute
-            on large screens so it takes the height of the text column instead
-            of dictating it. On small screens it stacks under the text at a
-            fixed height, inside the content padding. */}
-        <div className="relative mx-6 mb-12 min-h-[300px] border border-border bg-card md:mb-16 md:min-h-[360px] lg:mx-0 lg:mb-0 lg:mr-6 lg:min-h-0 lg:border-y-0 lg:border-r-0">
-          <iframe
-            title={`Volumes Lab, ${ADDRESS.full}`}
-            src={MAP_EMBED}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="absolute inset-0 block h-full w-full"
-          />
+/* ---------------- Location (map) ---------------- */
+
+// The last section of the page, right above the footer (client, 23/09/2026):
+// a "Location" heading on the content column and the map running from left
+// to right between the two vertical margin lines SiteChrome fixes at 16px
+// (24px from tablets up).
+function Location() {
+  return (
+    <section id="location" className="scroll-mt-20 border-b border-border pt-10 md:pt-14">
+      <div className="px-page">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-baseline gap-x-6 gap-y-2">
+          <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight md:text-3xl">Location</h2>
+          {ADDRESS.short && (
+            <a
+              href={MAP_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[11px] uppercase tracking-widest text-muted hover:text-primary"
+            >
+              {ADDRESS.short}
+            </a>
+          )}
         </div>
+      </div>
+      <div className="mx-4 mt-8 h-[320px] border-t border-border md:mx-6 md:h-[420px]">
+        <iframe
+          title={`Volumes Lab, ${ADDRESS.full}`}
+          src={MAP_EMBED}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="block h-full w-full"
+        />
       </div>
     </section>
   );
@@ -177,7 +192,7 @@ function ContactBlock() {
 function Intro() {
   if (!homePage.intro) return null;
   return (
-    <section className="border-b border-border px-6 py-10 md:py-14">
+    <section className="border-b border-border px-page py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
         <p className="max-w-4xl whitespace-pre-line text-lg leading-relaxed text-foreground/85 md:text-xl">
           {homePage.intro}
@@ -201,7 +216,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-20 border-b border-border px-6 py-10 md:py-14">
+    <section id={id} className="scroll-mt-20 border-b border-border px-page py-10 md:py-14">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
           {title && (

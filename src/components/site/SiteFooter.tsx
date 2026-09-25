@@ -31,7 +31,7 @@ import {
 export function SiteFooter() {
   const items = footerItems();
   return (
-    <footer className="border-t border-border px-6 py-10">
+    <footer className="border-t border-border px-page py-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
         <img src={BRANDING.mark} alt="Volumes Lab" className="w-24 shrink-0 opacity-90" />
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase leading-relaxed tracking-wider text-muted">

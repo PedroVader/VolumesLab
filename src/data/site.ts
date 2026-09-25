@@ -9,6 +9,12 @@ export const COMING_SOON = true;
 // notice (12/09/2026) and switch it on "when the moment comes": flip to true.
 export const ANALYTICS_ENABLED = false;
 
+// Booking switch. True = every Book CTA (each SKU's Book, the header's Book
+// Services, the booking bands) opens an email to CONTACT.email instead of
+// Momence or the catalogue (client, 23/09/2026: "Book now -> por ahora todo
+// mailto: hello@volumeslab.com"). Flip to false to send SKUs to Momence again.
+export const BOOK_BY_EMAIL = true;
+
 // Pages the client can switch off from the CMS ("Pages on / off"). A page
 // that is off leaves the menus and the footer and its URL returns 404. The
 // homepage and the service pages are not here: services have their own Live
