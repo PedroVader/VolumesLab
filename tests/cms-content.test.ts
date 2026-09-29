@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { applyCmsContent, cmsSiteContent, cmsTextSize, type CmsBundle } from '../src/lib/cms-content';
+import { applyCmsContent, cmsBackground, cmsLookCss, cmsSiteContent, cmsTextSize, type CmsBundle } from '../src/lib/cms-content';
 import { tests, assessments, training, allProducts, findProduct, productPath } from '../src/data/catalog';
 import { productContent } from '../src/data/productContent';
 import { homePage, productLabels, faqPage, blogPage, contactPage, SECTION_KEYS } from '../src/data/pages';
@@ -304,6 +304,26 @@ test('text size and logos (17/09): from the CMS, defaults when cleared or unknow
   assert.equal(BRANDING.mark, '/volumes-mark.png', 'an unpopulated id (depth 0) is the bundled logo too');
   applyCmsContent(bundle([], [], { site: { textSize: 'small' } }));
   assert.equal(TEXT.size, 'small');
+});
+
+test('letter case and background (29/09): uppercase and the default ground unless the CMS says otherwise', () => {
+  const look = (site: Record<string, unknown> | null) => cmsLookCss(site ? ({ site } as unknown as CmsBundle) : null);
+  assert.equal(
+    look(null),
+    'html{font-size:93.75%}:root{--case-titles:uppercase;--case-labels:uppercase}',
+    'no CMS = the site as built',
+  );
+  const css = look({ titleCase: 'asTyped', labelCase: 'lowercase', backgroundColor: ' #FFF ' });
+  assert.match(css, /--case-titles:none;--case-labels:lowercase/);
+  assert.match(css, /--background:#ffffff;/);
+  assert.match(css, /--card:color-mix\(in srgb,#ffffff 67%,white\)/);
+  assert.doesNotMatch(look({ titleCase: 'shouting' }), /shouting/, 'an unknown case is uppercase');
+  const bg = (v: unknown) => cmsBackground({ site: { backgroundColor: v } } as unknown as CmsBundle);
+  assert.equal(bg('eae8e3'), '#eae8e3', 'the # is optional');
+  assert.equal(bg(''), null, 'cleared = default');
+  assert.equal(bg('red'), null, 'names are ignored');
+  assert.equal(bg('#fff}body{display:none'), null, 'nothing but a hex reaches the <style>');
+  assert.doesNotMatch(look({ backgroundColor: 'nope' }), /--background/);
 });
 
 test('flat service addresses: /<slug> finds a SKU in any section, 404 when its section is off', () => {

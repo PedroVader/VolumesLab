@@ -111,6 +111,13 @@ html {
   --warm: hsl(0 0% 96%);
 }
 
+/* Letter case, chosen in the CMS (client, 29/09/2026). Titles are the
+   condensed display type, labels / buttons / menu the mono type; the root
+   route sets both variables, uppercase when it does not. Unlayered, so it
+   wins over Tailwind's `uppercase` utility. */
+.font-display.uppercase { text-transform: var(--case-titles, uppercase); }
+.font-mono.uppercase { text-transform: var(--case-labels, uppercase); }
+
 @layer base {
   * { border-color: var(--color-border); }
   body {

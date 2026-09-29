@@ -51,6 +51,20 @@ export const TEXT_SIZE_CSS: Record<TextSize, string> = {
 };
 export const TEXT = { size: "medium" as TextSize };
 
+// Letter case and background colour (client, 29/09/2026: "poder escoger caps
+// vs minúsculas en todos los sitios" and "cambiar el color general del
+// background"). Every uppercase on the site is either a title (condensed
+// display type) or a label, button or menu entry (mono type), so the CMS
+// picks the case per family and styles.css reads it from --case-titles /
+// --case-labels. Uppercase is the design as built.
+export type LetterCase = "uppercase" | "asTyped" | "lowercase";
+export const LETTER_CASES: LetterCase[] = ["uppercase", "asTyped", "lowercase"];
+export const LETTER_CASE_CSS: Record<LetterCase, string> = {
+  uppercase: "uppercase",
+  asTyped: "none",
+  lowercase: "lowercase",
+};
+
 // The logos, editable from the CMS since 17/09/2026 (Contact, Address & Hours
 // → Logo). `logo` is the small mark next to the name in the top menu; `mark`
 // is the logo with the wordmark on the homepage and in the footer. The

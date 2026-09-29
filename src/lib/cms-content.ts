@@ -58,7 +58,11 @@ import {
   PAGES,
   TEXT,
   TEXT_SIZES,
+  TEXT_SIZE_CSS,
+  LETTER_CASES,
+  LETTER_CASE_CSS,
   setMapLink,
+  type LetterCase,
   type PageKey,
   type TextSize,
 } from "@/data/site";
@@ -395,6 +399,46 @@ function uploadUrl(v: unknown): string {
 export function cmsTextSize(bundle: CmsBundle | null): TextSize {
   const size = str(bundle?.site?.textSize);
   return size && (TEXT_SIZES as string[]).includes(size) ? (size as TextSize) : "medium";
+}
+
+function letterCase(v: unknown): LetterCase {
+  const c = str(v);
+  return c && (LETTER_CASES as string[]).includes(c) ? (c as LetterCase) : "uppercase";
+}
+
+/**
+ * A background colour from the CMS as a 6-digit hex, or null for the default.
+ * Accepts #rgb / #rrggbb with or without the #; anything else is ignored,
+ * which also keeps free text out of the <style> it is written into.
+ */
+export function cmsBackground(bundle: CmsBundle | null): string | null {
+  const raw = str(bundle?.site?.backgroundColor)?.trim().replace(/^#/, "");
+  if (!raw) return null;
+  if (/^[0-9a-f]{3}$/i.test(raw)) return `#${raw.replace(/./g, "$&$&").toLowerCase()}`;
+  if (/^[0-9a-f]{6}$/i.test(raw)) return `#${raw.toLowerCase()}`;
+  return null;
+}
+
+/**
+ * The CSS the root route writes into <head>: text size, letter case per
+ * family and, when set, the background. Cards and the light fills are
+ * derived from the background so a new colour keeps the same tonal steps
+ * (cards a touch lighter, fills a touch darker) instead of beige boxes on it.
+ */
+export function cmsLookCss(bundle: CmsBundle | null): string {
+  const s = bundle?.site;
+  let css =
+    `html{font-size:${TEXT_SIZE_CSS[cmsTextSize(bundle)]}}` +
+    `:root{--case-titles:${LETTER_CASE_CSS[letterCase(s?.titleCase)]};` +
+    `--case-labels:${LETTER_CASE_CSS[letterCase(s?.labelCase)]}}`;
+  const bg = cmsBackground(bundle);
+  if (bg) {
+    css +=
+      `:root{--background:${bg};` +
+      `--card:color-mix(in srgb,${bg} 67%,white);--popover:color-mix(in srgb,${bg} 67%,white);` +
+      `--secondary:color-mix(in srgb,${bg} 95%,black);--accent:color-mix(in srgb,${bg} 95%,black)}`;
+  }
+  return css;
 }
 
 let appliedStamp = "";
