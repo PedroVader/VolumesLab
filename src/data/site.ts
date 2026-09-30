@@ -1,8 +1,8 @@
 // Launch switch. True = every route serves the "Opening Soon" placeholder
 // and the full site stays built but unreachable (?preview=volumes2026 unlocks
 // it in one browser). Went live on 30/08/2026; put back up on 09/09/2026 at
-// the client's request. Flip to false to relaunch.
-export const COMING_SOON = true;
+// the client's request; relaunched on 30/09/2026. Flip to true to hide it again.
+export const COMING_SOON = false;
 
 // Analytics switch. False = no consent notice and Google Analytics never
 // loads (without consent it cannot). The client wants to open without the
