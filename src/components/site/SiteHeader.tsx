@@ -20,13 +20,11 @@ export function SiteHeader() {
 
   // Built per render: the CMS can switch pages and sections off, rename and
   // reorder the sections between requests.
-  // Blog and Team sit in the top menu as well as in the footer line (client,
-  // 14/09/2026). FAQ is in the footer only (client, 23/09/2026). Team stays
-  // off in "Pages on / off" until its content exists.
+  // Blog and FAQ are linked from the footer only. Team stays off in
+  // "Pages on / off" until its content exists.
   const navItems: NavItem[] = [
     ...visibleSections().map((s) => ({ label: sectionLabel(s.key), hash: s.key })),
     ...(PAGES.lab ? [{ label: "The Lab", to: "/about/lab" }] : []),
-    ...(PAGES.blog ? [{ label: "Blog", to: "/blog" }] : []),
     ...(PAGES.team ? [{ label: "Team", to: "/about/team" }] : []),
   ];
 
