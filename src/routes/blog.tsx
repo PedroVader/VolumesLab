@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { metaTags } from "@/data/meta";
@@ -9,7 +9,7 @@ import { blogPage } from "@/data/pages";
 
 export const Route = createFileRoute("/blog")({
   beforeLoad: pageGate("blog"),
-  component: BlogIndex,
+  component: BlogRoute,
   // Posts come from the CMS at request time (30s cache), so publishing in
   // Payload shows up here without a deploy. Falls back to the bundled posts
   // if the CMS is unreachable.
@@ -18,6 +18,11 @@ export const Route = createFileRoute("/blog")({
     meta: metaTags("blog"),
   }),
 });
+
+function BlogRoute() {
+  const matchRoute = useMatchRoute();
+  return matchRoute({ to: "/blog/$slug" }) ? <Outlet /> : <BlogIndex />;
+}
 
 function BlogIndex() {
   const { posts } = Route.useLoaderData();
