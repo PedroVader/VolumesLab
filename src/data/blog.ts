@@ -1,5 +1,12 @@
+import { editorialPosts } from "./seoPosts";
+
 /** One block of an article body: a paragraph, or a subheading between paragraphs. */
-export type PostBlock = { type: "paragraph" | "heading"; text: string };
+export type PostBlock = {
+  type: "paragraph" | "heading";
+  text: string;
+  linkText?: string;
+  href?: string;
+};
 
 export type Post = {
   slug: string;
@@ -12,8 +19,8 @@ export type Post = {
   body: PostBlock[];
 };
 
-// The bundled snapshot is written as plain paragraphs; `posts` below turns
-// them into blocks so the template renders one shape whatever the source.
+// The original bundled snapshot is written as plain paragraphs; `posts` below
+// turns them into blocks and includes the SEO articles supplied for the site.
 type BundledPost = Omit<Post, "body"> & { body: string[] };
 
 const bundled: BundledPost[] = [
@@ -80,10 +87,13 @@ const bundled: BundledPost[] = [
   },
 ];
 
-export const posts: Post[] = bundled.map((p) => ({
-  ...p,
-  body: p.body.map((text) => ({ type: "paragraph", text })),
-}));
+export const posts: Post[] = [
+  ...editorialPosts,
+  ...bundled.map((p) => ({
+    ...p,
+    body: p.body.map((text) => ({ type: "paragraph" as const, text })),
+  })),
+];
 
 export function getPost(slug: string) {
   return posts.find((p) => p.slug === slug);

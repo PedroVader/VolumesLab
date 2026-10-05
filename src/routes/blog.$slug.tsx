@@ -4,6 +4,7 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
 import { Eyebrow } from "@/components/site/blocks";
 import { cmsPost, cmsPosts } from "@/lib/cms";
+import type { PostBlock } from "@/data/blog";
 import { findProduct } from "@/data/catalog";
 import { productReachable } from "@/lib/sections";
 
@@ -28,6 +29,12 @@ const categoryProduct: Record<string, { slug: string; kind: string; name: string
     kind: "test",
     name: "VO2Max Test",
     pitch: "Reading about VO2max is step one. Measuring yours takes 60 minutes, mask, treadmill, real numbers.",
+  },
+  Metabolism: {
+    slug: "metabolic-assessment",
+    kind: "test",
+    name: "Metabolic Assessment",
+    pitch: "Measure your resting energy use with an indirect calorimetry assessment at Volumes Lab.",
   },
   Training: {
     slug: "strength-assessment",
@@ -117,7 +124,7 @@ function PostPage() {
               </h2>
             ) : (
               <p key={i} className="whitespace-pre-line text-lg leading-relaxed text-foreground/85">
-                {block.text}
+                {renderPostText(block)}
               </p>
             ),
           )}
@@ -145,8 +152,8 @@ function PostPage() {
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted">Written by</p>
           <p className="mt-3 font-display text-xl font-bold uppercase tracking-tight">Volumes Lab</p>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-            The medical and performance team at Calle Churruca 5, Madrid. Every article is written
-            from the lab floor, by the people who run the tests, not a content agency.
+            Articles from Volumes Lab about testing, training and interpreting results. Check
+            individual test pages for current services and booking information.
           </p>
         </div>
       </section>
@@ -215,4 +222,24 @@ function formatDate(iso: string) {
     month: "short",
     year: "numeric",
   });
+}
+
+function renderPostText(block: PostBlock) {
+  if (!block.linkText || !block.href) return block.text;
+  const start = block.text.indexOf(block.linkText);
+  if (start < 0) return block.text;
+  return (
+    <>
+      {block.text.slice(0, start)}
+      <a
+        href={block.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 hover:opacity-70"
+      >
+        {block.linkText}
+      </a>
+      {block.text.slice(start + block.linkText.length)}
+    </>
+  );
 }
