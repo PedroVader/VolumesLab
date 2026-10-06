@@ -48,6 +48,7 @@ async function fetchCms<T>(path: string): Promise<T | null> {
 /* ─────────────────────────── Posts ─────────────────────────── */
 
 import { posts as bundledPosts, type Post, type PostBlock } from "@/data/blog";
+import { editorialPosts } from "@/data/seoPosts";
 
 type CmsPost = {
   slug: string;
@@ -107,7 +108,11 @@ export async function cmsPosts(): Promise<Post[]> {
     "/api/posts?limit=100&sort=-date&depth=0",
   );
   if (!res?.docs?.length) return bundledPosts;
-  return res.docs.map(adaptPost);
+  const cms = res.docs.map(adaptPost);
+  const cmsSlugs = new Set(cms.map((post) => post.slug));
+  return [...editorialPosts.filter((post) => !cmsSlugs.has(post.slug)), ...cms].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
 }
 
 export async function cmsPost(slug: string): Promise<Post | undefined> {
