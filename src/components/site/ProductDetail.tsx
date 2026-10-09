@@ -19,14 +19,57 @@ function description(product: Product) {
   return product.shortDescription || product.tagline || "Ask our team for details before booking.";
 }
 
-function faqs(product: Product) {
+function categoryLabel(product: Product) {
+  const label = product.categoryLabel.trim();
+  return label && !label.toLowerCase().includes("goes here") ? label : "Service";
+}
+
+type CopySection = "whatItIs" | "whatItDoes" | "whyItMatters" | "prep";
+
+function splitOutcomeCopy(items: string[]) {
+  const sections: Record<CopySection, string[]> = {
+    whatItIs: [],
+    whatItDoes: [],
+    whyItMatters: [],
+    prep: [],
+  };
+  const headings: Record<string, CopySection> = {
+    "what it is": "whatItIs",
+    "what it does": "whatItDoes",
+    "why it matters": "whyItMatters",
+    "how to prepare": "prep",
+  };
+
+  for (const item of items) {
+    let section: CopySection = "whatItIs";
+    let lines: string[] = [];
+    const flush = () => {
+      const body = lines.join("\n").trim();
+      if (body) sections[section].push(body);
+      lines = [];
+    };
+    for (const line of item.split(/\r?\n/)) {
+      const next = headings[line.trim().toLowerCase()];
+      if (next) {
+        flush();
+        section = next;
+      } else {
+        lines.push(line);
+      }
+    }
+    flush();
+  }
+  return sections;
+}
+
+function faqs(product: Product, preparation: string[]) {
   const content = getProductContent(product.slug);
   const items = [...(content?.faqs ?? [])];
   const fallbacks = [
     {
       q: "How should I prepare?",
-      a: content?.prep.length
-        ? content.prep.join(" ")
+      a: preparation.length
+        ? preparation.join(" ")
         : "The team will confirm any preparation instructions before your appointment.",
     },
     {
@@ -51,17 +94,21 @@ export function ProductDetail({ product }: { product: Product }) {
   const content = getProductContent(product.slug);
   const path = productPath(product);
   const isMembership = product.category === "membership";
-  const whatItIs = content?.outcomes.length ? content.outcomes : product.measures;
+  const copy = splitOutcomeCopy(content?.outcomes ?? []);
+  const whatItIs = copy.whatItIs.length ? copy.whatItIs : product.measures;
+  const preparation = content?.prep.length ? content.prep : copy.prep;
   const howItWorks = content?.experience.length
     ? content.experience
-    : product.protocol.map((body, index) => ({ title: `Step ${index + 1}`, body }));
+    : product.protocol.length
+      ? product.protocol.map((body, index) => ({ title: `Step ${index + 1}`, body }))
+      : copy.whatItDoes.map((body) => ({ title: "What it does", body }));
 
   return (
     <div className="bg-background pb-20 md:pb-0">
       <section className="border-b border-border px-page py-14 md:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <Eyebrow>{product.categoryLabel || "Service"}</Eyebrow>
+            <Eyebrow>{categoryLabel(product)}</Eyebrow>
             <h1 className="mt-6 font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-balance md:text-6xl">
               {product.name}
             </h1>
@@ -120,6 +167,37 @@ export function ProductDetail({ product }: { product: Product }) {
               </li>
             ))}
           </ul>
+          {(Boolean(content?.experience.length) || product.protocol.length > 0) &&
+            copy.whatItDoes.length > 0 && (
+              <div className="mt-10 max-w-3xl">
+                <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">
+                  What it does
+                </h3>
+                {copy.whatItDoes.map((item) => (
+                  <p
+                    key={item}
+                    className="mt-3 whitespace-pre-line text-base leading-relaxed text-foreground/85"
+                  >
+                    {item}
+                  </p>
+                ))}
+              </div>
+            )}
+          {copy.whyItMatters.length > 0 && (
+            <div className="mt-10 max-w-3xl">
+              <h3 className="font-display text-xl font-extrabold uppercase tracking-tight">
+                Why it matters
+              </h3>
+              {copy.whyItMatters.map((item) => (
+                <p
+                  key={item}
+                  className="mt-3 whitespace-pre-line text-base leading-relaxed text-foreground/85"
+                >
+                  {item}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -157,9 +235,9 @@ export function ProductDetail({ product }: { product: Product }) {
       <section className="border-b border-border px-page py-14 md:py-20">
         <div className="mx-auto max-w-7xl">
           <SectionTitle>How to prepare</SectionTitle>
-          {content?.prep.length ? (
+          {preparation.length ? (
             <ul className="mt-8 max-w-3xl space-y-3">
-              {content.prep.map((item) => (
+              {preparation.map((item) => (
                 <li
                   key={item}
                   className="flex gap-4 whitespace-pre-line text-base leading-relaxed text-foreground/85"
@@ -183,7 +261,7 @@ export function ProductDetail({ product }: { product: Product }) {
         <div className="mx-auto max-w-4xl">
           <SectionTitle>FAQs</SectionTitle>
           <div className="mt-8">
-            <FaqList items={faqs(product)} />
+            <FaqList items={faqs(product, preparation)} />
           </div>
         </div>
       </section>
@@ -265,7 +343,7 @@ function OtherProductsCarousel({ product }: { product: Product }) {
                   className="flex h-full min-h-64 flex-col border border-border bg-card p-6 transition-colors hover:border-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                   <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
-                    {item.categoryLabel || "Service"}
+                    {categoryLabel(item)}
                   </span>
                   <h3 className="mt-5 font-display text-xl font-extrabold uppercase leading-tight">
                     {item.name}
