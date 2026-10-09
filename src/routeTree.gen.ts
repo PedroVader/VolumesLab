@@ -9,53 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as BookRouteImport } from './routes/book'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TrainingIndexRouteImport } from './routes/training.index'
-import { Route as TestsIndexRouteImport } from './routes/tests.index'
-import { Route as MembershipsIndexRouteImport } from './routes/memberships.index'
-import { Route as LegalIndexRouteImport } from './routes/legal.index'
-import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index'
+import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as BookRouteImport } from './routes/book'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
-import { Route as TrainingSlugRouteImport } from './routes/training.$slug'
-import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
-import { Route as MembershipsSlugRouteImport } from './routes/memberships.$slug'
-import { Route as MedicalSlugRouteImport } from './routes/medical.$slug'
-import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as AssessmentsSlugRouteImport } from './routes/assessments.$slug'
-import { Route as AboutTeamRouteImport } from './routes/about.team'
-import { Route as AboutLocationRouteImport } from './routes/about.location'
 import { Route as AboutLabRouteImport } from './routes/about.lab'
+import { Route as AboutLocationRouteImport } from './routes/about.location'
+import { Route as AboutTeamRouteImport } from './routes/about.team'
+import { Route as AssessmentsIndexRouteImport } from './routes/assessments.index'
+import { Route as AssessmentsSlugRouteImport } from './routes/assessments.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as LegalIndexRouteImport } from './routes/legal.index'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
+import { Route as MedicalSlugRouteImport } from './routes/medical.$slug'
+import { Route as MembershipsIndexRouteImport } from './routes/memberships.index'
+import { Route as MembershipsSlugRouteImport } from './routes/memberships.$slug'
+import { Route as TestsIndexRouteImport } from './routes/tests.index'
+import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
+import { Route as TrainingIndexRouteImport } from './routes/training.index'
+import { Route as TrainingSlugRouteImport } from './routes/training.$slug'
 
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookRoute = BookRouteImport.update({
-  id: '/book',
-  path: '/book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugRoute = SlugRouteImport.update({
@@ -63,34 +43,29 @@ const SlugRoute = SlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrainingIndexRoute = TrainingIndexRouteImport.update({
-  id: '/training/',
-  path: '/training/',
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestsIndexRoute = TestsIndexRouteImport.update({
-  id: '/tests/',
-  path: '/tests/',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MembershipsIndexRoute = MembershipsIndexRouteImport.update({
-  id: '/memberships/',
-  path: '/memberships/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LegalIndexRoute = LegalIndexRouteImport.update({
-  id: '/legal/',
-  path: '/legal/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssessmentsIndexRoute = AssessmentsIndexRouteImport.update({
-  id: '/assessments/',
-  path: '/assessments/',
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -98,44 +73,9 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrainingSlugRoute = TrainingSlugRouteImport.update({
-  id: '/training/$slug',
-  path: '/training/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TestsSlugRoute = TestsSlugRouteImport.update({
-  id: '/tests/$slug',
-  path: '/tests/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MembershipsSlugRoute = MembershipsSlugRouteImport.update({
-  id: '/memberships/$slug',
-  path: '/memberships/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MedicalSlugRoute = MedicalSlugRouteImport.update({
-  id: '/medical/$slug',
-  path: '/medical/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LegalSlugRoute = LegalSlugRouteImport.update({
-  id: '/legal/$slug',
-  path: '/legal/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
-} as any)
-const AssessmentsSlugRoute = AssessmentsSlugRouteImport.update({
-  id: '/assessments/$slug',
-  path: '/assessments/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutTeamRoute = AboutTeamRouteImport.update({
-  id: '/about/team',
-  path: '/about/team',
+const AboutLabRoute = AboutLabRouteImport.update({
+  id: '/about/lab',
+  path: '/about/lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutLocationRoute = AboutLocationRouteImport.update({
@@ -143,9 +83,69 @@ const AboutLocationRoute = AboutLocationRouteImport.update({
   path: '/about/location',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutLabRoute = AboutLabRouteImport.update({
-  id: '/about/lab',
-  path: '/about/lab',
+const AboutTeamRoute = AboutTeamRouteImport.update({
+  id: '/about/team',
+  path: '/about/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentsIndexRoute = AssessmentsIndexRouteImport.update({
+  id: '/assessments/',
+  path: '/assessments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentsSlugRoute = AssessmentsSlugRouteImport.update({
+  id: '/assessments/$slug',
+  path: '/assessments/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const LegalIndexRoute = LegalIndexRouteImport.update({
+  id: '/legal/',
+  path: '/legal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicalSlugRoute = MedicalSlugRouteImport.update({
+  id: '/medical/$slug',
+  path: '/medical/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipsIndexRoute = MembershipsIndexRouteImport.update({
+  id: '/memberships/',
+  path: '/memberships/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipsSlugRoute = MembershipsSlugRouteImport.update({
+  id: '/memberships/$slug',
+  path: '/memberships/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestsIndexRoute = TestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestsSlugRoute = TestsSlugRouteImport.update({
+  id: '/tests/$slug',
+  path: '/tests/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrainingIndexRoute = TrainingIndexRouteImport.update({
+  id: '/training/',
+  path: '/training/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrainingSlugRoute = TrainingSlugRouteImport.update({
+  id: '/training/$slug',
+  path: '/training/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -330,39 +330,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/book': {
-      id: '/book'
-      path: '/book'
-      fullPath: '/book'
-      preLoaderRoute: typeof BookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug': {
@@ -372,46 +344,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/training/': {
-      id: '/training/'
-      path: '/training'
-      fullPath: '/training/'
-      preLoaderRoute: typeof TrainingIndexRouteImport
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tests/': {
-      id: '/tests/'
-      path: '/tests'
-      fullPath: '/tests/'
-      preLoaderRoute: typeof TestsIndexRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/memberships/': {
-      id: '/memberships/'
-      path: '/memberships'
-      fullPath: '/memberships/'
-      preLoaderRoute: typeof MembershipsIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/legal/': {
-      id: '/legal/'
-      path: '/legal'
-      fullPath: '/legal/'
-      preLoaderRoute: typeof LegalIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assessments/': {
-      id: '/assessments/'
-      path: '/assessments'
-      fullPath: '/assessments/'
-      preLoaderRoute: typeof AssessmentsIndexRouteImport
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/': {
@@ -421,60 +386,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/training/$slug': {
-      id: '/training/$slug'
-      path: '/training/$slug'
-      fullPath: '/training/$slug'
-      preLoaderRoute: typeof TrainingSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tests/$slug': {
-      id: '/tests/$slug'
-      path: '/tests/$slug'
-      fullPath: '/tests/$slug'
-      preLoaderRoute: typeof TestsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/memberships/$slug': {
-      id: '/memberships/$slug'
-      path: '/memberships/$slug'
-      fullPath: '/memberships/$slug'
-      preLoaderRoute: typeof MembershipsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/medical/$slug': {
-      id: '/medical/$slug'
-      path: '/medical/$slug'
-      fullPath: '/medical/$slug'
-      preLoaderRoute: typeof MedicalSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/legal/$slug': {
-      id: '/legal/$slug'
-      path: '/legal/$slug'
-      fullPath: '/legal/$slug'
-      preLoaderRoute: typeof LegalSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
-    }
-    '/assessments/$slug': {
-      id: '/assessments/$slug'
-      path: '/assessments/$slug'
-      fullPath: '/assessments/$slug'
-      preLoaderRoute: typeof AssessmentsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about/team': {
-      id: '/about/team'
-      path: '/about/team'
-      fullPath: '/about/team'
-      preLoaderRoute: typeof AboutTeamRouteImport
+    '/about/lab': {
+      id: '/about/lab'
+      path: '/about/lab'
+      fullPath: '/about/lab'
+      preLoaderRoute: typeof AboutLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/location': {
@@ -484,11 +400,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLocationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/lab': {
-      id: '/about/lab'
-      path: '/about/lab'
-      fullPath: '/about/lab'
-      preLoaderRoute: typeof AboutLabRouteImport
+    '/about/team': {
+      id: '/about/team'
+      path: '/about/team'
+      fullPath: '/about/team'
+      preLoaderRoute: typeof AboutTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments/': {
+      id: '/assessments/'
+      path: '/assessments'
+      fullPath: '/assessments/'
+      preLoaderRoute: typeof AssessmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments/$slug': {
+      id: '/assessments/$slug'
+      path: '/assessments/$slug'
+      fullPath: '/assessments/$slug'
+      preLoaderRoute: typeof AssessmentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/legal/': {
+      id: '/legal/'
+      path: '/legal'
+      fullPath: '/legal/'
+      preLoaderRoute: typeof LegalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medical/$slug': {
+      id: '/medical/$slug'
+      path: '/medical/$slug'
+      fullPath: '/medical/$slug'
+      preLoaderRoute: typeof MedicalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memberships/': {
+      id: '/memberships/'
+      path: '/memberships'
+      fullPath: '/memberships/'
+      preLoaderRoute: typeof MembershipsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memberships/$slug': {
+      id: '/memberships/$slug'
+      path: '/memberships/$slug'
+      fullPath: '/memberships/$slug'
+      preLoaderRoute: typeof MembershipsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tests/': {
+      id: '/tests/'
+      path: '/tests'
+      fullPath: '/tests/'
+      preLoaderRoute: typeof TestsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tests/$slug': {
+      id: '/tests/$slug'
+      path: '/tests/$slug'
+      fullPath: '/tests/$slug'
+      preLoaderRoute: typeof TestsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/training/': {
+      id: '/training/'
+      path: '/training'
+      fullPath: '/training/'
+      preLoaderRoute: typeof TrainingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/training/$slug': {
+      id: '/training/$slug'
+      path: '/training/$slug'
+      fullPath: '/training/$slug'
+      preLoaderRoute: typeof TrainingSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

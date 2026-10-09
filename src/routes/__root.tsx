@@ -39,11 +39,13 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportLovableError(error instanceof Error ? error : new Error(String(error)), {
+      boundary: "tanstack_root_error_component",
+    });
   }, [error]);
 
   return (
@@ -83,14 +85,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     applyCmsContent(cms);
     return { cmsJson: JSON.stringify(cms) };
   },
-  loader: ({ context }) => ({
-    cms: JSON.parse(context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>>,
-  }),
-  head: ({ loaderData }) => ({
+  head: ({ match }) => ({
     // Size of everything (client, 17/09/2026), letter case and background
     // (29/09/2026), all chosen in the CMS. Written from the loader data so
     // server and client agree, and inline so there is no flash at the default.
-    styles: [{ children: cmsLookCss(loaderData?.cms ?? null) }],
+    styles: [
+      {
+        children: cmsLookCss(
+          JSON.parse(match.context.cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>>,
+        ),
+      },
+    ],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -166,8 +171,8 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-  const { cms } = Route.useLoaderData();
+  const { queryClient, cmsJson } = Route.useRouteContext();
+  const cms = JSON.parse(cmsJson) as Awaited<ReturnType<typeof cmsSiteContent>>;
   applyCmsContent(cms);
 
   // Pre-launch gate: while COMING_SOON is on, every route (including deep
