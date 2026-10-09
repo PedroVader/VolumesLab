@@ -31,11 +31,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-warm: var(--warm);
-  --font-brand: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display: "Helvetica Neue Condensed", "HelveticaNeue-CondensedBold", "Arial Narrow", "Helvetica Neue", Impact, Helvetica, Arial, sans-serif;
+  --font-brand: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "Martian Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
   --font-accent: "Microsoft Himalaya", "Papyrus", "Palatino Linotype", serif;
+  --tracking-tight: -0.055em;
   /* The content column. It stays this wide while everything inside it scales
      with the root font size below, so the cards keep their width and only
      get shorter. Was 1280px; the client asked for twice the space on the
@@ -124,9 +125,12 @@ html {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    letter-spacing: -0.012em;
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4 { font-family: var(--font-display); }
+  h1, h2 { letter-spacing: -0.055em; }
+  h3, h4 { letter-spacing: -0.035em; }
 
   a, button, [role="button"], summary, label[for], .cursor-pointer {
     cursor: pointer;
