@@ -73,10 +73,7 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Article not found" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Article not found" }, { name: "robots", content: "noindex" }],
       };
     }
     const { post } = loaderData;
@@ -143,6 +140,58 @@ function PostPage() {
                   {block.text}
                 </h2>
               )
+            ) : block.type === "list" ? (
+              block.ordered ? (
+                <ol
+                  key={i}
+                  className="list-decimal space-y-2 pl-7 text-lg leading-relaxed text-foreground/85"
+                >
+                  {block.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ol>
+              ) : (
+                <ul
+                  key={i}
+                  className="list-disc space-y-2 pl-7 text-lg leading-relaxed text-foreground/85"
+                >
+                  {block.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )
+            ) : block.type === "table" ? (
+              <div key={i} className="overflow-x-auto">
+                <table className="w-full border-collapse text-left text-sm leading-relaxed md:text-base">
+                  <thead>
+                    <tr>
+                      {block.headers.map((header) => (
+                        <th
+                          key={header}
+                          scope="col"
+                          className="border-b border-foreground px-3 py-3 font-bold"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
+                          <td
+                            key={cellIndex}
+                            className="border-b border-border px-3 py-3 align-top text-foreground/85"
+                          >
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p key={i} className="whitespace-pre-line text-lg leading-relaxed text-foreground/85">
                 {renderPostText(block)}
@@ -249,7 +298,7 @@ function formatDate(iso: string) {
   });
 }
 
-function renderPostText(block: PostBlock) {
+function renderPostText(block: Extract<PostBlock, { type: "paragraph" }>) {
   if (!block.linkText || !block.href) return block.text;
   const start = block.text.indexOf(block.linkText);
   if (start < 0) return block.text;

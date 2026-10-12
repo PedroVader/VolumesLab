@@ -1,13 +1,11 @@
 import { editorialPosts } from "./seoPosts";
 
-/** One block of an article body: a paragraph, or a subheading between paragraphs. */
-export type PostBlock = {
-  type: "paragraph" | "heading";
-  text: string;
-  linkText?: string;
-  href?: string;
-  level?: 2 | 3;
-};
+/** Structured article content, including real lists and comparison tables. */
+export type PostBlock =
+  | { type: "paragraph"; text: string; linkText?: string; href?: string }
+  | { type: "heading"; text: string; level?: 2 | 3 }
+  | { type: "list"; items: string[]; ordered?: boolean }
+  | { type: "table"; headers: string[]; rows: string[][] };
 
 export type Post = {
   slug: string;
