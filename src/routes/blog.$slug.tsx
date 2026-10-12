@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { articleMetaDescription } from "@/lib/seo";
 import { pageGate } from "@/lib/pages";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { BookBand } from "@/components/site/BookBand";
@@ -72,16 +73,19 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Article not found, Volumes Lab" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Article not found" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const { post } = loaderData;
     return {
       meta: [
-        { title: `${post.title}, Volumes Lab` },
-        { name: "description", content: post.excerpt },
+        { title: post.title },
+        { name: "description", content: articleMetaDescription(post.slug, post.excerpt) },
         { property: "og:title", content: post.title },
-        { property: "og:description", content: post.excerpt },
+        { property: "og:description", content: articleMetaDescription(post.slug, post.excerpt) },
         { property: "og:type", content: "article" },
       ],
     };
