@@ -12,44 +12,55 @@ import { productReachable } from "@/lib/sections";
 // Map article categories to the product that measures what the article
 // teaches. The CTA shows only while that SKU is live and its section is on;
 // the button reads "Book the <name>" and goes to the SKU page.
-const categoryProduct: Record<string, { slug: string; kind: string; name: string; pitch: string }> = {
-  Medical: {
-    slug: "glp-1-medical-consultation",
-    kind: "medical",
-    name: "GLP-1 Medical Consultation",
-    pitch: "Thirty minutes with a doctor, in person at Churruca 5, to assess whether GLP-1 treatment is appropriate for you.",
-  },
-  Hyperbaric: {
-    slug: "hyperbaric-oxygen-chamber",
-    kind: "test",
-    name: "Hyperbaric Oxygen Chamber",
-    pitch: "Sixty minutes at 2.0 ATA breathing 95% oxygen, at Churruca 5 in Madrid.",
-  },
-  Performance: {
-    slug: "vo2max",
-    kind: "test",
-    name: "VO2Max Test",
-    pitch: "Reading about VO2max is step one. Measuring yours takes 60 minutes, mask, treadmill, real numbers.",
-  },
-  Metabolism: {
-    slug: "metabolic-assessment",
-    kind: "test",
-    name: "Metabolic Assessment",
-    pitch: "Measure your resting energy use with an indirect calorimetry assessment at Volumes Lab.",
-  },
-  Training: {
-    slug: "strength-assessment",
-    kind: "test",
-    name: "Strength Assessment",
-    pitch: "Force plates don't flatter. Get your actual numbers in one 60-minute session.",
-  },
-  Diagnostics: {
-    slug: "3d-body-composition",
-    kind: "test",
-    name: "3-D Body Composition",
-    pitch: "See what you're actually made of, a 30-second scan and a same-day walkthrough.",
-  },
-};
+const categoryProduct: Record<string, { slug: string; kind: string; name: string; pitch: string }> =
+  {
+    Medical: {
+      slug: "glp-1-medical-consultation",
+      kind: "medical",
+      name: "GLP-1 Medical Consultation",
+      pitch:
+        "Thirty minutes with a doctor, in person at Churruca 5, to assess whether GLP-1 treatment is appropriate for you.",
+    },
+    Hyperbaric: {
+      slug: "hyperbaric-oxygen-chamber",
+      kind: "test",
+      name: "Hyperbaric Oxygen Chamber",
+      pitch: "Sixty minutes at 2.0 ATA breathing 95% oxygen, at Churruca 5 in Madrid.",
+    },
+    Performance: {
+      slug: "vo2max",
+      kind: "test",
+      name: "VO2Max Test",
+      pitch:
+        "Reading about VO2max is step one. Measuring yours takes 60 minutes, mask, treadmill, real numbers.",
+    },
+    Metabolism: {
+      slug: "metabolic-assessment",
+      kind: "test",
+      name: "Metabolic Assessment",
+      pitch:
+        "Measure your resting energy use with an indirect calorimetry assessment at Volumes Lab.",
+    },
+    Training: {
+      slug: "strength-assessment",
+      kind: "test",
+      name: "Strength Assessment",
+      pitch: "Force plates don't flatter. Get your actual numbers in one 60-minute session.",
+    },
+    Diagnostics: {
+      slug: "3d-body-composition",
+      kind: "test",
+      name: "3-D Body Composition",
+      pitch: "See what you're actually made of, a 30-second scan and a same-day walkthrough.",
+    },
+    "Body Composition": {
+      slug: "3d-body-composition",
+      kind: "test",
+      name: "3-D Body Composition",
+      pitch:
+        "Track body shape, measurements and composition-related change with a 30-second scan and same-day walkthrough.",
+    },
+  };
 
 export const Route = createFileRoute("/blog/$slug")({
   beforeLoad: pageGate("blog"),
@@ -62,10 +73,7 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Article not found" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Article not found" }, { name: "robots", content: "noindex" }],
       };
     }
     const { post } = loaderData;
@@ -117,12 +125,73 @@ function PostPage() {
         <div className="mx-auto max-w-3xl space-y-8">
           {post.body.map((block, i) =>
             block.type === "heading" ? (
-              <h2
-                key={i}
-                className="pt-4 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl"
-              >
-                {block.text}
-              </h2>
+              block.level === 3 ? (
+                <h3
+                  key={i}
+                  className="pt-2 font-display text-xl font-extrabold leading-tight tracking-tight text-foreground md:text-2xl"
+                >
+                  {block.text}
+                </h3>
+              ) : (
+                <h2
+                  key={i}
+                  className="pt-4 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl"
+                >
+                  {block.text}
+                </h2>
+              )
+            ) : block.type === "list" ? (
+              block.ordered ? (
+                <ol
+                  key={i}
+                  className="list-decimal space-y-2 pl-7 text-lg leading-relaxed text-foreground/85"
+                >
+                  {block.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ol>
+              ) : (
+                <ul
+                  key={i}
+                  className="list-disc space-y-2 pl-7 text-lg leading-relaxed text-foreground/85"
+                >
+                  {block.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )
+            ) : block.type === "table" ? (
+              <div key={i} className="overflow-x-auto">
+                <table className="w-full border-collapse text-left text-sm leading-relaxed md:text-base">
+                  <thead>
+                    <tr>
+                      {block.headers.map((header) => (
+                        <th
+                          key={header}
+                          scope="col"
+                          className="border-b border-foreground px-3 py-3 font-bold"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
+                          <td
+                            key={cellIndex}
+                            className="border-b border-border px-3 py-3 align-top text-foreground/85"
+                          >
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p key={i} className="whitespace-pre-line text-lg leading-relaxed text-foreground/85">
                 {renderPostText(block)}
@@ -151,7 +220,9 @@ function PostPage() {
         {/* Author credentials */}
         <div className="mx-auto mt-12 max-w-3xl border-t border-border pt-8">
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted">Written by</p>
-          <p className="mt-3 font-display text-xl font-bold uppercase tracking-tight">Volumes Lab</p>
+          <p className="mt-3 font-display text-xl font-bold uppercase tracking-tight">
+            Volumes Lab
+          </p>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
             Articles from Volumes Lab about testing, training and interpreting results. Check
             individual test pages for current services and booking information.
@@ -211,7 +282,9 @@ function PostError() {
   return (
     <SiteChrome>
       <section className="px-6 py-32 text-center">
-        <h1 className="font-display text-3xl font-bold">Something went wrong loading this article.</h1>
+        <h1 className="font-display text-3xl font-bold">
+          Something went wrong loading this article.
+        </h1>
       </section>
     </SiteChrome>
   );
@@ -225,7 +298,7 @@ function formatDate(iso: string) {
   });
 }
 
-function renderPostText(block: PostBlock) {
+function renderPostText(block: Extract<PostBlock, { type: "paragraph" }>) {
   if (!block.linkText || !block.href) return block.text;
   const start = block.text.indexOf(block.linkText);
   if (start < 0) return block.text;
