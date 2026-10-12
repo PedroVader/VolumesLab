@@ -17,9 +17,18 @@ const pagePaths: Record<PageKey, string> = {
   team: "/about/team",
 };
 
-const escapeXml = (value: string) => value.replace(/[<>&"']/g, (char) => ({
-  "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;",
-})[char]!);
+const escapeXml = (value: string) =>
+  value.replace(
+    /[<>&"']/g,
+    (char) =>
+      ({
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        '"': "&quot;",
+        "'": "&apos;",
+      })[char]!,
+  );
 
 /** Read the same CMS snapshot and visibility rules used by the page loaders. */
 export async function sitemapResponse(request: Request): Promise<Response> {
@@ -41,10 +50,13 @@ export async function sitemapResponse(request: Request): Promise<Response> {
     for (const post of posts) paths.add(`/blog/${post.slug}`);
   }
 
-  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    + [...paths].map((path) => `  <url><loc>${escapeXml(canonical(path).href)}</loc></url>`).join("\n")
-    + "\n</urlset>\n";
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    [...paths]
+      .map((path) => `  <url><loc>${escapeXml(canonical(path).href)}</loc></url>`)
+      .join("\n") +
+    "\n</urlset>\n";
   return new Response(request.method === "HEAD" ? null : xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
