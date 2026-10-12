@@ -23,9 +23,9 @@ export const Route = createFileRoute("/$slug")({
       ? {
           meta: [
             { title: `${loaderData.product.name}, Madrid` },
-            { name: "description", content: metaDescription(loaderData.product.tagline) },
+            { name: "description", content: metaDescription(loaderData.product.tagline.trim() || `Explore ${loaderData.product.name} at Volumes Lab in Madrid. View session details and booking information.`) },
             { property: "og:title", content: loaderData.product.name },
-            { property: "og:description", content: metaDescription(loaderData.product.tagline) },
+            { property: "og:description", content: metaDescription(loaderData.product.tagline.trim() || `Explore ${loaderData.product.name} at Volumes Lab in Madrid. View session details and booking information.`) },
           ],
           links: [canonical(`/${loaderData.product.slug}`)],
         }

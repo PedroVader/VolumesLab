@@ -79,6 +79,15 @@ export const pageMeta = {
 
 export type PageMetaKey = keyof typeof pageMeta;
 
+// Retain usable descriptions when the CMS still contains its test placeholders.
+const defaultDescriptions = Object.fromEntries(
+  Object.entries(pageMeta).map(([key, value]) => [key, value.description]),
+);
+
+function searchTitle(title: string): string {
+  return title.replace(/, Volumes Lab Madrid$/, ", Madrid").replace(/, Volumes Lab$/, "");
+}
+
 /** Build the meta tags for a page from its entry above. */
 export function metaTags(key: PageMetaKey) {
   // While the pre-launch gate is up, every page shows the placeholder, so
@@ -92,11 +101,14 @@ export function metaTags(key: PageMetaKey) {
   // `satisfies` keeps the keys literal but narrows each entry to its own
   // shape, so widen it back to PageMeta before reading optional fields.
   const m: PageMeta = pageMeta[key];
+  const description = /^(?:asd)+$/i.test(m.description.trim()) || !m.description.trim()
+    ? defaultDescriptions[key]
+    : m.description;
   const tags: Record<string, string>[] = [
-    { title: m.title },
-    { name: "description", content: metaDescription(m.description) },
-    { property: "og:title", content: m.shareTitle ?? m.title },
-    { property: "og:description", content: metaDescription(m.shareDescription ?? m.description) },
+    { title: searchTitle(m.title) },
+    { name: "description", content: metaDescription(description) },
+    { property: "og:title", content: searchTitle(m.shareTitle ?? m.title) },
+    { property: "og:description", content: metaDescription(m.shareDescription ?? description) },
   ];
   if (m.noindex) tags.splice(1, 0, { name: "robots", content: "noindex, follow" });
   return tags;
