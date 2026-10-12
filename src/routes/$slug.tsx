@@ -10,7 +10,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { requireProductBySlug } from "@/lib/sections";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ProductDetail } from "@/components/site/ProductDetail";
-import { canonical } from "@/lib/seo";
+import { canonical, metaDescription } from "@/lib/seo";
 
 export const Route = createFileRoute("/$slug")({
   component: Page,
@@ -22,10 +22,10 @@ export const Route = createFileRoute("/$slug")({
     loaderData
       ? {
           meta: [
-            { title: `${loaderData.product.name}, Volumes Lab Madrid` },
-            { name: "description", content: loaderData.product.tagline },
-            { property: "og:title", content: `${loaderData.product.name}, Volumes Lab` },
-            { property: "og:description", content: loaderData.product.tagline },
+            { title: `${loaderData.product.name}, Madrid` },
+            { name: "description", content: metaDescription(loaderData.product.tagline) },
+            { property: "og:title", content: loaderData.product.name },
+            { property: "og:description", content: metaDescription(loaderData.product.tagline) },
           ],
           links: [canonical(`/${loaderData.product.slug}`)],
         }

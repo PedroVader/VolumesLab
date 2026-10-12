@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Madrid's first boutique Human Health & Performance Lab. VO2max, body composition, strength, mobility and metabolic testing, measured properly, reviewed by physicians. Calle Churruca 5, Chamberí.",
+          "Health and performance testing at Volumes Lab in Madrid. Explore VO2max, body composition, strength, mobility and metabolic assessments.",
       },
       { name: "author", content: "Volumes Lab" },
       {
