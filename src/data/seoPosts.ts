@@ -1,114 +1,16 @@
 import type { Post } from "./blog";
+import { bioimpedancePost } from "./bioimpedancePost";
+import { lactateStressCpetPost } from "./lactateStressCpetPost";
+import { wearableVo2maxAccuracyPost } from "./wearableVo2maxAccuracyPost";
+import { vo2maxPost } from "./vo2maxPost";
 
-// Posts supplied for the site in September 2026. The CMS may replace an
+// Editorial posts supplied for the site. The CMS may replace an
 // article with the same slug; these stay visible until then.
 export const editorialPosts: Post[] = [
-  {
-    slug: "estimated-vs-laboratory-vo2max",
-    title: "Estimated vs Lab Measured VO2max: What’s the Difference?",
-    excerpt:
-      "How wearable and field estimates differ from laboratory VO2max testing, and what to compare when tracking aerobic fitness over time.",
-    date: "2026-10-05",
-    readingTime: "5 min read",
-    category: "Performance",
-    author: "Volumes Lab",
-    body: [
-      {
-        type: "paragraph",
-        text: "A laboratory VO2max test measures respiratory gas exchange directly while exercise intensity increases. Wearables and field tests estimate VO2max from heart rate, pace, speed, distance, and other inputs. The numbers may look comparable, but they are produced through different methods and should not automatically be treated as the same result.",
-      },
-      {
-        type: "paragraph",
-        text: "This is why an Apple Watch, Garmin, field test, and laboratory test can produce different VO2max values. A wearable estimates from the signals it can observe. A laboratory system measures oxygen uptake and carbon-dioxide output during a structured exercise test.",
-      },
-      {
-        type: "heading",
-        text: "How estimated VO2max works",
-      },
-      {
-        type: "paragraph",
-        text: "A wearable or field test uses an equation or algorithm. Depending on the product, inputs may include heart rate, pace, speed, distance, movement, age, sex, height, weight, and the quality of the recorded signal. The exact model is device-specific and may work only during supported activities or under particular recording conditions.",
-      },
-      {
-        type: "paragraph",
-        text: "A field test follows the same general principle. It may estimate VO2max from the distance completed in a set time, the time required to cover a set distance, running speed, or heart-rate response to a known workload. The result is calculated rather than measured from each breath.",
-      },
-      {
-        type: "paragraph",
-        text: "This is why the label on a wearable should be read as an estimate from that product and activity. Apple Watch, Garmin, and other systems may use different inputs and models, so their values can disagree without one device necessarily being malfunctioning. A field estimate can be useful for following a trend, but the trend is strongest when the same device and activity are repeated.",
-      },
-      {
-        type: "heading",
-        text: "How laboratory VO2max works",
-      },
-      {
-        type: "paragraph",
-        text: "During a laboratory cardiopulmonary exercise test, the person exercises on a treadmill or cycle ergometer while breathing through a measurement interface. The system records oxygen consumption, carbon-dioxide production, and ventilation as workload increases. Heart rate, workload, and other variables may also be recorded.",
-      },
-      {
-        type: "paragraph",
-        text: "The laboratory result is more directly tied to the person’s respiratory response during that session. It still varies with protocol, calibration, effort, exercise mode, and test termination. A test that stops early or uses different workload stages may not produce the same value as another laboratory test, even when both are performed correctly.",
-      },
-      {
-        type: "paragraph",
-        text: "The American Heart Association provides additional context on cardiopulmonary exercise testing.",
-        linkText: "cardiopulmonary exercise testing",
-        href: "https://professional.heart.org/en/science-news/2016-focused-update-clinical-recommendations-for-cardiopulmonary-exercise-testing-data-assessment/commentary",
-      },
-      {
-        type: "heading",
-        text: "Why the numbers differ",
-      },
-      {
-        type: "paragraph",
-        text: "The main difference is the input. A wearable observes heart rate and movement; a laboratory system measures gas exchange. The algorithm may also be trained on a population that does not match every individual closely. Average agreement in a study does not guarantee that a particular person’s estimate will match a laboratory value.",
-      },
-      {
-        type: "paragraph",
-        text: "Exercise mode matters as well. Treadmill and cycling results can differ because the movements, muscle demands, technique, and familiarity are different. When comparing results over time, use the same exercise mode where possible. A running estimate should not be treated as directly interchangeable with a cycling laboratory result.",
-      },
-      {
-        type: "heading",
-        text: "What a laboratory report adds",
-      },
-      {
-        type: "paragraph",
-        text: "A laboratory assessment can provide more than a VO2max number. Ventilatory thresholds, heart-rate response, workload, ventilation, and the pattern of the test can help explain how the result was reached. These measures may be more useful than VO2max alone for understanding training intensity or changes between assessments.",
-      },
-      {
-        type: "paragraph",
-        text: "The result should still be interpreted as a measurement from a specific session. It is not a complete description of fitness, performance, symptoms, or sporting ability, and it is not medical advice by itself.",
-      },
-      {
-        type: "paragraph",
-        text: "The laboratory setting can also help explain why a wearable estimate changes from one day to the next. A device may use different workouts or different signal quality, while a laboratory report identifies the exercise mode, workload, and respiratory response that produced the result. This does not make the laboratory number permanent, but it gives the reader more information about the test behind it.",
-      },
-      {
-        type: "paragraph",
-        text: "For the cleanest trend, compare treadmill with treadmill and cycling with cycling. Keep the date, body mass, exercise mode, and test type beside the value. When the purpose is to understand training response, the thresholds and workload may be more informative than comparing two headline VO2max values produced by different methods.",
-      },
-      {
-        type: "paragraph",
-        text: "A laboratory test can also show whether the highest value was reached under the intended protocol. The report may describe how the workload progressed, when the test ended, and how the peak value was selected. That context is often unavailable in a consumer estimate, which is designed for convenient tracking rather than a full assessment of the exercise response.",
-      },
-      {
-        type: "heading",
-        text: "VO2max testing in Madrid",
-      },
-      {
-        type: "paragraph",
-        text: "Volumes Lab lists a VO2max test at Churruca 5, Madrid, using respiratory gas analysis during exercise. Check the test page for current details and booking availability.",
-      },
-      {
-        type: "heading",
-        text: "Conclusion",
-      },
-      {
-        type: "paragraph",
-        text: "Laboratory VO2max testing measures respiratory gas exchange directly, while Apple Watch, Garmin, and field-test values estimate VO2max from observable inputs. Both can be useful, but comparisons should preserve the method and exercise mode. A laboratory test adds respiratory, threshold, heart-rate, and workload information that a single wearable estimate cannot provide.",
-      },
-    ],
-  },
+  bioimpedancePost,
+  lactateStressCpetPost,
+  wearableVo2maxAccuracyPost,
+  vo2maxPost,
   {
     slug: "dexa-vs-bia-body-composition",
     title: "DEXA vs BIA: Which Is More Accurate for Body Composition?",

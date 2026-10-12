@@ -6,6 +6,7 @@ export type PostBlock = {
   text: string;
   linkText?: string;
   href?: string;
+  level?: 2 | 3;
 };
 
 export type Post = {
