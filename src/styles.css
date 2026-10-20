@@ -31,11 +31,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-warm: var(--warm);
-  --font-brand: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "Martian Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
-  --font-accent: "Microsoft Himalaya", "Papyrus", "Palatino Linotype", serif;
+  --font-brand: "Times New Roman", Times, serif;
+  --font-display: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
+  --font-mono: "Times New Roman", Times, serif;
+  --font-accent: "Times New Roman", Times, serif;
   --tracking-tight: -0.055em;
   /* The content column. It stays this wide while everything inside it scales
      with the root font size below, so the cards keep their width and only
