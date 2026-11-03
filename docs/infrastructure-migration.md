@@ -3,13 +3,45 @@
 Estado comprobado el 3 de noviembre de 2026. Esta preparación no constituye
 una migración completada ni cambia los destinos de producción.
 
+## Restricción de coste vigente
+
+Erik ha descartado los pagos: no contratar Workers Paid ni habilitar servicios
+con facturación por exceso de consumo. Se salió del checkout sin confirmar la
+compra. La propuesta del PDF queda subordinada a esta restricción.
+
+- **Web:** evaluar Workers Free con pruebas reales de CPU, peticiones y arranque;
+  que compile no garantiza que soporte la carga dentro del plan gratuito.
+- **Base de datos:** Neon Free en Frankfurt, si el dump y consumo caben en sus
+  cuotas. La tarifa consultada incluye 1 GB y 100 CU-h/mes por proyecto, sin
+  tarjeta. No activar Launch ni Scale.
+- **CMS:** no afirmar que Payload necesita Paid solo por tamaño: la documentación
+  vigente indica 64 MiB sin comprimir tanto en Free como en Paid. Free sigue
+  limitado a 10 ms de CPU por petición; hay que medir login, administración,
+  API y medios con el repositorio real antes de comprometer el destino.
+- **Imágenes:** R2 incluye una franquicia gratuita pero factura excesos y requiere
+  suscripción. No activarlo bajo la restricción actual de evitar cargos. Evaluar
+  almacenamiento sin facturación automática y compatible con el CMS cuando se
+  conozca el inventario de medios.
+- **Alternativa:** si Payload no funciona en Free, evaluar un VPS ya contratado
+  solo si Erik confirma que admite reutilizar infraestructura existente. Si exige
+  exclusivamente planes gratuitos, revisar otra arquitectura sin eliminar el CMS
+  actual ni sustituir su flujo editorial de forma unilateral.
+- **Vercel Hobby:** no es una alternativa para alojar gratis este negocio; sus
+  condiciones lo restringen a uso personal no comercial.
+
+Fuentes consultadas el 3 de noviembre de 2026:
+[Workers Free](https://developers.cloudflare.com/workers/platform/limits/),
+[Neon Free](https://neon.com/pricing),
+[R2](https://developers.cloudflare.com/r2/pricing/),
+[uso de Vercel Hobby](https://vercel.com/docs/limits/fair-use-guidelines).
+
 ## Evidencia y dependencias pendientes
 
 | Elemento | Comprobado | Pendiente para continuar |
 | --- | --- | --- |
 | Web | `PedroVader/VolumesLab`, rama `master`; Erik tiene permiso de escritura, no de administración | Transferencia del repositorio y aceptación por Erik |
 | CMS | Repositorio independiente llamado `volumes-cms`, según `.gitignore`; no aparece entre los repositorios accesibles. Consulta a `PedroVader/volumes-cms`: 404 | URL exacta y acceso al código; cuenta administradora del CMS |
-| Cloudflare | Acceso web confirmado a la cuenta de Erik `905ffd22734f2d0ef6319dd1fd356e2d`; Wrangler sigue caducado. Workers está en Free; checkout Paid preparado por 5 USD/mes más uso | Completar pago, identificar destino de producción y renovar acceso CLI |
+| Cloudflare | Acceso web confirmado a la cuenta de Erik `905ffd22734f2d0ef6319dd1fd356e2d`; Wrangler sigue caducado. Workers está en Free; compra descartada | Validar viabilidad en Free, identificar destino de producción y renovar acceso CLI |
 | Neon | El navegador solicita iniciar sesión | Cuenta de Erik, proyecto Frankfurt y copia completa de la base de datos |
 | Imágenes | El plan sitúa los originales en Vercel Blob | Inventario completo, acceso para copiar y comprobar R2 |
 | Producción | `https://volumeslab.com` devuelve 308 a `https://www.volumeslab.com/`; `www` y `/admin` del CMS devuelven 200 con `server: Vercel` | Identificar el Worker existente y validar su relación con la web pública |
@@ -45,6 +77,11 @@ Exportar la zona desde la cuenta que la gestiona, incluidos TTL, proxy, MX, SPF,
 DKIM, DMARC, verificaciones, CAA y subdominios. Los NS ya son de Cloudflare;
 no asumir que hay que cambiarlos. Conservar la exportación para rollback.
 
+**Copia realizada:** se descargó la exportación BIND del panel de Cloudflare y
+se guardó localmente como `volumeslab.com-before-migration.bind`. Contiene los
+13 registros mostrados por el panel (6 CNAME, 2 MX y 5 TXT), además de SOA y
+los dos NS. Incluye los registros de Google y Momence. No se modificó la zona.
+
 ## Cambio preparado en esta rama
 
 Ambos lectores del CMS y sus URLs relativas de imágenes usan `VITE_CMS_URL`.
@@ -63,7 +100,11 @@ Volver al CMS anterior requiere reconstruir con el origen anterior y desplegar,
 o restaurar una versión previa del Worker. Se mantiene el comportamiento
 existente de contenido de reserva durante fallos del CMS.
 
-## Ejecución cuando estén disponibles los accesos
+## Ejecución cuando estén disponibles los accesos y un destino sin gastos
+
+Los pasos de R2 y CMS en Workers del plan original son condicionales: no
+ejecutarlos si exigen contratar un plan o autorizar cargos. El destino definitivo
+debe respetar la restricción de coste anterior.
 
 1. **Recibir el traspaso.** Aceptar ambos repositorios; recibir dump PostgreSQL
    completo, versión del servidor, extensiones, recuentos por tabla, inventario
