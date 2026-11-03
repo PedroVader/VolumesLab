@@ -9,7 +9,7 @@ una migración completada ni cambia los destinos de producción.
 | --- | --- | --- |
 | Web | `PedroVader/VolumesLab`, rama `master`; Erik tiene permiso de escritura, no de administración | Transferencia del repositorio y aceptación por Erik |
 | CMS | Repositorio independiente llamado `volumes-cms`, según `.gitignore`; no aparece entre los repositorios accesibles. Consulta a `PedroVader/volumes-cms`: 404 | URL exacta y acceso al código; cuenta administradora del CMS |
-| Cloudflare | La sesión de Wrangler ha caducado; el navegador solicita iniciar sesión | Acceso a la cuenta correcta, comprobar Workers Paid, Worker y zona DNS |
+| Cloudflare | Acceso web confirmado a la cuenta de Erik `905ffd22734f2d0ef6319dd1fd356e2d`; Wrangler sigue caducado. Workers está en Free; checkout Paid preparado por 5 USD/mes más uso | Completar pago, identificar destino de producción y renovar acceso CLI |
 | Neon | El navegador solicita iniciar sesión | Cuenta de Erik, proyecto Frankfurt y copia completa de la base de datos |
 | Imágenes | El plan sitúa los originales en Vercel Blob | Inventario completo, acceso para copiar y comprobar R2 |
 | Producción | `https://volumeslab.com` devuelve 308 a `https://www.volumeslab.com/`; `www` y `/admin` del CMS devuelven 200 con `server: Vercel` | Identificar el Worker existente y validar su relación con la web pública |
@@ -17,6 +17,14 @@ una migración completada ni cambia los destinos de producción.
 La web pública observada está en Vercel, aunque el plan describe un Worker
 existente en Cloudflare. No sustituir el Worker ni cambiar DNS hasta identificar
 la versión que se va a publicar y comparar ambas webs.
+
+El panel confirma que `volumeslab.com` está activo en la cuenta Cloudflare de
+Nicolás (`013261f6c725024d2398f5856c8b5797`), accesible desde la sesión de Erik.
+No aparece en la cuenta propia de Erik. Los Workers encontrados por nombre en
+la cuenta de Erik son `volumeslab-landing-demos` y `tanstack-start-app` (este
+último sin rutas activas); no se ha identificado todavía el Worker de producción
+descrito en el plan. Resolver la propiedad de la zona y la vinculación de dominios
+entre cuentas antes del corte; el acceso delegado no equivale a la titularidad.
 
 ## DNS público observado
 
@@ -106,3 +114,14 @@ existente de contenido de reserva durante fallos del CMS.
 
 Estas referencias orientan la adaptación; no sustituyen una prueba con el
 repositorio y la base de datos reales del CMS.
+
+## Validación de la preparación
+
+- 18 pruebas del CMS y configuración superadas con `tsx@4.20.6`.
+- `tsc --noEmit`, lint del módulo nuevo y `git diff --check` correctos.
+- Build `cloudflare-module` correcto con el origen anterior y con
+  `https://cms.volumeslab.com`; valor configurado comprobado en bundles del
+  navegador y del servidor.
+- PR en borrador: https://github.com/PedroVader/VolumesLab/pull/4.
+- Estos resultados verifican el código de preparación, no el CMS migrado ni el
+  despliegue en producción.
