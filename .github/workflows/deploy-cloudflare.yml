@@ -51,7 +51,11 @@ jobs:
           NITRO_PRESET: node_server
       - name: Prepare static HTML from validated CMS snapshot
         if: steps.cms.outputs.changed == 'true'
-        run: node scripts/render-static.mjs
+        run: |
+          # Take a fresh snapshot after dependency installation/build, minimizing
+          # the window during which an editor could invalidate the publication.
+          node scripts/cms-snapshot.mjs
+          node scripts/render-static.mjs
       - name: Deploy only the web Worker
         if: steps.cms.outputs.changed == 'true'
         run: npx --yes wrangler@4.158.0 deploy --config wrangler.static.json
