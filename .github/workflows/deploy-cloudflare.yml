@@ -28,7 +28,7 @@ jobs:
           node-version: '22'
           cache: npm
       - name: Install locked dependencies
-        run: npm ci --ignore-scripts
+        run: npx --yes npm@11.19.0 ci --ignore-scripts
       - name: Check types
         run: npx --no-install tsc --noEmit
       - name: Build web for Cloudflare
